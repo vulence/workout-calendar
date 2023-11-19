@@ -1,0 +1,23 @@
+.autoComplete {
+    margin: 10px 0 !important;
+    width: 300px !important;
+}
+
+.Button {
+    font-size: 20px !important;
+}
+
+.dataGrid {
+    margin: 10px 0 !important;
+}
+
+.fab {
+    position: fixed !important;
+    bottom: 16px !important;
+    right: 16px !important;
+}
+
+.textField {
+    margin: 10px 0 !important;
+    display: block !important;
+}

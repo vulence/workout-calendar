@@ -1,0 +1,58 @@
+.accordion {
+    background-color: black !important;
+    color: white !important;
+    border: 1px solid white !important;
+    margin-top: 15px;
+    opacity: 0.75;
+}
+
+.accordionSummary {
+    border-bottom: 1px solid white !important;
+}
+
+.accordionDetails {
+    padding: 0 !important;
+}
+
+.accordionActions {
+    justify-content: center !important;
+}
+
+.containerBox {
+    display: flex !important;
+    background-color: black !important;
+    height: 200px !important;
+}
+
+.childBox {
+    flex-grow: 1 !important;
+    border-right: 1px solid white !important;
+    border-bottom: 1px solid white !important;
+}
+
+.datePicker {
+    margin-right: 20px !important;
+    border: 1px solid white;
+    border-radius: 5px;
+    margin-right: auto;
+    width: 100px;
+}
+
+.fab {
+    position: fixed !important;
+    bottom: 16px !important;
+    right: 16px !important;
+}
+
+.filterIcon {
+    margin-top: 2px !important;
+    margin-right: 5px !important;
+}
+
+.gridContainer {
+    margin: 15px 0 !important;
+}
+
+.gridItem {
+    min-width: 160px;
+}
