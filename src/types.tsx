@@ -122,7 +122,14 @@ export type CustomIcons = {
     };
 }
 
-export type FormData = {
+export type LoginFormData = {
     username: string;
     password: string;
+}
+
+export type RegisterFormData = {
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
 }

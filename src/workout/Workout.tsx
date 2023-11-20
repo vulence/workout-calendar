@@ -65,7 +65,7 @@ export default function AWorkout() {
             setWorkout(result);
         };
         fetchData();
-    }, [setWorkout, id])
+    }, [setWorkout])
 
     // Initialize exercises
     useEffect(() => {
@@ -240,7 +240,7 @@ export default function AWorkout() {
                 open={openNotesDialog}
                 handleClose={handleCloseNotesDialog}
                 handleSubmit={handleNotesSubmit}
-                notes={workout!.notes}
+                notes={workout ? workout.notes : "nema"}
             />
 
         </Container>

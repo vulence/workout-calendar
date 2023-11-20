@@ -1,5 +1,5 @@
-import { useNavigate, useLocation } from "react-router";
-import { useState, useContext } from "react";
+import React from 'react';
+import { useState } from 'react';
 import { Box, Button, Container, TextField } from '@mui/material';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -11,21 +11,17 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import EmailIcon from '@mui/icons-material/Email';
 
-import styles from './login.module.css';
-import { LoginFormData } from "../types";
-import { Link } from "react-router-dom";
+import styles from './register.module.css';
+import { RegisterFormData } from '../types';
 
-export default function Login() {
-    // Clears the local storage -- delete!!!!!
-    localStorage.setItem('token', '');
-
-    // State for shown/hidden password field
+export default function Register() {
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
-    // Keeps the form data (username and password)
-    const [formData, setFormData] = useState<LoginFormData>({
+    const [formData, setFormData] = useState<RegisterFormData>({
         username: '',
+        email: '',
         password: '',
+        confirmPassword: '',
     });
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -34,33 +30,30 @@ export default function Login() {
         event.preventDefault();
     };
 
-    // Updates the state of form data
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
         setFormData({
             ...formData,
             [id]: value,
         });
-    };
+    }
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/users/login', {
-                method: 'POST',
+            let username : string = formData.username;
+            let email : string = formData.email;
+            let password : string = formData.password;
+
+            const response = await fetch("http://localhost:8080/api/users/register", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': "application/json",
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({ username, email, password })
             });
 
-            if (response.ok) {
-                const token = await response.text();
-                localStorage.setItem('token', token);
-                console.log(token);
-            }
-            else {
-                console.error('Login failed!');
-            }
+            const result = await response.text();
+            console.log(result);
         }
         catch (error) {
             console.error(error);
@@ -71,10 +64,10 @@ export default function Login() {
         <Container sx={{ justifyContent: "center", alignItems: "center", display: "flex" }}>
             <Box className={styles.boxContainer}>
                 <Box className={styles.header}>
-                    <h2 style={{ fontSize: "48px", fontWeight: 700, color: "white" }}>Login</h2>
+                    <h2 style={{ fontSize: "48px", fontWeight: 700, color: "white" }}>Register</h2>
                 </Box>
 
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" required>
+                <FormControl sx={{m: 1, width: '25ch'}} variant="outlined" required>
                     <InputLabel htmlFor="username">
                         Username
                     </InputLabel>
@@ -87,6 +80,23 @@ export default function Login() {
                         }
                         label="Username"
                         value={formData.username}
+                        onChange={(e) => handleChange(e)}
+                    />
+                </FormControl>
+
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" required>
+                    <InputLabel htmlFor="email">
+                        Email
+                    </InputLabel>
+                    <OutlinedInput
+                        id="email"
+                        startAdornment={
+                            <InputAdornment position="start">
+                                <EmailIcon />
+                            </InputAdornment>
+                        }
+                        label="Email"
+                        value={formData.email}
                         onChange={(e) => handleChange(e)}
                     />
                 </FormControl>
@@ -113,25 +123,13 @@ export default function Login() {
                         onChange={(e) => handleChange(e)}
                     />
                 </FormControl>
-
-                <Box sx={{display: 'flex', flexDirection: "row"}}>
-                    <Link to="/register">
-                        <Button
-                            sx={{marginRight: "30px", height:"100%"}}
-                            variant="text"
-                        >
-                            Create account
-                        </Button>
-                    </Link>
-
-                    <Button
-                        sx={{ m: 1 }}
-                        variant="contained"
-                        onClick={handleSubmit}
-                    >
-                        SUBMIT
-                    </Button>
-                </Box>
+                <Button
+                    sx={{ m: 1}}
+                    variant="contained"
+                    onClick={handleSubmit}
+                >
+                    SUBMIT
+                </Button>
             </Box>
         </Container>
     );

@@ -22,13 +22,13 @@ export default function WorkoutToolbar(props: WorkoutToolbarProps) {
 
     // Set the current duration in timepicker
     const getTime = () => {
-        return dayjs().set('hour', Math.floor(props.workout.duration / 60)).set('minute', props.workout.duration - 60 * Math.floor(props.workout.duration / 60));
+        return dayjs().set('hour', Math.floor(props.workout?.duration / 60)).set('minute', props.workout?.duration - 60 * Math.floor(props.workout?.duration / 60));
     };
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box className={styles.dateBox}>
-                <h1 className={styles.h1}>{props.workout.date}</h1>
+                <h1 className={styles.h1}>{props.workout?.date}</h1>
             </Box>
 
             <GridToolbarContainer>
@@ -46,7 +46,7 @@ export default function WorkoutToolbar(props: WorkoutToolbarProps) {
                         maxTime={dayjs().set('hour', 5)}
                     />
 
-                    {Math.floor(props.workout.duration / 60)}h {props.workout.duration - 60 * Math.floor(props.workout.duration / 60)}min
+                    {Math.floor(props.workout?.duration / 60)}h {props.workout?.duration - 60 * Math.floor(props.workout?.duration / 60)}min
 
                     <Button className={styles.Button}
                         variant="contained"

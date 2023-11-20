@@ -283,7 +283,7 @@ export default function AllWorkouts() {
                                     <CardMedia
                                         component="img"
                                         height="150"
-                                        image={require('../img/workhard.jpg')}
+                                        image={'../img/workhard.jpg'}
                                         title="work hard"
                                     />
                                     <CardContent>

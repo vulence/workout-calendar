@@ -9,11 +9,11 @@ import Autocomplete from '@mui/material/Autocomplete';
 import styles from './workout.module.css';
 import { useState, useEffect } from 'react';
 
-import { AddExerciseDoneModalProps } from '../types';
+import { AddExerciseDoneModalProps, ExerciseDto } from '../types';
 
 export default function AddExerciseDoneModal(props : AddExerciseDoneModalProps) {
     // Getting all exercises from the prop
-    const exercises = props.exercises;
+    const exercises : Array<ExerciseDto> = props.exercises;
 
     // Data states
     const [name, setName] = useState<string>(props.name);
@@ -60,7 +60,7 @@ export default function AddExerciseDoneModal(props : AddExerciseDoneModalProps) 
             <DialogContent>
                 <Autocomplete
                     id="exercise-name"
-                    value={exercises.find(ex => ex.name === props.name)}
+                    value={exercises?.find(ex => ex.name === props.name)}
                     options={exercises}
                     getOptionLabel={(exercises) => exercises.name}
                     groupBy={(exercises) => exercises.muscleGroups[0].name}
