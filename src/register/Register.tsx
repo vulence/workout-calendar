@@ -13,10 +13,16 @@ import EmailIcon from '@mui/icons-material/Email';
 
 import styles from './register.module.css';
 import { RegisterFormData } from '../types';
+import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
+    // State for shown/hidden password field
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
+    // Allows navigation between different routes
+    let navigate = useNavigate();
+
+    // Registration form data
     const [formData, setFormData] = useState<RegisterFormData>({
         username: '',
         email: '',
@@ -24,12 +30,13 @@ export default function Register() {
         confirmPassword: '',
     });
 
+    // Handlers for hiding/unhiding password
     const handleClickShowPassword = () => setShowPassword((show) => !show);
-
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
     };
 
+    // Updates the state of formdata
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
         setFormData({
@@ -38,6 +45,7 @@ export default function Register() {
         });
     }
 
+    // Submits the registration form to server
     const handleSubmit = async () => {
         try {
             let username : string = formData.username;
@@ -52,8 +60,9 @@ export default function Register() {
                 body: JSON.stringify({ username, email, password })
             });
 
+            // If everything is ok, send user to login page
             const result = await response.text();
-            console.log(result);
+            navigate("/login");
         }
         catch (error) {
             console.error(error);

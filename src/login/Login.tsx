@@ -1,4 +1,3 @@
-import { useNavigate, useLocation } from "react-router";
 import { useState, useContext } from "react";
 import { Box, Button, Container, TextField } from '@mui/material';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -14,10 +13,12 @@ import EmailIcon from '@mui/icons-material/Email';
 import styles from './login.module.css';
 import { LoginFormData } from "../types";
 import { Link } from "react-router-dom";
+import { AuthContext } from '../auth/AuthContext';
+import { AuthContextType } from '../types';
 
 export default function Login() {
-    // Clears the local storage -- delete!!!!!
-    localStorage.setItem('token', '');
+    // Gets the authentification context
+    const { login }  = useContext<AuthContextType>(AuthContext);
 
     // State for shown/hidden password field
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -28,8 +29,8 @@ export default function Login() {
         password: '',
     });
 
+    // Handlers for hiding/unhiding password
     const handleClickShowPassword = () => setShowPassword((show) => !show);
-
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
     };
@@ -43,6 +44,7 @@ export default function Login() {
         });
     };
 
+    // Submits the login form to server
     const handleSubmit = async () => {
         try {
             const response = await fetch('http://localhost:8080/api/users/login', {
@@ -53,10 +55,10 @@ export default function Login() {
                 body: JSON.stringify(formData),
             });
 
+            // If response status is 201, then store the token in context and localstorage
             if (response.ok) {
                 const token = await response.text();
-                localStorage.setItem('token', token);
-                console.log(token);
+                login(token);
             }
             else {
                 console.error('Login failed!');
