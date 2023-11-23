@@ -1,6 +1,12 @@
 import { Dayjs } from "dayjs";
 import React, { ReactNode } from "react";
 
+export type User = {
+    id: string;
+    username: string;
+    email: string;
+}
+
 export type Exercise = {
     id: number;
     name: string;
@@ -135,8 +141,9 @@ export type RegisterFormData = {
 }
 
 export type AuthContextType = {
-    token: string | null;
-    login: (newToken : string) => void;
+    user: User | null;
+    authenticated: boolean;
+    login: (username : string, password : string) => Promise<void>;
     logout: () => void;
 }
 

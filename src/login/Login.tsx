@@ -46,27 +46,7 @@ export default function Login() {
 
     // Submits the login form to server
     const handleSubmit = async () => {
-        try {
-            const response = await fetch('http://localhost:8080/api/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData),
-            });
-
-            // If response status is 201, then store the token in context and localstorage
-            if (response.ok) {
-                const token = await response.text();
-                login(token);
-            }
-            else {
-                console.error('Login failed!');
-            }
-        }
-        catch (error) {
-            console.error(error);
-        }
+        await login(formData.username, formData.password);
     }
 
     return (

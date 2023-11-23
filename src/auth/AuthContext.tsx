@@ -1,38 +1,84 @@
 import { createContext, useEffect, useState } from 'react';
 
-import { AuthContextType, AuthProviderProps } from '../types';
+import { AuthContextType, AuthProviderProps, User } from '../types';
 
 // Defines the structure of AuthContext
 export const AuthContext = createContext<AuthContextType>({
-    token: null,
-    login: () => {},
-    logout: () => {},
+    user: null,
+    authenticated: false,
+    login: async () => { },
+    logout: () => {}
 });
 
 export default function AuthProvider({ children }: AuthProviderProps) {
-    // Sets the initial JWT state to the token value
-    const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+    // States for whether the user is authenticated and the user data
+    const [authenticated, setAuthenticated] = useState<boolean>(false);
+    const [user, setUser] = useState<User | null>(null);
 
-    // Logs the user in, setting the token in context and local storage
-    const login = (newToken : string) => {
-        setToken(newToken);
-        localStorage.setItem('token', newToken);
+    // Logs the user in
+    const login = async (username: string, password: string) => {
+        try {
+            const response = await fetch('http://localhost:8080/api/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password }),
+                credentials: "include"
+            });
+
+            const result = await response.json();
+
+            // If response status is 201, then store the user object and set authentication to true
+            if (response.ok) {
+                setUser(result);
+                setAuthenticated(true);
+            }
+            else {
+                console.error('Login failed!');
+            }
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
 
-    // Logs the user out, removing the token from context and local storage
+    // Logs the user out
     const logout = () => {
-        setToken(null);
-        localStorage.removeItem('token');
+
     }
 
-    // Checks if the user has a token on component mount
+    const checkAuthentication = async () => {
+        // Checks if the user already has a cookie
+        try {
+            const response = await fetch('http://localhost:8080/api/users/check-authentication', {
+                method: "GET",
+                credentials: 'include',
+            });
+
+            const result = await response.json();
+
+            // If he does, set the user object
+            if (response.ok) {
+                setUser(result);
+                setAuthenticated(true);
+            }
+            else {
+                setAuthenticated(false);
+            }
+        }
+        catch (error) {
+            console.error(error);
+        }
+    };
+
+    // Checks if the user has a cookie on component mount
     useEffect(() => {
-        const storedToken = localStorage.getItem('token');
-        if (storedToken) setToken(storedToken);
+        checkAuthentication();
     }, [])
 
     return (
-        <AuthContext.Provider value={{ token, login, logout }}>
+        <AuthContext.Provider value={{ user, authenticated, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

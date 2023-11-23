@@ -12,6 +12,7 @@ export default function Home() {
     const handleLogout = () => {
         logout();
     }
+    
     return (
         <Container>
             <Button onClick={handleLogout}>Logout</Button>

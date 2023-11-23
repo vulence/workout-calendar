@@ -62,9 +62,7 @@ export default function AWorkout() {
         const fetchData = async () => {
             const response = await fetch("http://localhost:8080/workouts/" + id, {
                 method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem('token')}`,
-                },
+                credentials: 'include',
             });
             const result = await response.json();
             setWorkout(result);
@@ -109,10 +107,10 @@ export default function AWorkout() {
             fetch(`http://localhost:8080/workouts/${id}/exercises/new`, {
                 method: "PUT",
                 headers: {
-                    "Authorization": `Bearer ${localStorage.getItem('token')}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(exerciseDoneDto)
+                body: JSON.stringify(exerciseDoneDto),
+                credentials: "include"
             }).then(() => {
                 console.log("New exercise in the workout added.");
             })
@@ -123,10 +121,10 @@ export default function AWorkout() {
             fetch(`http://localhost:8080/workouts/${id}/exercises/update`, {
                 method: "PUT",
                 headers: {
-                    "Authorization": `Bearer ${localStorage.getItem('token')}`,
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(dataGridExerciseDto)
+                body: JSON.stringify(dataGridExerciseDto),
+                credentials: "include"
             }).then(() => {
                 console.log("Exercise successfully updated");
             })

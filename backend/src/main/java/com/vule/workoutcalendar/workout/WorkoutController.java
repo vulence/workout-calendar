@@ -2,10 +2,10 @@ package com.vule.workoutcalendar.workout;
 
 import com.vule.workoutcalendar.exercise.dto.DataGridExerciseDto;
 import com.vule.workoutcalendar.exercisedone.dto.ExerciseDoneDto;
+import com.vule.workoutcalendar.jwt.JwtService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,108 +14,110 @@ import org.springframework.web.bind.annotation.*;
 public class WorkoutController {
 
     private final WorkoutService workoutService;
+    private final JwtService jwtService;
 
-    public WorkoutController(WorkoutService workoutService) {
+    public WorkoutController(WorkoutService workoutService, JwtService jwtService) {
         this.workoutService = workoutService;
+        this.jwtService = jwtService;
     }
 
     @GetMapping("")
-    public ResponseEntity<?> findAll(Authentication authentication) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+    public ResponseEntity<?> findAll(@CookieValue(name = "jwt", required = false) String jwtToken) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - HttpOnly cookie missing or invalid.");
 
-        return ResponseEntity.ok(workoutService.findAll(authentication.getName()));
+        return ResponseEntity.ok(workoutService.findAll(jwtService.parseUsernameFromJwt(jwtToken)));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(Authentication authentication, @PathVariable Integer id) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+    public ResponseEntity<?> findById(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        return ResponseEntity.ok(workoutService.findById(authentication.getName(), id));
+        return ResponseEntity.ok(workoutService.findById(jwtService.parseUsernameFromJwt(jwtToken), id));
     }
 
     @GetMapping("/{id}/exercises")
-    public ResponseEntity<?> getWorkoutDetails(Authentication authentication, @PathVariable Integer id) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+    public ResponseEntity<?> getWorkoutDetails(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        return ResponseEntity.ok(workoutService.getWorkoutDetails(authentication.getName(), id));
+        return ResponseEntity.ok(workoutService.getWorkoutDetails(jwtService.parseUsernameFromJwt(jwtToken), id));
     }
 
     @GetMapping("/{id}/muscleGroups")
-    public ResponseEntity<?> getWorkoutMuscleGroups(Authentication authentication, @PathVariable Integer id) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+    public ResponseEntity<?> getWorkoutMuscleGroups(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        return ResponseEntity.ok(workoutService.getWorkoutMuscleGroups(authentication.getName(), id));
+        return ResponseEntity.ok(workoutService.getWorkoutMuscleGroups(jwtService.parseUsernameFromJwt(jwtToken), id));
     }
 
 
     @PostMapping("/new")
-    public ResponseEntity<?> create(Authentication authentication, @Valid @RequestBody Workout workout) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+    public ResponseEntity<?> create(@CookieValue(name = "jwt", required = false) String jwtToken, @Valid @RequestBody Workout workout) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        workoutService.create(authentication.getName(), workout);
+        workoutService.create(jwtService.parseUsernameFromJwt(jwtToken), workout);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Workout created successfully.");
     }
 
     @PutMapping("/{id}/setNotes")
-    public ResponseEntity<?> updateNotes(Authentication authentication, @PathVariable Integer id, @RequestBody String notes) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+    public ResponseEntity<?> updateNotes(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id, @RequestBody String notes) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        workoutService.updateNotes(authentication.getName(), id, notes);
+        workoutService.updateNotes(jwtService.parseUsernameFromJwt(jwtToken), id, notes);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Workout notes updated successfully.");
     }
 
     @PutMapping("/{id}/setDuration")
-    public ResponseEntity<?> updateDuration(Authentication authentication, @PathVariable Integer id, @RequestBody Integer duration) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+    public ResponseEntity<?> updateDuration(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id, @RequestBody Integer duration) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        workoutService.updateDuration(authentication.getName(), id, duration);
+        workoutService.updateDuration(jwtService.parseUsernameFromJwt(jwtToken), id, duration);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Workout duration updated successfully.");
     }
 
     @PutMapping("/{id}/setRating")
-    public ResponseEntity<?> updateRating(Authentication authentication, @PathVariable Integer id, @RequestBody Integer rating) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+    public ResponseEntity<?> updateRating(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id, @RequestBody Integer rating) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        workoutService.updateRating(authentication.getName(), id, rating);
+        workoutService.updateRating(jwtService.parseUsernameFromJwt(jwtToken), id, rating);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Workout rating updated successfully.");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(Authentication authentication, @PathVariable Integer id) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+    public ResponseEntity<?> delete(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        workoutService.delete(authentication.getName(), id);
+        workoutService.delete(jwtService.parseUsernameFromJwt(jwtToken), id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Workout deleted successfully.");
     }
 
     @PutMapping("/{id}/exercises/new")
-    public ResponseEntity<?> addWorkoutExercise(Authentication authentication, @PathVariable Integer id, @Valid @RequestBody ExerciseDoneDto exerciseDoneDto) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+    public ResponseEntity<?> addWorkoutExercise(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id, @Valid @RequestBody ExerciseDoneDto exerciseDoneDto) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        workoutService.addWorkoutExercise(authentication.getName(), id, exerciseDoneDto);
+        workoutService.addWorkoutExercise(jwtService.parseUsernameFromJwt(jwtToken), id, exerciseDoneDto);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Exercise added successfully.");
     }
 
     @PutMapping("/{id}/exercises/update")
-    public ResponseEntity<?> updateWorkoutExercise(Authentication authentication, @PathVariable Integer id, @Valid @RequestBody DataGridExerciseDto dataGridExerciseDto) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+    public ResponseEntity<?> updateWorkoutExercise(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id, @Valid @RequestBody DataGridExerciseDto dataGridExerciseDto) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        workoutService.updateWorkoutExercise(authentication.getName(), id, dataGridExerciseDto);
+        workoutService.updateWorkoutExercise(jwtService.parseUsernameFromJwt(jwtToken), id, dataGridExerciseDto);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Workout exercise updated successfully.");
     }
 
     @DeleteMapping("/{id}/exercises")
-    public ResponseEntity<?> deleteWorkoutExercise(Authentication authentication, @PathVariable Integer id, @RequestBody Integer exerciseDoneId) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+    public ResponseEntity<?> deleteWorkoutExercise(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id, @RequestBody Integer exerciseDoneId) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        workoutService.deleteWorkoutExercise(authentication.getName(), id, exerciseDoneId);
+        workoutService.deleteWorkoutExercise(jwtService.parseUsernameFromJwt(jwtToken), id, exerciseDoneId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Exercise deleted successfully.");
     }

@@ -130,11 +130,9 @@ export default function AllWorkouts() {
         const fetchData = async () => {
             const response = await fetch("http://localhost:8080/workouts", {
                 method: "GET",
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    'Content-Type': 'application/json',
-                },
+                credentials: 'include',
             });
+
             const result = await response.json();
             setWorkouts(result);
         };
@@ -147,9 +145,9 @@ export default function AllWorkouts() {
             const response = await fetch("http://localhost:8080/muscleGroups", {
                 method: "GET",
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
             });
             const result = await response.json();
             setMuscleGroups(result);
@@ -164,10 +162,10 @@ export default function AllWorkouts() {
         fetch("http://localhost:8080/workouts/new", {
             method: 'POST',
             headers: { 
-                "Authorization": `Bearer ${localStorage.getItem('token')}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(workout)
+            body: JSON.stringify(workout),
+            credentials: 'include'
         }).then(() => {
             console.log("New workout added");
         })

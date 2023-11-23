@@ -18,8 +18,8 @@ import { useContext } from 'react';
 import { AuthContextType } from './types';
 
 export default function App() {
-  // Gets the token from authcontext
-  const { token } = useContext<AuthContextType>(AuthContext);
+  // Gets user authentication status from context
+  const { authenticated } = useContext<AuthContextType>(AuthContext);
 
   return (
     <ThemeProvider theme={theme}>
@@ -31,11 +31,11 @@ export default function App() {
         <Appbar />
 
         <Routes>
-          <Route path="/login" element={!token ? <Login /> : <Navigate to="/home" />} />
-          <Route path="/register" element={!token ? <Register /> : <Navigate to="/home" />} />
-          <Route path="*" element={!token ? <Navigate to="/login" /> : null} />
+          <Route path="/login" element={!authenticated ? <Login /> : <Navigate to="/home" />} />
+          <Route path="/register" element={!authenticated ? <Register /> : <Navigate to="/home" />} />
+          <Route path="*" element={!authenticated ? <Navigate to="/login" /> : null} />
 
-          {token &&
+          {authenticated &&
             <>
               <Route path="/" element={<Navigate to="/home" />} />
               <Route path="/home" element={<Home />} />

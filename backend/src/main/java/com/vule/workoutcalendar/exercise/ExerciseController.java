@@ -1,7 +1,7 @@
 package com.vule.workoutcalendar.exercise;
 
 import com.vule.workoutcalendar.exercise.dto.ExerciseDto;
-import com.vule.workoutcalendar.exercise.dto.ExerciseHistoryDto;
+import com.vule.workoutcalendar.jwt.JwtService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +16,11 @@ import java.util.List;
 public class ExerciseController {
 
     private final ExerciseService exerciseService;
+    private final JwtService jwtService;
 
-    public ExerciseController(ExerciseService exerciseService) {
+    public ExerciseController(ExerciseService exerciseService, JwtService jwtService) {
         this.exerciseService = exerciseService;
+        this.jwtService = jwtService;
     }
 
     @GetMapping("")
@@ -32,16 +34,16 @@ public class ExerciseController {
     }
 
     @GetMapping("/{id}/exerciseHistory")
-    public ResponseEntity<?> findExerciseHistory(Authentication authentication, @PathVariable Integer id) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+    public ResponseEntity<?> findExerciseHistory(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        return ResponseEntity.ok(exerciseService.findExerciseHistory(authentication.getName(), id));
+        return ResponseEntity.ok(exerciseService.findExerciseHistory(jwtService.parseUsernameFromJwt(jwtToken), id));
     }
     @GetMapping("/{id}/workouts")
-    public ResponseEntity<?> findMaxWeights(Authentication authentication, @PathVariable Integer id) {
-        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+    public ResponseEntity<?> findMaxWeights(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        return ResponseEntity.ok(exerciseService.findMaxWeights(authentication.getName(), id));
+        return ResponseEntity.ok(exerciseService.findMaxWeights(jwtService.parseUsernameFromJwt(jwtToken), id));
     }
 
     @ResponseStatus(HttpStatus.CREATED)

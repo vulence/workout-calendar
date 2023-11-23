@@ -1,6 +1,6 @@
 package com.vule.workoutcalendar.user;
 
-import com.vule.workoutcalendar.service.TokenService;
+import com.vule.workoutcalendar.jwt.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,13 +16,13 @@ public class UserService {
     private final UserRepository users;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final TokenService tokenService;
+    private final JwtService jwtService;
 
-    public UserService(UserRepository users, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, TokenService tokenService) {
+    public UserService(UserRepository users, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService) {
         this.users = users;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
-        this.tokenService = tokenService;
+        this.jwtService = jwtService;
     }
 
     public String login(LoginRequest loginRequest) {
@@ -30,7 +30,7 @@ public class UserService {
                 new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password())
         );
 
-        return tokenService.generateToken(authentication);
+        return jwtService.generateJwt(authentication);
     }
 
     public ResponseEntity<?> create(User user) {
@@ -50,5 +50,9 @@ public class UserService {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Phone number is already taken");
             }
         }
+    }
+
+    public User findUser(String username) {
+        return users.findByUsername(username);
     }
 }

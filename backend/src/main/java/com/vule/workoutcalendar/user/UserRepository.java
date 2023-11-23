@@ -1,6 +1,5 @@
 package com.vule.workoutcalendar.user;
 
-import com.vule.workoutcalendar.user.User;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
