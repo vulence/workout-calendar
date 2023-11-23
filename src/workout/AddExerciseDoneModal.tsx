@@ -60,7 +60,7 @@ export default function AddExerciseDoneModal(props : AddExerciseDoneModalProps) 
             <DialogContent>
                 <Autocomplete
                     id="exercise-name"
-                    value={exercises?.find(ex => ex.name === props.name)}
+                    value={exercises? exercises.find(ex => ex.name === props.name) : null}
                     options={exercises}
                     getOptionLabel={(exercises) => exercises.name}
                     groupBy={(exercises) => exercises.muscleGroups[0].name}

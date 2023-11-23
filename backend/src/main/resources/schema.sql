@@ -48,5 +48,7 @@ CREATE TABLE IF NOT EXISTS Exercise_Muscle_Group (
     exercise INTEGER,
     muscle_group INTEGER,
     name text,
-    PRIMARY KEY (exercise, muscle_group)
+    PRIMARY KEY (exercise, muscle_group),
+    FOREIGN KEY (exercise) REFERENCES Exercise(id) ON DELETE CASCADE,
+    FOREIGN KEY (muscle_group) REFERENCES Muscle_Group(id) ON DELETE CASCADE
 );

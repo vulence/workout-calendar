@@ -4,6 +4,7 @@ import com.vule.workoutcalendar.musclegroup.MuscleGroup;
 import com.vule.workoutcalendar.exercise.dto.ExerciseDto;
 import com.vule.workoutcalendar.exercise.dto.ExerciseHistoryDto;
 import com.vule.workoutcalendar.musclegroup.MuscleGroupRepository;
+import com.vule.workoutcalendar.user.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,10 +16,12 @@ import java.util.Set;
 public class ExerciseService {
     private final ExerciseRepository exercises;
     private final MuscleGroupRepository muscleGroups;
+    private final UserRepository users;
 
-    public ExerciseService(ExerciseRepository exercises, MuscleGroupRepository muscleGroups) {
+    public ExerciseService(ExerciseRepository exercises, MuscleGroupRepository muscleGroups, UserRepository users) {
         this.exercises = exercises;
         this.muscleGroups = muscleGroups;
+        this.users = users;
     }
 
     public List<ExerciseDto> findAll() {
@@ -42,12 +45,16 @@ public class ExerciseService {
         return exercises.findById(id).orElse(null);
     }
 
-    public List<ExerciseHistoryDto> findExerciseHistory(Integer id) {
-        return exercises.findExerciseHistory(id);
+    public List<ExerciseHistoryDto> findExerciseHistory(String username, Integer id) {
+        Integer userId = users.findByUsername(username).getId();
+
+        return exercises.findExerciseHistory(userId, id);
     }
 
-    public List<ExerciseHistoryDto> findMaxWeights(Integer id) {
-        return exercises.findMaxWeights(id);
+    public List<ExerciseHistoryDto> findMaxWeights(String username, Integer id) {
+        Integer userId = users.findByUsername(username).getId();
+
+        return exercises.findMaxWeights(userId, id);
     }
 
     public void create(Exercise exercise) {

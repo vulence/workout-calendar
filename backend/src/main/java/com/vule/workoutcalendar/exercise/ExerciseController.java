@@ -4,6 +4,8 @@ import com.vule.workoutcalendar.exercise.dto.ExerciseDto;
 import com.vule.workoutcalendar.exercise.dto.ExerciseHistoryDto;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,12 +32,16 @@ public class ExerciseController {
     }
 
     @GetMapping("/{id}/exerciseHistory")
-    public List<ExerciseHistoryDto> findExerciseHistory(@PathVariable Integer id) {
-        return exerciseService.findExerciseHistory(id);
+    public ResponseEntity<?> findExerciseHistory(Authentication authentication, @PathVariable Integer id) {
+        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+
+        return ResponseEntity.ok(exerciseService.findExerciseHistory(authentication.getName(), id));
     }
     @GetMapping("/{id}/workouts")
-    public List<ExerciseHistoryDto> findMaxWeights(@PathVariable Integer id) {
-        return exerciseService.findMaxWeights(id);
+    public ResponseEntity<?> findMaxWeights(Authentication authentication, @PathVariable Integer id) {
+        if (authentication == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+
+        return ResponseEntity.ok(exerciseService.findMaxWeights(authentication.getName(), id));
     }
 
     @ResponseStatus(HttpStatus.CREATED)

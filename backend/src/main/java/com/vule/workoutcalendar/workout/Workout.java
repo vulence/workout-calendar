@@ -3,7 +3,6 @@ package com.vule.workoutcalendar.workout;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.vule.workoutcalendar.exercisedone.ExerciseDone;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -21,18 +20,10 @@ public class Workout {
     private Set<ExerciseDone> exercisesDone = new HashSet<>();
 
     public Workout(LocalDateTime date, String notes, Integer duration, Integer rating) {
-        this.date = LocalDateTime.now();
+        this.date = date;
         this.notes = notes;
         this.duration = duration;
         this.rating = rating;
-    }
-
-    public Integer getuserId() {
-        return userId;
-    }
-
-    public void setuserId(Integer userId) {
-        this.userId = userId;
     }
 
     public Integer getId() {
@@ -90,5 +81,13 @@ public class Workout {
 
     public void removeExerciseDone(ExerciseDone ed) {
         exercisesDone.remove(ed);
+    }
+
+    public Integer getuserId() {
+        return userId;
+    }
+
+    public void setuserId(Integer userId) {
+        this.userId = userId;
     }
 }

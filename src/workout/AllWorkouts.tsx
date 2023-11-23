@@ -163,7 +163,10 @@ export default function AllWorkouts() {
 
         fetch("http://localhost:8080/workouts/new", {
             method: 'POST',
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify(workout)
         }).then(() => {
             console.log("New workout added");
@@ -197,7 +200,10 @@ export default function AllWorkouts() {
         // Update the rating in the database
         fetch(`http://localhost:8080/workouts/${workoutId}/setRating`, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token')}`,
+                "Content-Type": "application/json",
+             },
             body: JSON.stringify(rating)
         }).then(() => {
             console.log("Workout rating successfully modified!");

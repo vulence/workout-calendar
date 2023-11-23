@@ -7,9 +7,25 @@ import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> {
     List<Workout> findByUserId(Integer userId);
+
+    @Query("""
+            SELECT *
+            FROM WORKOUT
+            WHERE id = :workoutId AND user_id = :userId
+            """)
+    Optional<Workout> findByIdAndUserId(@Param("workoutId") Integer workoutId, @Param("userId") Integer userId);
+
+    @Query("""
+            DELETE
+            FROM WORKOUT
+            WHERE id = :workoutId AND user_id = :userId
+            """)
+    void deleteByIdAndUserId(@Param("workoutId") Integer workoutId, @Param("userId") Integer userId);
+
     @Query("""
            SELECT *
            FROM EXERCISE_DONE

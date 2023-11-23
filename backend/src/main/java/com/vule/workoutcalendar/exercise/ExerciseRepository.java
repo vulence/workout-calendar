@@ -12,17 +12,17 @@ public interface ExerciseRepository extends ListCrudRepository<Exercise, Integer
            SELECT W.DATE, ED.*
            FROM WORKOUT W
            INNER JOIN EXERCISE_DONE ED ON W.ID = ED.WORKOUT
-           WHERE ED.EXERCISE = :exerciseId
+           WHERE W.ID = :userId AND ED.EXERCISE = :exerciseId
            ORDER BY W.DATE ASC
             """)
-    List<ExerciseHistoryDto> findExerciseHistory(@Param("exerciseId") Integer id);
+    List<ExerciseHistoryDto> findExerciseHistory(@Param("userId") Integer userId, @Param("exerciseId") Integer id);
 
     @Query("""
           SELECT W.DATE, MAX(ED.WEIGHT) AS Weight
           FROM WORKOUT W
           INNER JOIN EXERCISE_DONE ED ON W.ID = ED.WORKOUT
-          WHERE ED.EXERCISE = :exerciseId
+          WHERE W.ID = :userId AND ED.EXERCISE = :exerciseId
           GROUP BY W.DATE
             """)
-    List<ExerciseHistoryDto> findMaxWeights(@Param("exerciseId") Integer id);
+    List<ExerciseHistoryDto> findMaxWeights(@Param("userId") Integer userId, @Param("exerciseId") Integer id);
 }

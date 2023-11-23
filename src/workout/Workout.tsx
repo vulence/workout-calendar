@@ -60,7 +60,12 @@ export default function AWorkout() {
     // Initialize the workout
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch("http://localhost:8080/workouts/" + id);
+            const response = await fetch("http://localhost:8080/workouts/" + id, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
             const result = await response.json();
             setWorkout(result);
         };
@@ -103,7 +108,10 @@ export default function AWorkout() {
 
             fetch(`http://localhost:8080/workouts/${id}/exercises/new`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('token')}`,
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify(exerciseDoneDto)
             }).then(() => {
                 console.log("New exercise in the workout added.");
@@ -114,7 +122,10 @@ export default function AWorkout() {
             const dataGridExerciseDto = { rowId, weight, sets, reps };
             fetch(`http://localhost:8080/workouts/${id}/exercises/update`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('token')}`,
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify(dataGridExerciseDto)
             }).then(() => {
                 console.log("Exercise successfully updated");
