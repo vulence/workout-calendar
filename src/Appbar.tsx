@@ -18,16 +18,21 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+
+import { AuthContext } from './auth/AuthContext';
+import { useContext } from 'react';
+import { AuthContextType } from './types';
 
 const pages = ['Workouts', 'Exercises', 'Muscle Groups'];
 const settings = ['Workouts', 'Exercises', 'Account', 'Dashboard', 'Logout'];
 
 function ResponsiveAppBar() {
+  const { authenticated } = useContext<AuthContextType>(AuthContext);
   const [anchorElUser, setAnchorElUser] = React.useState<HTMLElement | null>(null);
   const [state, setState] = useState<boolean>(false);
 
-  const handleOpenUserMenu = (event : React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
@@ -36,7 +41,7 @@ function ResponsiveAppBar() {
   };
 
   // Opens or closes the left-side drawer
-  const toggleDrawer = (open : boolean) => (event : React.KeyboardEvent | React.MouseEvent) => {
+  const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
       event &&
       'type' in event &&
@@ -58,15 +63,15 @@ function ResponsiveAppBar() {
     >
       <List>
         {pages.map((page) => (
-          <Link to={page.replace(/\s/g, '').toLowerCase()} style={{color: 'inherit'}}>
-              <ListItem key={page} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <FitnessCenterIcon sx={{color: "white"}} />
-                  </ListItemIcon>
-                  <ListItemText primary={page} />
-                </ListItemButton>
-              </ListItem>
+          <Link to={page.replace(/\s/g, '').toLowerCase()} style={{ color: 'inherit' }}>
+            <ListItem key={page} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <FitnessCenterIcon sx={{ color: "white" }} />
+                </ListItemIcon>
+                <ListItemText primary={page} />
+              </ListItemButton>
+            </ListItem>
           </Link>
         ))}
       </List>
@@ -77,33 +82,35 @@ function ResponsiveAppBar() {
     <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{mr: 2}}
-            onClick={toggleDrawer(true)}
-          >
-            <MenuIcon />
-          </IconButton>
+          {authenticated ? (
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={toggleDrawer(true)}
+            >
+              <MenuIcon />
+            </IconButton>
+          ) : null}
 
           <SwipeableDrawer
             open={state}
             onClose={toggleDrawer(false)}
             onOpen={toggleDrawer(true)}
             PaperProps={{
-                sx: {
-                    backgroundColor: "black",
-                    color: "white",
-                }
+              sx: {
+                backgroundColor: "black",
+                color: "white",
+              }
             }}
           >
             {list()}
           </SwipeableDrawer>
 
-          <IconButton component={Link} to="/home" sx={{marginLeft: "auto"}}>
-            <FitnessCenterIcon sx={{ marginLeft: "auto", display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <IconButton component={Link} to="/home" sx={{ marginLeft: "auto" }}>
+            <FitnessCenterIcon sx={{marginLeft: "auto", display: { xs: 'none', md: 'flex' }, mr: 1}} />
           </IconButton>
 
           <Typography
@@ -152,9 +159,9 @@ function ResponsiveAppBar() {
             >
               {settings.map((setting) => (
                 <Link to={setting.replace(/\s/g, '').toLowerCase()}>
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
+                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
                 </Link>
               ))}
             </Menu>

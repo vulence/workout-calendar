@@ -145,6 +145,7 @@ export type AuthContextType = {
     authenticated: boolean;
     login: (username : string, password : string) => Promise<void>;
     logout: () => void;
+    loading: boolean;
 }
 
 export type AuthProviderProps = {

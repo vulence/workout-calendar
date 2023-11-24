@@ -7,13 +7,15 @@ export const AuthContext = createContext<AuthContextType>({
     user: null,
     authenticated: false,
     login: async () => { },
-    logout: () => {}
+    logout: () => {},
+    loading: true,
 });
 
 export default function AuthProvider({ children }: AuthProviderProps) {
-    // States for whether the user is authenticated and the user data
+    // States for whether the user is authenticated and the user data, as well as if the API authentication call is ongoing
     const [authenticated, setAuthenticated] = useState<boolean>(false);
     const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
     // Logs the user in
     const login = async (username: string, password: string) => {
@@ -44,8 +46,26 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     }
 
     // Logs the user out
-    const logout = () => {
+    const logout = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/users/logout', {
+                method: 'POST',
+                credentials: 'include',
+            });
 
+            const result = await response.json();
+
+            if (response.ok) {
+                setUser(null);
+                setAuthenticated(false);
+            }
+            else {
+                console.error("Logout failed!");
+            }
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
 
     const checkAuthentication = async () => {
@@ -53,6 +73,9 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         try {
             const response = await fetch('http://localhost:8080/api/users/check-authentication', {
                 method: "GET",
+                headers: {
+                    'Content-Type': "application/json",
+                },  
                 credentials: 'include',
             });
 
@@ -70,6 +93,9 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         catch (error) {
             console.error(error);
         }
+        finally {
+            setLoading(false);
+        }
     };
 
     // Checks if the user has a cookie on component mount
@@ -78,7 +104,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ user, authenticated, login, logout }}>
+        <AuthContext.Provider value={{ user, authenticated, login, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );

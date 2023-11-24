@@ -18,8 +18,13 @@ import { useContext } from 'react';
 import { AuthContextType } from './types';
 
 export default function App() {
-  // Gets user authentication status from context
-  const { authenticated } = useContext<AuthContextType>(AuthContext);
+  // Gets user authentication status and loading status from context
+  const { authenticated, loading } = useContext<AuthContextType>(AuthContext);
+
+  // Wait until the authentication process is finished
+  if (loading) {
+    return null;
+  }
 
   return (
     <ThemeProvider theme={theme}>

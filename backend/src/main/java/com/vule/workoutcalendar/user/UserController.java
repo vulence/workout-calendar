@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api/users")
@@ -35,6 +37,20 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@CookieValue(name = "jwt", required = false) String jwtToken, HttpServletResponse response) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Not authenticated"));
+
+        Cookie cookie = new Cookie("jwt", null);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok().body(Map.of("message", "Logout successful."));
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         return userService.create(user);
@@ -42,11 +58,11 @@ public class UserController {
 
     @GetMapping("/check-authentication")
     public ResponseEntity<?> checkAuthentication(@CookieValue(name = "jwt", required = false) String jwtToken) {
-        if (jwtToken != null) {
-            User user = userService.findUser(jwtService.parseUsernameFromJwt(jwtToken));
-            return ResponseEntity.ok(user);
+        if (jwtToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Not authenticated"));
         }
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
+        User user = userService.findUser(jwtService.parseUsernameFromJwt(jwtToken));
+        return ResponseEntity.ok(user);
     }
 }

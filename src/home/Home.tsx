@@ -9,8 +9,8 @@ import { AuthContextType } from '../types';
 export default function Home() {
     const { logout } = useContext<AuthContextType>(AuthContext);
 
-    const handleLogout = () => {
-        logout();
+    const handleLogout = async () => {
+        await logout();
     }
     
     return (
