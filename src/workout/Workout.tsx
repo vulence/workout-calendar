@@ -12,9 +12,9 @@ import WorkoutToolbar from './WorkoutToolbar';
 import AddExerciseDoneModal from './AddExerciseDoneModal';
 import EditNotesModal from './EditNotesModal';
 
-import { Workout, ExerciseDto, WorkoutDataGridRows } from '../types';
+import { Workout as WorkoutType, ExerciseDto, WorkoutDataGridRows } from '../types';
 
-export default function AWorkout() {
+export default function Workout() {
     const { id } = useParams();
 
     // Dialog control state
@@ -22,7 +22,7 @@ export default function AWorkout() {
     const [openNotesDialog, setOpenNotesDialog] = useState(false);
 
     // Data states
-    const [workout, setWorkout] = useState<Workout>();
+    const [workout, setWorkout] = useState<WorkoutType>();
     const [exercise, setExercise] = useState<Array<ExerciseDto>>();
     const [name, setName] = useState<string>('');
     const [weight, setWeight] = useState<number | null>();
@@ -100,7 +100,7 @@ export default function AWorkout() {
     };
 
     // Exercise done form submission
-    const handleExerciseSubmit = (exerciseId: number, weight: number, sets: number, reps: number) => {
+    const handleExerciseSubmit = async (exerciseId: number, weight: number, sets: number, reps: number) => {
         if (rowId === null) {
             const exerciseDoneDto = { exerciseId, weight, sets, reps };
 
@@ -138,6 +138,7 @@ export default function AWorkout() {
         fetch(`http://localhost:8080/workouts/${id}/exercises`, {
             method: "DELETE",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify(params.id)
         }).then(() => {
             console.log("Exercise done in workout deleted.");
@@ -186,6 +187,7 @@ export default function AWorkout() {
     const handleNotesSubmit = (notes: string) => {
         fetch(`http://localhost:8080/workouts/${id}/setNotes`, {
             method: "PUT",
+            credentials: "include",
             body: notes
         }).then(() => {
             console.log("Workout notes successfully modified.");
@@ -199,6 +201,7 @@ export default function AWorkout() {
         fetch(`http://localhost:8080/workouts/${id}/setDuration`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify(minutes)
         }).then(() => {
             console.log("Workout duration successfully modified.");

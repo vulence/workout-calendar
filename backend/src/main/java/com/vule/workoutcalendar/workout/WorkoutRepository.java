@@ -19,6 +19,7 @@ public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> 
             """)
     Optional<Workout> findByIdAndUserId(@Param("workoutId") Integer workoutId, @Param("userId") Integer userId);
 
+    @Modifying
     @Query("""
             DELETE
             FROM WORKOUT

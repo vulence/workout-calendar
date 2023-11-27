@@ -18,17 +18,20 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import LogoutIcon from '@mui/icons-material/Logout';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import SportsGymnasticsIcon from '@mui/icons-material/SportsGymnastics';
 import { Link } from "react-router-dom";
 
 import { AuthContext } from './auth/AuthContext';
 import { useContext } from 'react';
-import { AuthContextType } from './types';
+import { AuthContextType, IconMap } from './types';
 
 const pages = ['Workouts', 'Exercises', 'Muscle Groups'];
-const settings = ['Workouts', 'Exercises', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Workouts', 'Exercises', 'Account', 'Logout'];
 
 function ResponsiveAppBar() {
-  const { authenticated } = useContext<AuthContextType>(AuthContext);
+  const { authenticated, user } = useContext<AuthContextType>(AuthContext);
   const [anchorElUser, setAnchorElUser] = React.useState<HTMLElement | null>(null);
   const [state, setState] = useState<boolean>(false);
 
@@ -78,6 +81,13 @@ function ResponsiveAppBar() {
     </Box>
   );
 
+  const iconMap : IconMap = {
+    workouts: <FitnessCenterIcon fontSize="small" />,
+    exercises: <SportsGymnasticsIcon fontSize="small" />,
+    account: <AccountCircleIcon fontSize="small" />,
+    logout: <LogoutIcon fontSize="small" />
+  };
+
   return (
     <AppBar position="sticky">
       <Container maxWidth="xl">
@@ -110,7 +120,7 @@ function ResponsiveAppBar() {
           </SwipeableDrawer>
 
           <IconButton component={Link} to="/home" sx={{ marginLeft: "auto" }}>
-            <FitnessCenterIcon sx={{marginLeft: "auto", display: { xs: 'none', md: 'flex' }, mr: 1}} />
+            <FitnessCenterIcon sx={{ marginLeft: "auto", display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           </IconButton>
 
           <Typography
@@ -135,36 +145,43 @@ function ResponsiveAppBar() {
             <FitnessCenterIcon sx={{ marginLeft: "auto", display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           </IconButton>
 
-          <Box sx={{ marginLeft: "auto", flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <Link to={setting.replace(/\s/g, '').toLowerCase()}>
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                </Link>
-              ))}
-            </Menu>
+          <Box sx={{ marginLeft: "auto", flexGrow: 0, position: 'relative', zIndex: 1 }}>
+            {authenticated ? (
+              <>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar>{user?.username.charAt(0).toUpperCase()}</Avatar>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <Link to={setting.replace(/\s/g, '').toLowerCase()} style={{textDecoration: "none", color: "white"}}>
+                      <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                        <ListItemIcon>
+                          {iconMap[setting.replace(/\s/g, '').toLowerCase()]}
+                        </ListItemIcon>
+                        <Typography textAlign="center">{setting}</Typography>
+                      </MenuItem>
+                    </Link>
+                  ))}
+                </Menu>
+              </>
+            ) : null}
           </Box>
         </Toolbar>
       </Container>

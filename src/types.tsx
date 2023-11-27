@@ -148,6 +148,17 @@ export type AuthContextType = {
     loading: boolean;
 }
 
+export type IconMap = {
+    [key : string]: React.ReactNode;
+}
+
 export type AuthProviderProps = {
     children: ReactNode;
+}
+
+export type CalendarEvent = {
+    id: number;
+    title: string;
+    start: Date;
+    end: Date;
 }

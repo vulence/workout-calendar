@@ -175,7 +175,8 @@ export default function AllWorkouts() {
     // Delete a workout
     const handleDelete = (workoutId : number) => {
         fetch(`http://localhost:8080/workouts/${workoutId}`, {
-            method: "DELETE"
+            method: "DELETE",
+            credentials: "include"
         }).then(() => {
             console.log("Workout deleted");
         })
@@ -199,9 +200,9 @@ export default function AllWorkouts() {
         fetch(`http://localhost:8080/workouts/${workoutId}/setRating`, {
             method: "PUT",
             headers: {
-                "Authorization": `Bearer ${localStorage.getItem('token')}`,
                 "Content-Type": "application/json",
-             },
+            },
+            credentials: "include",
             body: JSON.stringify(rating)
         }).then(() => {
             console.log("Workout rating successfully modified!");
