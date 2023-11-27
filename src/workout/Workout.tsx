@@ -2,7 +2,7 @@ import * as React from 'react';
 import Container from '@mui/material/Container';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { DataGrid, GridActionsCellItem, GridRowParams } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridRenderCellParams, GridRowParams } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import Fab from '@mui/material/Fab';
@@ -33,7 +33,18 @@ export default function Workout() {
     // Set up data grid columns
     const columns = [
         { field: 'exercise', headerName: 'Exercise', width: 200 },
-        { field: 'weight', headerName: 'Weight', type: 'number', width: 100 },
+        {
+            field: 'weight',
+            headerName: 'Weight',
+            type: 'number',
+            width: 100,
+            renderCell: (params: GridRenderCellParams) => {
+                const weightValue = params.value;
+                const displayValue = weightValue === -1 ? 'Bodyweight' : weightValue;
+
+                return <div>{displayValue}</div>
+            }
+        },
         { field: 'sets', headerName: 'Sets', type: 'number', width: 100 },
         { field: 'reps', headerName: 'Reps', type: 'number', width: 100 },
         {
@@ -149,7 +160,7 @@ export default function Workout() {
     };
 
     // Set parameters to the corresponding row that's being edited
-    const handleEditClick = (params : GridRowParams) => () => {
+    const handleEditClick = (params: GridRowParams) => () => {
         setName(params.row.exercise);
         setWeight(params.row.weight);
         setSets(params.row.sets);

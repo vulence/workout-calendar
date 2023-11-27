@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
+import Box from '@mui/material/Box';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -7,13 +9,14 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import styles from './workout.module.css';
-import { useState, useEffect } from 'react';
+import Switch from '@mui/material/Switch';
 
 import { AddExerciseDoneModalProps, ExerciseDto } from '../types';
+import Typography from '@mui/material/Typography';
 
-export default function AddExerciseDoneModal(props : AddExerciseDoneModalProps) {
+export default function AddExerciseDoneModal(props: AddExerciseDoneModalProps) {
     // Getting all exercises from the prop
-    const exercises : Array<ExerciseDto> = props.exercises;
+    const exercises: Array<ExerciseDto> = props.exercises;
 
     // Data states
     const [name, setName] = useState<string>(props.name);
@@ -25,6 +28,12 @@ export default function AddExerciseDoneModal(props : AddExerciseDoneModalProps) 
     const [weightValid, setWeightValid] = useState<boolean>(false);
     const [setsValid, setSetsValid] = useState<boolean>(false);
     const [repsValid, setRepsValid] = useState<boolean>(false);
+
+    const [isSwitchOn, setSwitchOn] = useState<boolean>(false);
+
+    const handleSwitchChange = () => {
+        setSwitchOn(!isSwitchOn);
+    };
 
     // Synchronizes the fields if the user wants to edit an existing exercise
     useEffect(() => {
@@ -47,11 +56,11 @@ export default function AddExerciseDoneModal(props : AddExerciseDoneModalProps) 
     const handleSubmit = () => {
         const exerciseId = exercises.find(ex => ex.name === name)?.id;
 
-        if (exerciseId == null || !weightValid || !setsValid || !repsValid) {
+        if (exerciseId == null || (!weightValid && !isSwitchOn) || !setsValid || !repsValid) {
             return;
         }
 
-        props.handleSubmit(exerciseId, weight, sets, reps);
+        props.handleSubmit(exerciseId, isSwitchOn ? -1 : weight, sets, reps);
     };
 
     return (
@@ -60,7 +69,8 @@ export default function AddExerciseDoneModal(props : AddExerciseDoneModalProps) 
             <DialogContent>
                 <Autocomplete
                     id="exercise-name"
-                    value={exercises? exercises.find(ex => ex.name === props.name) : null}
+                    fullWidth
+                    value={exercises ? exercises.find(ex => ex.name === props.name) : null}
                     options={exercises}
                     getOptionLabel={(exercises) => exercises.name}
                     groupBy={(exercises) => exercises.muscleGroups[0].name}
@@ -68,23 +78,31 @@ export default function AddExerciseDoneModal(props : AddExerciseDoneModalProps) 
                     onChange={(e, newValue) => setName(newValue?.name || '')}
                     renderInput={(params) => <TextField {...params} label="Exercise name" />}
                 />
-                <TextField
-                    fullWidth
-                    required
-                    error={!weightValid}
-                    helperText={!weightValid ? "You must enter a positive integer" : ""}
-                    className={styles.textField}
-                    id="weight"
-                    label="Weight (kg)"
-                    value={weight}
-                    onChange={(e) => {
-                        const inputValue : string = e.target.value;
-                        const parsedWeight : number = parseFloat(inputValue);
 
-                        setWeight(!isNaN(parsedWeight) ? parsedWeight : 0);
-                        setWeightValid(!isNaN(parsedWeight) && parsedWeight > 0);
-                    }}
-                />
+                <Box display="flex" alignItems="center" justifyContent="center" marginTop={2}>
+                    <TextField
+                        fullWidth
+                        required
+                        disabled={isSwitchOn}
+                        error={!weightValid && !isSwitchOn}
+                        helperText={!weightValid && !isSwitchOn ? "You must enter a positive integer" : ""}
+                        className={styles.textField}
+                        id="weight"
+                        label={!isSwitchOn ? "Weight (kg)" : "Selected body weight"}
+                        value={weight}
+                        onChange={(e) => {
+                            const inputValue: string = e.target.value;
+                            const parsedWeight: number = parseFloat(inputValue);
+
+                            setWeight(!isNaN(parsedWeight) ? parsedWeight : 0);
+                            setWeightValid(!isNaN(parsedWeight) && parsedWeight > 0);
+                        }}
+                    />
+                    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" marginBottom={3} marginLeft={3}>
+                        <Typography noWrap fontSize={12}>Body weight</Typography>
+                        <Switch checked={isSwitchOn} onChange={handleSwitchChange} />
+                    </Box>
+                </Box>
                 <TextField
                     fullWidth
                     required
@@ -95,8 +113,8 @@ export default function AddExerciseDoneModal(props : AddExerciseDoneModalProps) 
                     label="Sets"
                     value={sets}
                     onChange={(e) => {
-                        const inputValue : string = e.target.value;
-                        const parsedSets : number = parseFloat(inputValue);
+                        const inputValue: string = e.target.value;
+                        const parsedSets: number = parseFloat(inputValue);
 
                         setSets(!isNaN(parsedSets) ? parsedSets : 0);
                         setSetsValid(!isNaN(parsedSets) && parsedSets > 0 && Number.isInteger(parsedSets));
@@ -112,8 +130,8 @@ export default function AddExerciseDoneModal(props : AddExerciseDoneModalProps) 
                     label="Reps"
                     value={reps}
                     onChange={(e) => {
-                        const inputValue : string = e.target.value;
-                        const parsedReps : number = parseFloat(inputValue);
+                        const inputValue: string = e.target.value;
+                        const parsedReps: number = parseFloat(inputValue);
 
                         setReps(!isNaN(parsedReps) ? parsedReps : 0);
                         setRepsValid(!isNaN(parsedReps) && parsedReps > 0 && Number.isInteger(parsedReps));

@@ -9,7 +9,6 @@ public class ExerciseDoneDto {
     @Positive(message = "Exercise ID has to be a positive number")
     private Integer exerciseId;
     @NotNull
-    @Positive(message = "Weight has to be a positive number")
     private Integer weight;
     @NotNull
     @Positive(message = "Sets have to be a positive number")

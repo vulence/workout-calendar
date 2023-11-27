@@ -1,0 +1,28 @@
+.rbc-calendar {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  .rbc-header {
+    background-color: #555;
+    color: #fff;
+  }
+  
+  .rbc-toolbar button {
+    color: #fff;
+  }
+  
+  .rbc-today {
+    background-color: #666;
+  }
+  
+  .rbc-month-row,
+  .rbc-day-bg,
+  .rbc-time-view {
+    background-color: #444;
+  }
+  
+  .rbc-event {
+    background-color: #7F3131;
+    color: #fff;
+  }
