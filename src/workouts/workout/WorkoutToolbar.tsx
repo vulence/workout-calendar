@@ -12,7 +12,7 @@ import styles from './workoutToolbar.module.css';
 import utc from 'dayjs/plugin/utc';
 import dayjs, { Dayjs } from 'dayjs';
 
-import { WorkoutToolbarProps } from '../types';
+import { WorkoutToolbarProps } from '../../types';
 
 dayjs.extend(utc);
 

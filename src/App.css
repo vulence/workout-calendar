@@ -3,7 +3,7 @@
 
 .App {
   text-align: center;
-  background-image: url('./img/arnie.jpg');
+  background-image: url('arnie.jpg');
   background-size: cover;
   background-attachment: fixed;
   background-position: top;

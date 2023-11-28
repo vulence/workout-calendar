@@ -7,7 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-import { EditNotesModalProps } from '../types';
+import { EditNotesModalProps } from '../../types';
 
 export default function EditNotesModal(props : EditNotesModalProps) {
     const [notes, setNotes] = useState<string>(props.notes);

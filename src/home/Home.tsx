@@ -53,7 +53,7 @@ export default function Home() {
             const month = parseInt(parts[1]) - 1;
             const day = parseInt(parts[0]);
 
-            const newEvent: CalendarEvent = { id: workout.id, title: "Workout", start: new Date(year, month, day), end: new Date(year, month, day) };
+            const newEvent: CalendarEvent = { id: workout.id, title: workout.title, start: new Date(year, month, day), end: new Date(year, month, day) };
             curEvents.push(newEvent);
         });
 

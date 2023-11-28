@@ -23,10 +23,12 @@ export type ExerciseHistoryDto = {
 
 export type Workout = {
     id: number;
+    title: string;
     date: string;
     notes: string;
     duration: number;
     rating: number;
+    finished: boolean;
     exercisesDone: Array<ExerciseDone>;
 };
 
@@ -40,10 +42,12 @@ export type ExerciseDone = {
 
 export type WorkoutDto = {
     id: number;
+    title: string;
     date: string;
     notes: string;
     duration: number;
     rating: number;
+    finished: boolean;
     muscleGroups: Array<string>;
 };
 
@@ -59,7 +63,7 @@ export type ExerciseHistoryToolbarProps = {
 
 export type AddWorkoutModalProps = {
     open: boolean;
-    handleSubmit: (date: Dayjs | null, notes: string, duration: number) => void;
+    handleSubmit: (title: string, date: Dayjs | null, notes: string, duration: number) => void;
     handleClose: () => void;
 };
 
@@ -143,7 +147,8 @@ export type RegisterFormData = {
 export type AuthContextType = {
     user: User | null;
     authenticated: boolean;
-    login: (username : string, password : string) => Promise<void>;
+    login: (username : string, password : string) => Promise<string>;
+    register: (username : string, email : string, password : string) => Promise<string>;
     logout: () => void;
     loading: boolean;
 }

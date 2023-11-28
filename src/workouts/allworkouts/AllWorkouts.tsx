@@ -1,46 +1,34 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import Container from '@mui/material/Container';
+import {
+    Container, Button, Box, Card, CardActions, CardContent, CardHeader, CardMedia, CardActionArea, MenuItem, Select, Fab, Popover, IconButton, Grid, Accordion,
+    AccordionSummary, AccordionDetails, AccordionActions, Typography, Rating, Tooltip, Divider
+} from '@mui/material';
 import { Link } from "react-router-dom";
-import Button from '@mui/material/Button'
-import Box from '@mui/material/Box';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import { CardActionArea, MenuItem, Select } from '@mui/material';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers/';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-import Popover from '@mui/material/Popover';
-import IconButton from '@mui/material/IconButton';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import Grid from '@mui/material/Grid';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionActions from '@mui/material/AccordionActions';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Typography from '@mui/material/Typography';
 import { Helmet } from 'react-helmet';
 import AddWorkoutModal from './AddWorkoutModal';
 import styles from './allWorkouts.module.css';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import Rating from '@mui/material/Rating';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
+import { pink } from '@mui/material/colors';
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
-import { MuscleGroup, WorkoutDto, PopoverState, CustomIcons } from '../types';
+import { MuscleGroup, WorkoutDto, PopoverState, CustomIcons } from '../../types';
 
 dayjs.extend(utc);
 
@@ -60,7 +48,7 @@ export default function AllWorkouts() {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
     // Sets up rating icons
-    const customIcons : CustomIcons = {
+    const customIcons: CustomIcons = {
         0: {
             icon: <SentimentSatisfiedIcon />,
             label: 'default',
@@ -95,7 +83,7 @@ export default function AllWorkouts() {
     }));
 
     // Creates the rating icon container
-    const IconContainer : React.FC<{value : number}> = (props) => {
+    const IconContainer: React.FC<{ value: number }> = (props) => {
         const { value, ...other } = props;
         return <span {...other}>{customIcons[value].icon}</span>;
     }
@@ -104,13 +92,13 @@ export default function AllWorkouts() {
     };
 
     // Popover open handler
-    const handlePopoverOpen = (workoutId : number, event : React.MouseEvent<HTMLElement>) => {
+    const handlePopoverOpen = (workoutId: number, event: React.MouseEvent<HTMLElement>) => {
         setPopoverState({ ...popoverState, [workoutId]: true });
         setAnchorEl(event.currentTarget);
     };
 
     // Popover close handler
-    const handlePopoverClose = (workoutId : number) => {
+    const handlePopoverClose = (workoutId: number) => {
         setPopoverState({ ...popoverState, [workoutId]: false });
         setAnchorEl(null);
     };
@@ -134,6 +122,7 @@ export default function AllWorkouts() {
             });
 
             const result = await response.json();
+            console.log(result);
             setWorkouts(result);
         };
         fetchData();
@@ -156,12 +145,12 @@ export default function AllWorkouts() {
     }, [setMuscleGroups])
 
     // Workout form submission
-    const handleSubmit = (date : Dayjs | null, notes : string, duration : number) => {
-        const workout = { date, notes, duration };
+    const handleSubmit = (title: string, date: Dayjs | null, notes: string, duration: number) => {
+        const workout = { title, date, notes, duration };
 
         fetch("http://localhost:8080/workouts/new", {
             method: 'POST',
-            headers: { 
+            headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(workout),
@@ -173,7 +162,7 @@ export default function AllWorkouts() {
     }
 
     // Delete a workout
-    const handleDelete = (workoutId : number) => {
+    const handleDelete = (workoutId: number) => {
         fetch(`http://localhost:8080/workouts/${workoutId}`, {
             method: "DELETE",
             credentials: "include"
@@ -184,9 +173,9 @@ export default function AllWorkouts() {
     }
 
     // Add a rating to a workout
-    const handleRating = (workoutId : number, rating : number) => {
+    const handleRating = (workoutId: number, rating: number) => {
         // Update the rating in the state
-        const updatedWorkouts : Array<WorkoutDto> = workouts.map((w) => {
+        const updatedWorkouts: Array<WorkoutDto> = workouts.map((w) => {
             if (w.id === workoutId) {
                 return { ...w, rating: rating };
             }
@@ -209,6 +198,28 @@ export default function AllWorkouts() {
         })
 
         handlePopoverClose(workoutId);
+    }
+
+    // Mark workout as finished/not finished
+    const handleFinished = (workoutId: number) => {
+        // Update the finished state inside the workouts state
+        const updatedWorkouts: Array<WorkoutDto> = workouts.map((w) => {
+            if (w.id === workoutId) {
+                return { ...w, finished: !w.finished };
+            }
+
+            return w;
+        });
+
+        setWorkouts(updatedWorkouts);
+
+        // Update the finished state in the database
+        fetch(`http://localhost:8080/workouts/${workoutId}/setFinished`, {
+            method: "PATCH",
+            credentials: "include",
+        }).then(() => {
+            console.log("Workout finished status successfully modified!");
+        })
     }
 
     // Applies filters to workouts
@@ -280,35 +291,51 @@ export default function AllWorkouts() {
                     {filterWorkouts().sort((a, b) => a.date > b.date ? -1 : 1).map(workout => (
                         <Grid item xs={1} sm={2} md={3} className={styles.gridItem}>
                             <Card key={workout.id.toString()} variant="outlined">
-                                <CardActionArea component={Link} to={workout.id.toString()}>
-                                    <CardHeader
-                                        title={workout.muscleGroups.join(', ') + " workout"}
-                                        subheader={workout.date}
-                                    />
-                                    <CardMedia
-                                        component="img"
-                                        height="150"
-                                        image={'../img/workhard.jpg'}
-                                        title="work hard"
-                                    />
-                                    <CardContent>
-                                        <Typography variant="body2" color="text.secondary">
-                                            {"Duration: " + Math.floor(workout.duration / 60) + "hr " + (workout.duration - 60 * Math.floor(workout.duration / 60)) + "min"}
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                                <CardActions>
-                                    <IconButton onClick={() => handleDelete(workout.id)} sx={{ marginRight: 'auto' }}>
-                                        <DeleteIcon />
-                                    </IconButton>
+                                <Tooltip title="Click to see more" placement="top" arrow>
+                                    <CardActionArea component={Link} to={workout.id.toString()}>
+                                        <CardHeader
+                                            title={workout.title}
+                                            subheader={workout.date}
+                                        />
+                                        <Divider />
 
-                                    <IconButton
-                                        aria-owns={popoverState[workout.id] ? `mouse-over-popover-${workout.id}` : undefined}
-                                        aria-haspopup="true"
-                                        onClick={(e) => handlePopoverOpen(workout.id, e)}
-                                    >
-                                        {workout.rating ? customIcons[workout.rating].icon : customIcons[0].icon}
-                                    </IconButton>
+                                        <CardContent sx={{ textAlign: "left" }}>
+                                            <Box sx={{ display: "flex", flexDirection: "row" }}>
+                                                <WhatshotIcon sx={{ marginRight: 2 }} />
+                                                <Typography fontSize={15}>Calories burned: 1500</Typography>
+                                            </Box>
+                                        </CardContent>
+                                        <Divider />
+
+                                        <CardContent>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {"Duration: " + Math.floor(workout.duration / 60) + "hr " + (workout.duration - 60 * Math.floor(workout.duration / 60)) + "min"}
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Tooltip>
+                                <CardActions>
+                                    <Tooltip title="Delete workout" arrow>
+                                        <IconButton onClick={() => handleDelete(workout.id)} sx={{ marginRight: 'auto' }}>
+                                            <DeleteIcon sx={{ color: pink[500] }} />
+                                        </IconButton>
+                                    </Tooltip>
+
+                                    <Tooltip title={workout.finished ? "Mark as not done?" : "Mark as done?"} arrow>
+                                        <IconButton className={styles.finishedIcon} onClick={(e) => handleFinished(workout.id)}>
+                                            {workout.finished ? <CheckCircleIcon color="success" /> : <CheckCircleOutlineIcon />}
+                                        </IconButton>
+                                    </Tooltip>
+
+                                    <Tooltip title={workout.rating ? "Rating: " + workout.rating + "/5" : "Rate this workout"} arrow>
+                                        <IconButton
+                                            aria-owns={popoverState[workout.id] ? `mouse-over-popover-${workout.id}` : undefined}
+                                            aria-haspopup="true"
+                                            onClick={(e) => handlePopoverOpen(workout.id, e)}
+                                        >
+                                            {workout.rating ? customIcons[workout.rating].icon : customIcons[0].icon}
+                                        </IconButton>
+                                    </Tooltip>
                                     <Popover
                                         id={`mouse-over-popover-${workout.id}`}
                                         open={popoverState[workout.id] || false}

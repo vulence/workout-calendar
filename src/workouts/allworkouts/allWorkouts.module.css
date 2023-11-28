@@ -49,6 +49,10 @@
     margin-right: 5px !important;
 }
 
+.finishedIcon {
+    margin-right: auto !important;
+}
+
 .gridContainer {
     margin: 15px 0 !important;
 }

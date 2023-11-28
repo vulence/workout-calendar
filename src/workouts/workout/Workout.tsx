@@ -12,7 +12,7 @@ import WorkoutToolbar from './WorkoutToolbar';
 import AddExerciseDoneModal from './AddExerciseDoneModal';
 import EditNotesModal from './EditNotesModal';
 
-import { Workout as WorkoutType, ExerciseDto, WorkoutDataGridRows } from '../types';
+import { Workout as WorkoutType, ExerciseDto, WorkoutDataGridRows } from '../../types';
 
 export default function Workout() {
     const { id } = useParams();

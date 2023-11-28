@@ -1,10 +1,5 @@
 import { useState, useContext } from "react";
-import { Box, Button, Container, TextField } from '@mui/material';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
-import IconButton from '@mui/material/IconButton';
+import { Box, Button, Container, TextField, FormHelperText, OutlinedInput, InputLabel, InputAdornment, FormControl, IconButton } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -18,7 +13,7 @@ import { AuthContextType } from '../types';
 
 export default function Login() {
     // Gets the authentification context
-    const { login }  = useContext<AuthContextType>(AuthContext);
+    const { login } = useContext<AuthContextType>(AuthContext);
 
     // State for shown/hidden password field
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -29,6 +24,9 @@ export default function Login() {
         password: '',
     });
 
+    // Form validation states
+    const [loginValidText, setLoginValidText] = useState<string | null>(null);
+
     // Handlers for hiding/unhiding password
     const handleClickShowPassword = () => setShowPassword((show) => !show);
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -38,6 +36,9 @@ export default function Login() {
     // Updates the state of form data
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
+
+        setLoginValidText(null);
+
         setFormData({
             ...formData,
             [id]: value,
@@ -46,7 +47,11 @@ export default function Login() {
 
     // Submits the login form to server
     const handleSubmit = async () => {
-        await login(formData.username, formData.password);
+        const result = await login(formData.username, formData.password);
+        
+        if (result !== "Ok") {
+            setLoginValidText(result);
+        }
     }
 
     return (
@@ -56,7 +61,7 @@ export default function Login() {
                     <h2 style={{ fontSize: "48px", fontWeight: 700, color: "white" }}>Login</h2>
                 </Box>
 
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" required>
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" required error={loginValidText ? true : false}>
                     <InputLabel htmlFor="username">
                         Username
                     </InputLabel>
@@ -73,7 +78,7 @@ export default function Login() {
                     />
                 </FormControl>
 
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" required>
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" required error={loginValidText ? true : false}>
                     <InputLabel htmlFor="password">Password</InputLabel>
                     <OutlinedInput
                         id="password"
@@ -94,6 +99,7 @@ export default function Login() {
                         value={formData.password}
                         onChange={(e) => handleChange(e)}
                     />
+                    <FormHelperText id="username-helper-text" error={loginValidText ? true : false}>{loginValidText}</FormHelperText>
                 </FormControl>
 
                 <Box sx={{display: 'flex', flexDirection: "row"}}>

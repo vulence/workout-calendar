@@ -11,7 +11,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import styles from './workout.module.css';
 import Switch from '@mui/material/Switch';
 
-import { AddExerciseDoneModalProps, ExerciseDto } from '../types';
+import { AddExerciseDoneModalProps, ExerciseDto } from '../../types';
 import Typography from '@mui/material/Typography';
 
 export default function AddExerciseDoneModal(props: AddExerciseDoneModalProps) {
@@ -20,15 +20,16 @@ export default function AddExerciseDoneModal(props: AddExerciseDoneModalProps) {
 
     // Data states
     const [name, setName] = useState<string>(props.name);
-    const [weight, setWeight] = useState<number>(props.weight);
-    const [sets, setSets] = useState<number>(props.sets);
-    const [reps, setReps] = useState<number>(props.reps);
+    const [weight, setWeight] = useState<number>(props.weight | 0);
+    const [sets, setSets] = useState<number>(props.sets | 0);
+    const [reps, setReps] = useState<number>(props.reps | 0);
 
     // Form validation states
-    const [weightValid, setWeightValid] = useState<boolean>(false);
-    const [setsValid, setSetsValid] = useState<boolean>(false);
-    const [repsValid, setRepsValid] = useState<boolean>(false);
+    const [weightValid, setWeightValid] = useState<boolean>(true);
+    const [setsValid, setSetsValid] = useState<boolean>(true);
+    const [repsValid, setRepsValid] = useState<boolean>(true);
 
+    // Controls whether bodyweight is selected
     const [isSwitchOn, setSwitchOn] = useState<boolean>(false);
 
     const handleSwitchChange = () => {
@@ -98,7 +99,7 @@ export default function AddExerciseDoneModal(props: AddExerciseDoneModalProps) {
                             setWeightValid(!isNaN(parsedWeight) && parsedWeight > 0);
                         }}
                     />
-                    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" marginBottom={3} marginLeft={3}>
+                    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" marginLeft={3}>
                         <Typography noWrap fontSize={12}>Body weight</Typography>
                         <Switch checked={isSwitchOn} onChange={handleSwitchChange} />
                     </Box>

@@ -127,7 +127,7 @@ export default function AllExercises() {
                                 height="200"
                                 sx={{ background: 'white' }}
                                 component="img"
-                                image={'../img/' + ex.name.replace(/\s+/g, '').toLowerCase() + '.png'}
+                                image={ex.name.replace(/\s+/g, '').toLowerCase() + '.png'}
                             />
                             <CardHeader
                                 title={ex.name}

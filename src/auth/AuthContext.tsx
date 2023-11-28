@@ -6,7 +6,8 @@ import { AuthContextType, AuthProviderProps, User } from '../types';
 export const AuthContext = createContext<AuthContextType>({
     user: null,
     authenticated: false,
-    login: async () => { },
+    login: async () => (""),
+    register: async () => (""),
     logout: () => {},
     loading: true,
 });
@@ -18,7 +19,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     const [loading, setLoading] = useState<boolean>(true);
 
     // Logs the user in
-    const login = async (username: string, password: string) => {
+    const login = async (username: string, password: string) : Promise<string> => {
         try {
             const response = await fetch('http://localhost:8080/api/users/login', {
                 method: 'POST',
@@ -35,13 +36,37 @@ export default function AuthProvider({ children }: AuthProviderProps) {
             if (response.ok) {
                 setUser(result);
                 setAuthenticated(true);
+
+                return "Ok";
             }
             else {
-                console.error('Login failed!');
+                return "Wrong username or password";
             }
         }
         catch (error) {
             console.error(error);
+            return "Wrong username or password";
+        }
+    }
+
+    // Registers a new user
+    const register = async (username : string, email : string, password : string) : Promise<string> => {
+        try {
+            const response = await fetch("http://localhost:8080/api/users/register", {
+                method: "POST",
+                headers: {
+                    'Content-Type': "application/json",
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            const result = await response.json();
+
+            return result.message;
+        }
+        catch (error) {
+            console.error(error);
+            return "An error occured during registration.";
         }
     }
 
@@ -104,7 +129,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ user, authenticated, login, logout, loading }}>
+        <AuthContext.Provider value={{ user, authenticated, login, register, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );

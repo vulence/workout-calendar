@@ -1,23 +1,26 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useState } from 'react';
-import { Box, Button, Container, TextField } from '@mui/material';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
-import IconButton from '@mui/material/IconButton';
+import { Box, Button, Container, FormHelperText, TextField, OutlinedInput, InputLabel, InputAdornment, FormControl, IconButton } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import EmailIcon from '@mui/icons-material/Email';
 
 import styles from './register.module.css';
-import { RegisterFormData } from '../types';
+import { AuthContextType, RegisterFormData } from '../types';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../auth/AuthContext';
 
 export default function Register() {
+    // Gets the authentification context
+    const { register } = useContext<AuthContextType>(AuthContext);
+
     // State for shown/hidden password field
     const [showPassword, setShowPassword] = useState<boolean>(false);
+
+    // Form validation states
+    const [usernameValidText, setUsernameValidText] = useState<string | null>(null);
+    const [emailValidText, setEmailValidText] = useState<string | null>(null);
 
     // Allows navigation between different routes
     let navigate = useNavigate();
@@ -39,6 +42,10 @@ export default function Register() {
     // Updates the state of formdata
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
+
+        if (id === 'email') setEmailValidText(null);
+        if (id === 'username') setUsernameValidText(null);
+
         setFormData({
             ...formData,
             [id]: value,
@@ -47,25 +54,23 @@ export default function Register() {
 
     // Submits the registration form to server
     const handleSubmit = async () => {
-        try {
-            let username : string = formData.username;
-            let email : string = formData.email;
-            let password : string = formData.password;
+        const result = await register(formData.username, formData.email, formData.password);
 
-            const response = await fetch("http://localhost:8080/api/users/register", {
-                method: "POST",
-                headers: {
-                    'Content-Type': "application/json",
-                },
-                body: JSON.stringify({ username, email, password })
-            });
-
-            // If everything is ok, send user to login page
-            const result = await response.text();
+        if (result === "User created") {
             navigate("/login");
         }
-        catch (error) {
-            console.error(error);
+        else {
+            displayErrorHelperText(result);
+        }
+    }
+
+    // Displays the error helper text if the registration data is invalid
+    const displayErrorHelperText = (errorMessage : string) => {
+        if (errorMessage === "Username is already taken") {
+            setUsernameValidText(errorMessage);
+        }
+        else if (errorMessage === "Email is already taken") {
+            setEmailValidText(errorMessage);
         }
     }
 
@@ -76,7 +81,7 @@ export default function Register() {
                     <h2 style={{ fontSize: "48px", fontWeight: 700, color: "white" }}>Register</h2>
                 </Box>
 
-                <FormControl sx={{m: 1, width: '25ch'}} variant="outlined" required>
+                <FormControl sx={{m: 1, width: '25ch'}} variant="outlined" required error={usernameValidText ? true : false}>
                     <InputLabel htmlFor="username">
                         Username
                     </InputLabel>
@@ -91,9 +96,10 @@ export default function Register() {
                         value={formData.username}
                         onChange={(e) => handleChange(e)}
                     />
+                    <FormHelperText id="username-helper-text" error={usernameValidText ? true : false}>{usernameValidText}</FormHelperText>
                 </FormControl>
 
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" required>
+                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" required error={emailValidText ? true : false}>
                     <InputLabel htmlFor="email">
                         Email
                     </InputLabel>
@@ -108,6 +114,7 @@ export default function Register() {
                         value={formData.email}
                         onChange={(e) => handleChange(e)}
                     />
+                    <FormHelperText id="email-helper-text" error={emailValidText ? true : false}>{emailValidText}</FormHelperText>
                 </FormControl>
 
                 <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" required>
