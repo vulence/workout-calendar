@@ -61,7 +61,7 @@ export default function AddExerciseDoneModal(props: AddExerciseDoneModalProps) {
             return;
         }
 
-        props.handleSubmit(exerciseId, isSwitchOn ? -1 : weight, sets, reps);
+        props.handleSubmit(exerciseId, isSwitchOn ? 0 : weight, sets, reps);
     };
 
     return (

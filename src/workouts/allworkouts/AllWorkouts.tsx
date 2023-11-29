@@ -23,12 +23,13 @@ import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import WhatshotIcon from '@mui/icons-material/Whatshot';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { pink } from '@mui/material/colors';
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
 import { MuscleGroup, WorkoutDto, PopoverState, CustomIcons } from '../../types';
+import { calculateTotalCaloriesForWorkout } from '../utils/calorieCalculator';
 
 dayjs.extend(utc);
 
@@ -40,12 +41,66 @@ export default function AllWorkouts() {
     const [filterYear, setFilterYear] = useState<number | null>(null);
     const [filterMonth, setFilterMonth] = useState<number | null>(null);
 
+    // Stores burned calories for each workout
+    const [calories, setCalories] = useState<Array<number | undefined>>([]);
+
     // Dialog control state
     const [openAddWorkout, setOpenAddWorkout] = useState<boolean>(false);
 
     // Anchor for the popover
     const [popoverState, setPopoverState] = useState<PopoverState>({});
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+    // Initialize all workouts
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await fetch("http://localhost:8080/workouts", {
+                method: "GET",
+                credentials: 'include',
+            });
+
+            const result = await response.json();
+            console.log(result);
+            setWorkouts(result);
+        };
+        fetchData();
+    }, [setWorkouts]);
+
+    // Initialize all muscle groups
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await fetch("http://localhost:8080/muscleGroups", {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+            });
+            const result = await response.json();
+            setMuscleGroups(result);
+        };
+        fetchData();
+    }, [setMuscleGroups]);
+
+    // Calculates calories burned for each workout
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const caloriesPromises = workouts.map(async (workout) => {
+                    const caloriesBurned = await calculateTotalCaloriesForWorkout(workout.id);
+                    return caloriesBurned;
+                });
+
+                const caloriesResults = await Promise.all(caloriesPromises);
+                setCalories(caloriesResults);
+            }
+            catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchData();
+    }, [workouts]);
 
     // Sets up rating icons
     const customIcons: CustomIcons = {
@@ -112,37 +167,6 @@ export default function AllWorkouts() {
     const handleCloseAddWorkout = () => {
         setOpenAddWorkout(false);
     }
-
-    // Initialize all workouts
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:8080/workouts", {
-                method: "GET",
-                credentials: 'include',
-            });
-
-            const result = await response.json();
-            console.log(result);
-            setWorkouts(result);
-        };
-        fetchData();
-    }, [setWorkouts])
-
-    // Initialize all muscle groups
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:8080/muscleGroups", {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            });
-            const result = await response.json();
-            setMuscleGroups(result);
-        };
-        fetchData();
-    }, [setMuscleGroups])
 
     // Workout form submission
     const handleSubmit = (title: string, date: Dayjs | null, notes: string, duration: number) => {
@@ -288,7 +312,7 @@ export default function AllWorkouts() {
                 </Accordion>
 
                 <Grid container spacing={2} className={styles.gridContainer}>
-                    {filterWorkouts().sort((a, b) => a.date > b.date ? -1 : 1).map(workout => (
+                    {filterWorkouts().sort((a, b) => a.date > b.date ? -1 : 1).map((workout, index) => (
                         <Grid item xs={1} sm={2} md={3} className={styles.gridItem}>
                             <Card key={workout.id.toString()} variant="outlined">
                                 <Tooltip title="Click to see more" placement="top" arrow>
@@ -301,8 +325,8 @@ export default function AllWorkouts() {
 
                                         <CardContent sx={{ textAlign: "left" }}>
                                             <Box sx={{ display: "flex", flexDirection: "row" }}>
-                                                <WhatshotIcon sx={{ marginRight: 2 }} />
-                                                <Typography fontSize={15}>Calories burned: 1500</Typography>
+                                                <LocalFireDepartmentIcon sx={{ marginRight: 1 }} />
+                                                <Typography fontSize={15}>Calories burned: {calories[index] ? calories[index] : 'Loading...'}</Typography>
                                             </Box>
                                         </CardContent>
                                         <Divider />

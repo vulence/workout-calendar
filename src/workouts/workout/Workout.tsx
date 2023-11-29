@@ -40,7 +40,7 @@ export default function Workout() {
             width: 100,
             renderCell: (params: GridRenderCellParams) => {
                 const weightValue = params.value;
-                const displayValue = weightValue === -1 ? 'Bodyweight' : weightValue;
+                const displayValue = weightValue === 0 ? 'Bodyweight' : weightValue;
 
                 return <div>{displayValue}</div>
             }

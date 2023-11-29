@@ -66,15 +66,15 @@ export default function Home() {
     };
 
     return (
-        <Container>
-            <Box style={{ margin: 16, backgroundColor: "white", borderRadius: 10 }}>
+        <Container style={{width: "100%", margin: 0, padding: 0, maxWidth: "100%"}}>
+            <Box style={{ backgroundColor: "white", borderRadius: 10 }}>
                 <Calendar
                     localizer={localizer}
                     events={events}
                     startAccessor="start"
                     endAccessor="end"
                     views={['month']}
-                    style={{ height: 400, borderRadius: 5 }}
+                    style={{ height: 500, borderRadius: 5 }}
                     onSelectEvent={handleClick}
                     components={{
                         toolbar: CustomToolbar
