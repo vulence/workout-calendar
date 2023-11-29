@@ -22,22 +22,22 @@ export default function CustomToolbar(toolbarProps: { onNavigate: any; label: an
 
     return (
         <Box style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: 5, padding: 5}}>
-            <Button variant="outlined" style={{marginRight: "auto", borderWidth: 1}} onClick={() => onNavigate('PREV')}>{'<'}</Button>
-            <Select style={{width: 150}} value={dayjs(label).month().toString()} onChange={handleMonthChange}>
+            <Button variant="outlined" style={{marginRight: "auto", borderWidth: 1, height: 50}} onClick={() => onNavigate('PREV')}>{'<'}</Button>
+            <Select style={{width: 150, margin: 5, height: 50}} value={dayjs(label).month().toString()} onChange={handleMonthChange}>
                 {Array.from({ length: 12 }, (_, index) => (
                     <MenuItem key={index} value={index}>
                         {dayjs().month(index).format('MMMM')}
                     </MenuItem>
                 ))}
             </Select>
-            <Select value={dayjs(label).year().toString()} onChange={handleYearChange}>
-                {Array.from({ length: 10 }, (_, index) => dayjs(label).year() - index + 1).map((year) => (
+            <Select style={{margin: 5, height: 50}} value={dayjs(label).year().toString()} onChange={handleYearChange}>
+                {Array.from({ length: 5 }, (_, index) => dayjs(label).year() - index + 1).map((year) => (
                     <MenuItem key={year} value={year}>
                         {year}
                     </MenuItem>
                 ))}
             </Select>
-            <Button variant="outlined" style={{marginLeft: "auto"}} onClick={() => onNavigate('NEXT')}>{'>'}</Button>
+            <Button variant="outlined" style={{marginLeft: "auto", height: 50}} onClick={() => onNavigate('NEXT')}>{'>'}</Button>
         </Box>
     );
 };

@@ -8,10 +8,12 @@ CREATE TABLE IF NOT EXISTS Users (
 
 CREATE TABLE IF NOT EXISTS Workout (
     id INTEGER AUTO_INCREMENT,
+    title text,
     date TIMESTAMP,
     duration INTEGER,
     notes text,
     rating INTEGER,
+    finished BOOL,
     user_id INTEGER NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(user_id) REFERENCES Users(id),

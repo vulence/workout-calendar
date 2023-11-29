@@ -121,6 +121,16 @@ public class WorkoutService {
         workouts.updateRating(workoutId, rating);
     }
 
+    public void updateFinished(String username, Integer workoutId) {
+        Integer userId = users.findByUsername(username).getId();
+
+        Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
+
+        workout.setFinished(!workout.getFinished());
+
+        workouts.updateFinished(workoutId, workout.getFinished() ? 1 : 0);
+    }
+
     public void addWorkoutExercise(String username, Integer workoutId, ExerciseDoneDto exerciseDoneDto) {
         Integer userId = users.findByUsername(username).getId();
 

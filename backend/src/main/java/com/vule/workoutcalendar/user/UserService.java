@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -38,16 +39,16 @@ public class UserService {
 
         if (existingUser.isEmpty()) {
             users.save(new User(user.getUsername(), user.getEmail(), passwordEncoder.encode(user.getPassword())));
-            return ResponseEntity.status(HttpStatus.CREATED).body("User created");
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "User created"));
         }
         else {
             User foundUser = existingUser.get();
             if (foundUser.getEmail().equals(user.getEmail())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already taken");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "Email is already taken"));
             } else if (foundUser.getUsername().equals(user.getUsername())) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Username is already taken");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "Username is already taken"));
             } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("Phone number is already taken");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", "Phone number is already taken"));
             }
         }
     }

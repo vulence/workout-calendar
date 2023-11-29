@@ -1,19 +1,18 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Button, FormControl, MenuItem } from '@mui/material';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import Select from '@mui/material/Select';
-import { SelectChangeEvent } from '@mui/material/Select';
 import { Calendar, dayjsLocalizer } from 'react-big-calendar';
 import { useNavigate } from 'react-router-dom';
 import dayjs, { Dayjs } from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import CustomToolbar from './CalendarToolbar';
-import { AuthContext } from '../auth/AuthContext';
-import { useContext } from 'react';
-import { AuthContextType, WorkoutDto, CalendarEvent } from '../types';
+import { WorkoutDto, CalendarEvent } from '../types';
+import AddWorkoutModal from '../workouts/allworkouts/AddWorkoutModal';
+
+dayjs.extend(utc);
 
 export default function Home() {
     const navigate = useNavigate();
@@ -23,10 +22,11 @@ export default function Home() {
     const [workouts, setWorkouts] = useState<Array<WorkoutDto>>([]);
     const [events, setEvents] = useState<Array<CalendarEvent>>([]);
 
-    // Redirects the user to the logout page
-    const handleLogout = () => {
-        navigate("/logout");
-    }
+    // Trackes the date of the selected cell in the calendar
+    const [selectedDate, setSelectedDate] = useState<Dayjs | undefined>();
+
+    // Dialog control state
+    const [openAddWorkout, setOpenAddWorkout] = useState<boolean>(false);
 
     // Gets all the workouts
     useEffect(() => {
@@ -60,13 +60,46 @@ export default function Home() {
         setEvents([...events, ...curEvents]);
     }, [workouts]);
 
+    // Dialog open handler
+    const handleOpenAddWorkout = (e : { start : Date}) => {
+        setSelectedDate(dayjs(e.start).set('hour', 23));
+        setOpenAddWorkout(true);
+    };
+
+    // Dialog close handler
+    const handleCloseAddWorkout = () => {
+        setOpenAddWorkout(false);
+    };
+
+    // Workout form submission
+    const handleSubmit = (title: string, date: Dayjs | null, notes: string, duration: number) => {
+        const workout = { title, date, notes, duration };
+
+        fetch("http://localhost:8080/workouts/new", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(workout),
+            credentials: 'include'
+        }).then(() => {
+            console.log("New workout added");
+        })
+        window.location.reload();
+    }
+
+    // Redirects the user to the logout page
+    const handleLogout = () => {
+        navigate("/logout");
+    }
+
     // Navigates to the workout that was clicked    
     const handleClick = (e: CalendarEvent) => {
         navigate("/workouts/" + e.id);
     };
 
     return (
-        <Container style={{width: "100%", margin: 0, padding: 0, maxWidth: "100%"}}>
+        <Container style={{ width: "100%", margin: 0, padding: 0, maxWidth: "100%" }}>
             <Box style={{ backgroundColor: "white", borderRadius: 10 }}>
                 <Calendar
                     localizer={localizer}
@@ -76,9 +109,18 @@ export default function Home() {
                     views={['month']}
                     style={{ height: 500, borderRadius: 5 }}
                     onSelectEvent={handleClick}
+                    onSelectSlot={handleOpenAddWorkout}
                     components={{
                         toolbar: CustomToolbar
                     }}
+                    selectable
+                />
+
+                <AddWorkoutModal
+                    open={openAddWorkout}
+                    handleSubmit={handleSubmit}
+                    handleClose={handleCloseAddWorkout}
+                    date={selectedDate}
                 />
             </Box>
         </Container>

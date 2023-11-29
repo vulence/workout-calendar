@@ -65,6 +65,7 @@ export type AddWorkoutModalProps = {
     open: boolean;
     handleSubmit: (title: string, date: Dayjs | null, notes: string, duration: number) => void;
     handleClose: () => void;
+    date?: Dayjs;
 };
 
 export type WorkoutToolbarProps = {

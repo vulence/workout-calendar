@@ -11,19 +11,23 @@ import java.util.Set;
 public class Workout {
     @Id
     private Integer id;
+    private String title;
     @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDateTime date;
     private String notes;
     private Integer duration;
     private Integer rating;
+    private Boolean finished;
     private Integer userId;
     private Set<ExerciseDone> exercisesDone = new HashSet<>();
 
-    public Workout(LocalDateTime date, String notes, Integer duration, Integer rating) {
+    public Workout(String title, LocalDateTime date, String notes, Integer duration, Integer rating) {
+        this.title = title;
         this.date = date;
         this.notes = notes;
         this.duration = duration;
         this.rating = rating;
+        this.finished = false;
     }
 
     public Integer getId() {
@@ -32,6 +36,14 @@ public class Workout {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public LocalDateTime getDate() {
@@ -81,6 +93,14 @@ public class Workout {
 
     public void removeExerciseDone(ExerciseDone ed) {
         exercisesDone.remove(ed);
+    }
+
+    public Boolean getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
     }
 
     public Integer getuserId() {

@@ -60,7 +60,6 @@ export default function AllWorkouts() {
             });
 
             const result = await response.json();
-            console.log(result);
             setWorkouts(result);
         };
         fetchData();

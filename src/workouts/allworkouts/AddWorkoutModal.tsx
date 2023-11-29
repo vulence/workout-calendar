@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -24,10 +24,14 @@ dayjs.extend(utc);
 export default function AddWorkoutModal(props: AddWorkoutModalProps) {
     // Data states
     const [title, setTitle] = useState<string>('');
-    const [date, setDate] = useState<Dayjs | null>(dayjs.utc());
+    const [date, setDate] = useState<Dayjs | null>(props.date || dayjs.utc());
     const [notes, setNotes] = useState<string>('');
     const [hours, setHours] = useState<number>(0);
     const [minutes, setMinutes] = useState<number>(0);
+
+    useEffect(() => {
+        props.date ? setDate(props.date) : null;
+    }, [props.date]);
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -50,6 +54,7 @@ export default function AddWorkoutModal(props: AddWorkoutModalProps) {
                         value={date!}
                         format='DD/MM/YYYY'
                         sx={{ margin: "10px 0" }}
+                        disabled={props.date ? true : false}
                         onChange={(newDate: Dayjs | null) => setDate(newDate)}
                     />
                     <TextField
@@ -75,7 +80,7 @@ export default function AddWorkoutModal(props: AddWorkoutModalProps) {
                             onChange={(e) => setHours(+e.target.value)}
                         >
                             {[...Array.from(Array(5).keys())].map((num, i) =>
-                                <MenuItem value={i + 1}>{i + 1}</MenuItem>
+                                <MenuItem value={i}>{i}</MenuItem>
                             )}
                         </Select>
                         <FormHelperText>Hours</FormHelperText>

@@ -8,21 +8,25 @@ import java.util.Set;
 
 public class WorkoutDto {
     private Integer id;
+    private String title;
     @JsonFormat(pattern="dd-MM-YYYY")
     private LocalDateTime date;
     private String notes;
     private Integer duration;
     private Integer rating;
+    private Boolean finished;
     private Set<String> muscleGroups;
 
     public WorkoutDto() {}
 
     public WorkoutDto(Workout workout) {
         this.id = workout.getId();
+        this.title = workout.getTitle();
         this.date = workout.getDate();
         this.notes = workout.getNotes();
         this.duration = workout.getDuration();
         this.rating = workout.getRating();
+        this.finished = workout.getFinished();
     }
 
     public Integer getId() {
@@ -31,6 +35,14 @@ public class WorkoutDto {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public LocalDateTime getDate() {
@@ -63,6 +75,14 @@ public class WorkoutDto {
 
     public void setRating(Integer rating) {
         this.rating = rating;
+    }
+
+    public Boolean getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
     }
 
     public Set<String> getMuscleGroups() {

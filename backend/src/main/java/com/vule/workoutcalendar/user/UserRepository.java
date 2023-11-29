@@ -13,7 +13,7 @@ public interface UserRepository extends ListCrudRepository<User, Integer> {
     User findByUsername(@Param("username") String username);
 
     @Query("""
-           SELECT * FROM USERS WHERE username = :username OR email = :email
+           SELECT * FROM USERS WHERE username = :username OR email = :email LIMIT 1
             """)
     Optional<User> findExistingUser(@Param("username") String username, @Param("email") String email);
 }
