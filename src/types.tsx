@@ -167,3 +167,13 @@ export type CalendarEvent = {
     end: Date;
     rating: number;
 }
+
+export type AllWorkoutsFilters = {
+    filterYear: number | null;
+    filterMonth: number | null;
+    muscleGroupName: string;
+}
+
+export type filterAccordionProps = {
+    updateParentValues: (newValues : AllWorkoutsFilters) => void;
+}

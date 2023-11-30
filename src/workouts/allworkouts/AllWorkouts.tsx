@@ -1,16 +1,13 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import {
-    Container, Button, Box, Card, CardActions, CardContent, CardHeader, CardMedia, CardActionArea, MenuItem, Select, Fab, Popover, IconButton, Grid, Accordion,
-    AccordionSummary, AccordionDetails, AccordionActions, Typography, Rating, Tooltip, Divider
+    Container, Box, Card, CardActions, CardContent, CardHeader, CardActionArea, Fab, Popover, IconButton, Grid, Typography, Rating, Tooltip, Divider
 } from '@mui/material';
 import { Link } from "react-router-dom";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers/';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import AddIcon from '@mui/icons-material/Add';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Helmet } from 'react-helmet';
 import AddWorkoutModal from './AddWorkoutModal';
 import styles from './allWorkouts.module.css';
@@ -26,18 +23,20 @@ import { pink } from '@mui/material/colors';
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
-import { MuscleGroup, WorkoutDto, PopoverState, CustomIcons } from '../../types';
+import { WorkoutDto, PopoverState, CustomIcons, AllWorkoutsFilters } from '../../types';
 import { calculateTotalCaloriesForWorkout } from '../utils/calorieCalculator';
+import FilterAccordion from './FilterAccordion';
 
 dayjs.extend(utc);
 
 export default function AllWorkouts() {
     // Data states
     const [workouts, setWorkouts] = useState<Array<WorkoutDto>>([]);
-    const [muscleGroups, setMuscleGroups] = useState<Array<MuscleGroup>>([]);
-    const [muscleGroupName, setMuscleGroupName] = useState<string>('');
-    const [filterYear, setFilterYear] = useState<number | null>(null);
-    const [filterMonth, setFilterMonth] = useState<number | null>(null);
+    const [filterValues, setFilterValues] = useState<AllWorkoutsFilters>({
+        filterYear: null,
+        filterMonth: null,
+        muscleGroupName: '',
+    });
 
     // Stores burned calories for each workout
     const [calories, setCalories] = useState<Array<number | undefined>>([]);
@@ -62,22 +61,6 @@ export default function AllWorkouts() {
         };
         fetchData();
     }, [setWorkouts]);
-
-    // Initialize all muscle groups
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:8080/muscleGroups", {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            });
-            const result = await response.json();
-            setMuscleGroups(result);
-        };
-        fetchData();
-    }, [setMuscleGroups]);
 
     // Calculates calories burned for each workout
     useEffect(() => {
@@ -143,6 +126,22 @@ export default function AllWorkouts() {
         value: PropTypes.number.isRequired,
     };
 
+    // Applies filters to workouts
+    const filterWorkouts = () => {
+        let filteredWorkouts = workouts;
+
+        if (filterValues.filterYear !== null) filteredWorkouts = filteredWorkouts.filter(workout => parseInt(workout.date.split('-')[2]) === filterValues.filterYear);
+        if (filterValues.filterMonth !== null) filteredWorkouts = filteredWorkouts.filter(workout => parseInt(workout.date.split('-')[1]) === filterValues.filterMonth! + 1);
+        if (filterValues.muscleGroupName !== '') filteredWorkouts = filteredWorkouts.filter(workout => workout.muscleGroups.includes(filterValues.muscleGroupName));
+
+        return filteredWorkouts;
+    }
+
+    // Filter callback function
+    const handleFilterValues = (newFilterValues: AllWorkoutsFilters) => {
+        setFilterValues(newFilterValues);
+    }
+
     // Popover open handler
     const handlePopoverOpen = (workoutId: number, event: React.MouseEvent<HTMLElement>) => {
         setPopoverState({ ...popoverState, [workoutId]: true });
@@ -201,7 +200,7 @@ export default function AllWorkouts() {
                 // Remove the rating if the user clicks on the same rating as it already is
                 if (rating === null) {
                     rating = 0; // In order to make a valid API call
-                    return { ...w, rating: rating};
+                    return { ...w, rating: rating };
                 }
                 // Set the rating if it's not the same
                 else {
@@ -229,22 +228,12 @@ export default function AllWorkouts() {
         handlePopoverClose(workoutId);
     }
 
-    // Applies filters to workouts
-    const filterWorkouts = () => {
-        let filteredWorkouts = workouts;
+    // Checks if the date(string) is in the future
+    const isLaterDate = (date: string) => {
+        const [day, month, year] = date.split('-').map(value => parseInt(value, 10));
+        const selectedDate = dayjs(`${year}-${month}-${day}`);
 
-        if (filterYear != null) filteredWorkouts = filteredWorkouts.filter(workout => parseInt(workout.date.split('-')[2]) === filterYear);
-        if (filterMonth != null) filteredWorkouts = filteredWorkouts.filter(workout => parseInt(workout.date.split('-')[1]) === filterMonth);
-        if (muscleGroupName !== '') filteredWorkouts = filteredWorkouts.filter(workout => workout.muscleGroups.includes(muscleGroupName));
-
-        return filteredWorkouts;
-    }
-
-    // Removes all filters
-    const removeFilters = () => {
-        setFilterYear(null);
-        setFilterMonth(null);
-        setMuscleGroupName('');
+        return selectedDate.isAfter(dayjs());
     }
 
     return (
@@ -254,45 +243,9 @@ export default function AllWorkouts() {
             </Helmet>
 
             <Container>
-                <Accordion disableGutters={true} className={styles.accordion}>
-                    <AccordionSummary
-                        className={styles.accordionSummary}
-                        expandIcon={<ExpandMoreIcon sx={{ color: 'white' }} />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <FilterAltIcon className={styles.filterIcon} />
-                        <Typography> FILTER </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails className={styles.accordionDetails}>
-                        <Box className={styles.containerBox}>
-                            <Box className={styles.childBox}>
-                                <Typography>Filter by date</Typography>
-                                <DatePicker value={filterYear ? dayjs().set('year', filterYear) : null} className={styles.datePicker} label={'year'} views={['year']} onAccept={(e) => setFilterYear(e!.year())} />
-                                <DatePicker value={filterMonth ? dayjs().set('month', filterMonth) : null} className={styles.datePicker} label={'month'} views={['month']} onAccept={(e) => setFilterMonth(e!.month() + 1)} />
-                            </Box>
-                            <Box className={styles.childBox}>
-                                <Typography>Filter by muscle group</Typography>
-                                <Select
-                                    id="muscle-group-name"
-                                    value={muscleGroupName}
-                                    onChange={(e) => setMuscleGroupName(e.target.value)}
-                                    sx={{
-                                        width: "200px"
-                                    }}
-                                >
-                                    <MenuItem value=""><em>None</em></MenuItem>
-                                    {muscleGroups.map(muscleGroup =>
-                                        <MenuItem value={muscleGroup.name}>{muscleGroup.name}</MenuItem>
-                                    )}
-                                </Select>
-                            </Box>
-                        </Box>
-                    </AccordionDetails>
-                    <AccordionActions className={styles.accordionActions}>
-                        <Button variant="contained" color="error" onClick={removeFilters}>Remove all</Button>
-                    </AccordionActions>
-                </Accordion>
+                <FilterAccordion
+                    updateParentValues={handleFilterValues}
+                />
 
                 <Grid container spacing={2} className={styles.gridContainer}>
                     {filterWorkouts().sort((a, b) => a.date > b.date ? -1 : 1).map((workout, index) => (
@@ -309,7 +262,7 @@ export default function AllWorkouts() {
                                         <CardContent sx={{ textAlign: "left" }}>
                                             <Box sx={{ display: "flex", flexDirection: "row" }}>
                                                 <LocalFireDepartmentIcon sx={{ marginRight: 1 }} />
-                                                <Typography fontSize={15}>Calories burned: {calories[index] ? calories[index] : 'Loading...'}</Typography>
+                                                <Typography fontSize={15}>Calories burned: {calories[index] !== null ? calories[index] : 'Loading...'}</Typography>
                                             </Box>
                                         </CardContent>
                                         <Divider />
@@ -333,6 +286,7 @@ export default function AllWorkouts() {
                                             aria-owns={popoverState[workout.id] ? `mouse-over-popover-${workout.id}` : undefined}
                                             aria-haspopup="true"
                                             onClick={(e) => handlePopoverOpen(workout.id, e)}
+                                            disabled={isLaterDate(workout.date)}
                                         >
                                             {workout.rating ? customIcons[workout.rating].icon : customIcons[0].icon}
                                         </IconButton>
