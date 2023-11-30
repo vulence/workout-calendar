@@ -86,15 +86,6 @@ public class WorkoutController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Workout rating updated successfully.");
     }
 
-    @PatchMapping("/{id}/setFinished")
-    public ResponseEntity<?> updateFinished(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
-        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
-
-        workoutService.updateFinished(jwtService.parseUsernameFromJwt(jwtToken), id);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Workout finished status updated successfully.");
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
         if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");

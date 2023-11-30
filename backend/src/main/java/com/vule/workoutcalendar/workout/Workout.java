@@ -17,7 +17,6 @@ public class Workout {
     private String notes;
     private Integer duration;
     private Integer rating;
-    private Boolean finished;
     private Integer userId;
     private Set<ExerciseDone> exercisesDone = new HashSet<>();
 
@@ -27,7 +26,6 @@ public class Workout {
         this.notes = notes;
         this.duration = duration;
         this.rating = rating;
-        this.finished = false;
     }
 
     public Integer getId() {
@@ -93,14 +91,6 @@ public class Workout {
 
     public void removeExerciseDone(ExerciseDone ed) {
         exercisesDone.remove(ed);
-    }
-
-    public Boolean getFinished() {
-        return finished;
-    }
-
-    public void setFinished(Boolean finished) {
-        this.finished = finished;
     }
 
     public Integer getuserId() {

@@ -13,11 +13,10 @@ CREATE TABLE IF NOT EXISTS Workout (
     duration INTEGER,
     notes text,
     rating INTEGER,
-    finished BOOL,
     user_id INTEGER NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY(user_id) REFERENCES Users(id),
-    CONSTRAINT CHK_Workout CHECK ((RATING >= 1 AND RATING <= 5) OR RATING IS NULL)
+    CONSTRAINT CHK_Workout CHECK ((RATING >= 0 AND RATING <= 5) OR RATING IS NULL)
 );
 
 CREATE TABLE IF NOT EXISTS Exercise (

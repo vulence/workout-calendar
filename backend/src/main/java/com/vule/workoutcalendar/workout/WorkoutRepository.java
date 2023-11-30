@@ -73,12 +73,4 @@ public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> 
            WHERE ID = :id
             """)
     void updateRating(@Param("id") Integer id, @Param("rating") Integer rating);
-
-    @Modifying
-    @Query("""
-            UPDATE WORKOUT
-            SET finished = :finished
-            WHERE ID = :id
-            """)
-    void updateFinished(@Param("id") Integer id, @Param("finished") Integer finished);
 }

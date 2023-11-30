@@ -21,8 +21,6 @@ import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied
 import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { pink } from '@mui/material/colors';
 import dayjs, { Dayjs } from 'dayjs';
@@ -108,7 +106,7 @@ export default function AllWorkouts() {
             label: 'default',
         },
         1: {
-            icon: <SentimentVeryDissatisfiedIcon color="error" />,
+            icon: <SentimentVeryDissatisfiedIcon sx={{ color: "red" }} />,
             label: 'Very Dissatisfied',
         },
         2: {
@@ -124,7 +122,7 @@ export default function AllWorkouts() {
             label: 'Satisfied',
         },
         5: {
-            icon: <SentimentVerySatisfiedIcon color="success" />,
+            icon: <SentimentVerySatisfiedIcon sx={{ color: "green" }} />,
             label: 'Very Satisfied',
         },
     };
@@ -200,7 +198,15 @@ export default function AllWorkouts() {
         // Update the rating in the state
         const updatedWorkouts: Array<WorkoutDto> = workouts.map((w) => {
             if (w.id === workoutId) {
-                return { ...w, rating: rating };
+                // Remove the rating if the user clicks on the same rating as it already is
+                if (rating === null) {
+                    rating = 0; // In order to make a valid API call
+                    return { ...w, rating: rating};
+                }
+                // Set the rating if it's not the same
+                else {
+                    return { ...w, rating: rating };
+                }
             }
 
             return w;
@@ -221,28 +227,6 @@ export default function AllWorkouts() {
         })
 
         handlePopoverClose(workoutId);
-    }
-
-    // Mark workout as finished/not finished
-    const handleFinished = (workoutId: number) => {
-        // Update the finished state inside the workouts state
-        const updatedWorkouts: Array<WorkoutDto> = workouts.map((w) => {
-            if (w.id === workoutId) {
-                return { ...w, finished: !w.finished };
-            }
-
-            return w;
-        });
-
-        setWorkouts(updatedWorkouts);
-
-        // Update the finished state in the database
-        fetch(`http://localhost:8080/workouts/${workoutId}/setFinished`, {
-            method: "PATCH",
-            credentials: "include",
-        }).then(() => {
-            console.log("Workout finished status successfully modified!");
-        })
     }
 
     // Applies filters to workouts
@@ -341,12 +325,6 @@ export default function AllWorkouts() {
                                     <Tooltip title="Delete workout" arrow>
                                         <IconButton onClick={() => handleDelete(workout.id)} sx={{ marginRight: 'auto' }}>
                                             <DeleteIcon sx={{ color: pink[500] }} />
-                                        </IconButton>
-                                    </Tooltip>
-
-                                    <Tooltip title={workout.finished ? "Mark as not done?" : "Mark as done?"} arrow>
-                                        <IconButton className={styles.finishedIcon} onClick={(e) => handleFinished(workout.id)}>
-                                            {workout.finished ? <CheckCircleIcon color="success" /> : <CheckCircleOutlineIcon />}
                                         </IconButton>
                                     </Tooltip>
 

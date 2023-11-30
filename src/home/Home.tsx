@@ -53,7 +53,7 @@ export default function Home() {
             const month = parseInt(parts[1]) - 1;
             const day = parseInt(parts[0]);
 
-            const newEvent: CalendarEvent = { id: workout.id, title: workout.title, start: new Date(year, month, day), end: new Date(year, month, day) };
+            const newEvent: CalendarEvent = { id: workout.id, title: workout.title, start: new Date(year, month, day), end: new Date(year, month, day), rating: workout.rating };
             curEvents.push(newEvent);
         });
 
@@ -102,6 +102,7 @@ export default function Home() {
         <Container style={{ width: "100%", margin: 0, padding: 0, maxWidth: "100%" }}>
             <Box style={{ backgroundColor: "white", borderRadius: 10 }}>
                 <Calendar
+                    selectable
                     localizer={localizer}
                     events={events}
                     startAccessor="start"
@@ -113,7 +114,33 @@ export default function Home() {
                     components={{
                         toolbar: CustomToolbar
                     }}
-                    selectable
+                    eventPropGetter={(event) => {
+                        let backgroundColor : string;
+
+                        // Sets the event color based on the rating
+                        switch (event.rating) {
+                            case 1:
+                                backgroundColor = "red";
+                                break;
+                            case 2:
+                                backgroundColor = "#f44336";
+                                break;
+                            case 3:
+                                backgroundColor = "#ffa726";
+                                break;
+                            case 4:
+                                backgroundColor = "#66bb6a";
+                                break;
+                            case 5:
+                                backgroundColor = "green";
+                                break;
+                            default:
+                                backgroundColor = "grey";
+                                break;
+                        }
+
+                        return { style: { backgroundColor } }
+                    }}
                 />
 
                 <AddWorkoutModal

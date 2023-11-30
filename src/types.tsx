@@ -28,16 +28,7 @@ export type Workout = {
     notes: string;
     duration: number;
     rating: number;
-    finished: boolean;
     exercisesDone: Array<ExerciseDone>;
-};
-
-export type ExerciseDone = {
-    id: number;
-    weight: number;
-    sets: number;
-    reps: number;
-    exercise: Exercise;
 };
 
 export type WorkoutDto = {
@@ -47,8 +38,15 @@ export type WorkoutDto = {
     notes: string;
     duration: number;
     rating: number;
-    finished: boolean;
     muscleGroups: Array<string>;
+};
+
+export type ExerciseDone = {
+    id: number;
+    weight: number;
+    sets: number;
+    reps: number;
+    exercise: Exercise;
 };
 
 export type MuscleGroup = {
@@ -167,4 +165,5 @@ export type CalendarEvent = {
     title: string;
     start: Date;
     end: Date;
+    rating: number;
 }

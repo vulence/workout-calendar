@@ -14,7 +14,6 @@ public class WorkoutDto {
     private String notes;
     private Integer duration;
     private Integer rating;
-    private Boolean finished;
     private Set<String> muscleGroups;
 
     public WorkoutDto() {}
@@ -26,7 +25,6 @@ public class WorkoutDto {
         this.notes = workout.getNotes();
         this.duration = workout.getDuration();
         this.rating = workout.getRating();
-        this.finished = workout.getFinished();
     }
 
     public Integer getId() {
@@ -75,14 +73,6 @@ public class WorkoutDto {
 
     public void setRating(Integer rating) {
         this.rating = rating;
-    }
-
-    public Boolean getFinished() {
-        return finished;
-    }
-
-    public void setFinished(Boolean finished) {
-        this.finished = finished;
     }
 
     public Set<String> getMuscleGroups() {
