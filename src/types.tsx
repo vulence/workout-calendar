@@ -174,6 +174,10 @@ export type AllWorkoutsFilters = {
     muscleGroupName: string;
 }
 
-export type filterAccordionProps = {
+export type FilterAccordionProps = {
     updateParentValues: (newValues : AllWorkoutsFilters) => void;
+}
+
+export type ExerciseFilterProps = {
+    updateParentValues: (muscleGroupName : string) => void;
 }

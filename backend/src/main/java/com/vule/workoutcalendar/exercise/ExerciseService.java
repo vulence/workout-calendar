@@ -38,6 +38,7 @@ public class ExerciseService {
             allExercisesMuscleGroups.add(new ExerciseDto(e.getId(), e.getName(), e.getDescription(), muscles));
         }
 
+
         return allExercisesMuscleGroups;
     }
 

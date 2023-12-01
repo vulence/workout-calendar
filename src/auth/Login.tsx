@@ -8,7 +8,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import styles from './login.module.css';
 import { LoginFormData } from "../types";
 import { Link } from "react-router-dom";
-import { AuthContext } from '../auth/AuthContext';
+import { AuthContext } from './AuthContext';
 import { AuthContextType } from '../types';
 
 export default function Login() {

@@ -8,11 +8,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import styles from './allWorkouts.module.css';
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { MuscleGroup, AllWorkoutsFilters, filterAccordionProps } from '../../types';
+import { MuscleGroup, AllWorkoutsFilters, FilterAccordionProps } from '../../types';
 
 dayjs.extend(utc);
 
-export default function FilterAccordion(props : filterAccordionProps) {
+export default function FilterAccordion(props : FilterAccordionProps) {
     // Data states
     const [muscleGroups, setMuscleGroups] = useState<Array<MuscleGroup>>([]);
     const [formValues, setFormValues] = useState<AllWorkoutsFilters>({
@@ -83,7 +83,7 @@ export default function FilterAccordion(props : filterAccordionProps) {
                         >
                             <MenuItem value=""><em>None</em></MenuItem>
                             {muscleGroups.map(muscleGroup =>
-                                <MenuItem value={muscleGroup.name}>{muscleGroup.name}</MenuItem>
+                                <MenuItem key={muscleGroup.id} value={muscleGroup.name}>{muscleGroup.name}</MenuItem>
                             )}
                         </Select>
                     </Box>

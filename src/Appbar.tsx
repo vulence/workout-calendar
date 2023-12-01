@@ -31,7 +31,9 @@ const pages = ['Workouts', 'Exercises', 'Muscle Groups'];
 const settings = ['Workouts', 'Exercises', 'Account', 'Logout'];
 
 function ResponsiveAppBar() {
+  // Loads in the authentication status and user object from context
   const { authenticated, user } = useContext<AuthContextType>(AuthContext);
+
   const [anchorElUser, setAnchorElUser] = React.useState<HTMLElement | null>(null);
   const [state, setState] = useState<boolean>(false);
 
@@ -66,7 +68,7 @@ function ResponsiveAppBar() {
     >
       <List>
         {pages.map((page) => (
-          <Link to={page.replace(/\s/g, '').toLowerCase()} style={{ color: 'inherit' }}>
+          <Link key={page} to={page.replace(/\s/g, '').toLowerCase()} style={{ color: 'inherit', textDecoration: 'none' }}>
             <ListItem key={page} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
@@ -81,7 +83,7 @@ function ResponsiveAppBar() {
     </Box>
   );
 
-  const iconMap : IconMap = {
+  const iconMap: IconMap = {
     workouts: <FitnessCenterIcon fontSize="small" />,
     exercises: <SportsGymnasticsIcon fontSize="small" />,
     account: <AccountCircleIcon fontSize="small" />,
@@ -170,7 +172,7 @@ function ResponsiveAppBar() {
                   onClose={handleCloseUserMenu}
                 >
                   {settings.map((setting) => (
-                    <Link to={setting.replace(/\s/g, '').toLowerCase()} style={{textDecoration: "none", color: "white"}}>
+                    <Link key={setting} to={setting.replace(/\s/g, '').toLowerCase()} style={{ textDecoration: "none", color: "white" }}>
                       <MenuItem key={setting} onClick={handleCloseUserMenu}>
                         <ListItemIcon>
                           {iconMap[setting.replace(/\s/g, '').toLowerCase()]}

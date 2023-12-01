@@ -42,7 +42,13 @@ export default function AddExerciseDoneModal(props: AddExerciseDoneModalProps) {
     }, [props.name])
 
     useEffect(() => {
-        setWeight(props.weight);
+        if (props.weight === 0) {
+            setSwitchOn(true);
+        }
+        else {
+            setWeight(props.weight);
+            setSwitchOn(false);
+        }
     }, [props.weight])
 
     useEffect(() => {
@@ -78,6 +84,7 @@ export default function AddExerciseDoneModal(props: AddExerciseDoneModalProps) {
                     className={styles.autoComplete}
                     onChange={(e, newValue) => setName(newValue?.name || '')}
                     renderInput={(params) => <TextField {...params} label="Exercise name" />}
+                    disabled={name ? true : false}
                 />
 
                 <Box display="flex" alignItems="center" justifyContent="center" marginTop={2}>

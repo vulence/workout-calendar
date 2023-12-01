@@ -1,43 +1,35 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
+import { Container, IconButton, Collapse, Typography, Grid, Card, CardActions, CardContent, CardHeader, CardMedia } from '@mui/material';
 import TimelineIcon from '@mui/icons-material/Timeline';
-import IconButton from '@mui/material/IconButton';
 import { Link } from "react-router-dom";
 import { Helmet } from 'react-helmet';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Collapse from '@mui/material/Collapse';
-import Typography from '@mui/material/Typography';
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
 
 import { ExerciseDto, ExpandMoreProps, ExpandedState, AllExercisesDataGridRows } from '../types';
+import ExerciseFilter from './ExerciseFilter';
 
 export default function AllExercises() {
     // Data states
-    const [name, setName] = useState<String>('');
-    const [exercise, setExercise] = useState<Array<ExerciseDto>>([]);
-
-    // Dialog control state
-    const [open, setOpen] = useState<boolean>(false);
+    const [exercises, setExercises] = useState<Array<ExerciseDto>>([]);
+    const [muscleGroupFilter, setMuscleGroupFilter] = useState<string>('');
 
     // Card expansion state
     const [expanded, setExpanded] = useState<ExpandedState>({});
 
+    // Initialize all exercises
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await fetch("http://localhost:8080/exercises");
+            const result = await response.json();
+            setExercises(result);
+        };
+        fetchData();
+    }, [setExercises]);
+
     // Used for collapsable cards
-    const ExpandMore = styled((props : ExpandMoreProps & React.ComponentProps<typeof IconButton>) => {
+    const ExpandMore = styled((props: ExpandMoreProps & React.ComponentProps<typeof IconButton>) => {
         const { expand, ...other } = props;
         return <IconButton {...other} />;
     })(({ theme, expand }) => ({
@@ -49,11 +41,11 @@ export default function AllExercises() {
     }));
 
     // Load data grid rows
-    const getRows = (exercise : Array<ExerciseDto>) => {
-        const rows : Array<AllExercisesDataGridRows> = [];
+    const getRows = (exercises: Array<ExerciseDto>) => {
+        const rows: Array<AllExercisesDataGridRows> = [];
 
-        exercise.forEach((exercise) => {
-            let muscles : string = "";
+        exercises.forEach((exercise) => {
+            let muscles: string = "";
 
             exercise.muscleGroups.forEach((muscleGroup) => muscles += muscleGroup.name + ", ");
             muscles = muscles.slice(0, -2);
@@ -64,49 +56,33 @@ export default function AllExercises() {
                 description: exercise.description,
                 muscleGroups: muscles
             })
-        })
+        });
 
         return rows;
     }
 
-    // Initialize all exercises
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:8080/exercises");
-            const result = await response.json();
-            setExercise(result);
-        };
-        fetchData();
-    }, [setExercise])
+    // Filters rows and calls the getRows function to structure them
+    const filteredRows = (exercises: Array<ExerciseDto>) => {
+        // If there are no filters, return all exercises
+        if (muscleGroupFilter === '') {
+            return getRows(exercises);
+        }
 
-    // Exercise form submission
-    const handleSubmit = (e : React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-
-        const exercise = { name };
-        fetch("http://localhost:8080/exercises/new", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(exercise)
-        }).then(() => {
-            console.log("New exercise added");
-        })
-
-        window.location.reload();
+        // If there are filters, apply them
+        return getRows(exercises.filter(exercise =>
+            exercise.muscleGroups.some(muscleGroup =>
+                muscleGroup.name === muscleGroupFilter
+            )
+        ));
     }
 
-    // Dialog open handler
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    // Dialog close handler
-    const handleClose = () => {
-        setOpen(false);
-    };
+    // Callback function for exerciseFilter
+    const handleFilters = (muscleGroupName: string) => {
+        setMuscleGroupFilter(muscleGroupName);
+    }
 
     // Expand card handler
-    const handleExpandClick = (id : number) => {
+    const handleExpandClick = (id: number) => {
         setExpanded(expanded => ({
             ...expanded,
             [id]: !expanded[id],
@@ -119,9 +95,13 @@ export default function AllExercises() {
                 <title>All Exercises</title>
             </Helmet>
 
+            <ExerciseFilter 
+                updateParentValues={handleFilters} 
+            />
+
             <Grid container spacing={2} sx={{ marginBottom: "30px", marginTop: "15px" }}>
-                {getRows(exercise).map(ex => (
-                    <Grid item xs={1} sm={2} md={3} sx={{ minWidth: "200px" }}>
+                {filteredRows(exercises).map(ex => (
+                    <Grid key={ex.id} item xs={1} sm={2} md={3} sx={{ minWidth: "200px" }}>
                         <Card key={ex.id.toString()} variant="outlined">
                             <CardMedia
                                 height="200"
@@ -134,7 +114,7 @@ export default function AllExercises() {
                                 subheader={ex.muscleGroups}
                             />
                             <CardActions>
-                                <IconButton component={Link} to={exercise.find(e => e.name === ex.name)?.id.toString() + "/history"}>
+                                <IconButton component={Link} to={exercises.find(e => e.name === ex.name)?.id.toString() + "/history"}>
                                     <TimelineIcon />
                                 </IconButton>
                                 <ExpandMore
@@ -157,30 +137,6 @@ export default function AllExercises() {
                     </Grid>
                 ))}
             </Grid>
-
-            <Button sx={{ fontSize: "20px" }} variant="contained" startIcon={<FitnessCenterIcon />} size="large" onClick={handleClickOpen}>
-                ADD EXERCISE
-            </Button>
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle margin="10px">Add exercise</DialogTitle>
-                <DialogContent>
-                    <TextField required
-                        fullWidth
-                        sx={{
-                            margin: '10px 0 0 0'
-                        }}
-                        id="exercise-name"
-                        label="Exercise name"
-                        variant="outlined"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} variant="outlined" color="error">Cancel</Button>
-                    <Button onClick={(e) => handleSubmit(e)} variant="contained" color="success">Submit</Button>
-                </DialogActions>
-            </Dialog>
         </Container>
     );
 }

@@ -249,7 +249,7 @@ export default function AllWorkouts() {
 
                 <Grid container spacing={2} className={styles.gridContainer}>
                     {filterWorkouts().sort((a, b) => a.date > b.date ? -1 : 1).map((workout, index) => (
-                        <Grid item xs={1} sm={2} md={3} className={styles.gridItem}>
+                        <Grid key={workout.id} item xs={1} sm={2} md={3} className={styles.gridItem}>
                             <Card key={workout.id.toString()} variant="outlined">
                                 <Tooltip title="Click to see more" placement="top" arrow>
                                     <CardActionArea component={Link} to={workout.id.toString()}>

@@ -9,14 +9,14 @@ import AllMuscleGroups from './musclegroups/AllMuscleGroups';
 import Home from './home/Home';
 import { Helmet } from 'react-helmet';
 import { ThemeProvider } from '@mui/material/styles';
-import Login from './login/Login';
-import Register from './register/Register';
+import Login from './auth/Login';
+import Register from './auth/Register';
 import theme from './theme';
 
 import { AuthContext } from './auth/AuthContext';
 import { useContext } from 'react';
 import { AuthContextType } from './types';
-import Logout from "./logout/Logout";
+import Logout from "./auth/Logout";
 
 export default function App() {
   // Gets user authentication status and loading status from context

@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 
-import { AuthContext } from '../auth/AuthContext';
+import { AuthContext } from './AuthContext';
 import { AuthContextType } from '../types';
 
 export default function Logout() {

@@ -9,7 +9,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import styles from './register.module.css';
 import { AuthContextType, RegisterFormData } from '../types';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../auth/AuthContext';
+import { AuthContext } from './AuthContext';
 
 export default function Register() {
     // Gets the authentification context

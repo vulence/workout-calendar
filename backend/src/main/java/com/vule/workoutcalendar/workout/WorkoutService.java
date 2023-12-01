@@ -2,7 +2,6 @@ package com.vule.workoutcalendar.workout;
 
 import com.vule.workoutcalendar.exercise.Exercise;
 import com.vule.workoutcalendar.exercisedone.ExerciseDone;
-import com.vule.workoutcalendar.exercise.dto.DataGridExerciseDto;
 import com.vule.workoutcalendar.exercisedone.dto.ExerciseDoneDto;
 import com.vule.workoutcalendar.user.UserRepository;
 import com.vule.workoutcalendar.workout.dto.WorkoutDto;
@@ -139,20 +138,20 @@ public class WorkoutService {
         workouts.deleteByIdAndUserId(id, userId);
     }
 
-    public void updateWorkoutExercise(String username, Integer workoutId, DataGridExerciseDto dataGridExerciseDto) {
+    public void updateWorkoutExercise(String username, Integer workoutId, ExerciseDone exerciseDone) {
         Integer userId = users.findByUsername(username).getId();
 
         Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
-        ExerciseDone ed = workouts.findExerciseDone(dataGridExerciseDto.getRowId());
+        ExerciseDone ed = workouts.findExerciseDone(exerciseDone.getId());
 
-        ed.setWeight(dataGridExerciseDto.getWeight());
-        ed.setSets(dataGridExerciseDto.getSets());
-        ed.setReps(dataGridExerciseDto.getReps());
+        ed.setWeight(exerciseDone.getWeight());
+        ed.setSets(exerciseDone.getSets());
+        ed.setReps(exerciseDone.getReps());
 
-        workouts.updateExerciseDone(dataGridExerciseDto.getRowId(),
-                                    dataGridExerciseDto.getWeight(),
-                                    dataGridExerciseDto.getSets(),
-                                    dataGridExerciseDto.getReps());
+        workouts.updateExerciseDone(ed.getId(),
+                                    ed.getWeight(),
+                                    ed.getSets(),
+                                    ed.getReps());
     }
 
     public void deleteWorkoutExercise(String username, Integer workoutId, Integer exerciseDoneId) {

@@ -29,6 +29,7 @@ export default function AddWorkoutModal(props: AddWorkoutModalProps) {
     const [hours, setHours] = useState<number>(0);
     const [minutes, setMinutes] = useState<number>(0);
 
+    // Sets the date from the props if it is passed in (used when clicking on the calendar directly to set the event)
     useEffect(() => {
         props.date ? setDate(props.date) : null;
     }, [props.date]);
@@ -79,8 +80,8 @@ export default function AddWorkoutModal(props: AddWorkoutModalProps) {
                             label="Hours"
                             onChange={(e) => setHours(+e.target.value)}
                         >
-                            {[...Array.from(Array(5).keys())].map((num, i) =>
-                                <MenuItem value={i}>{i}</MenuItem>
+                            {[...Array(5)].map((_, i) =>
+                                <MenuItem key={i} value={i}>{i}</MenuItem>
                             )}
                         </Select>
                         <FormHelperText>Hours</FormHelperText>
@@ -94,8 +95,8 @@ export default function AddWorkoutModal(props: AddWorkoutModalProps) {
                             label="Minutes"
                             onChange={(e) => setMinutes(+e.target.value)}
                         >
-                            {[...Array.from(Array(60).keys())].map((num, i) =>
-                                <MenuItem value={i}>{i}</MenuItem>
+                            {[...Array(60)].map((_, i) =>
+                                <MenuItem key={i} value={i}>{i}</MenuItem>
                             )}
                         </Select>
                         <FormHelperText>Minutes</FormHelperText>

@@ -112,6 +112,7 @@ export default function Workout() {
 
     // Exercise done form submission
     const handleExerciseSubmit = async (exerciseId: number, weight: number, sets: number, reps: number) => {
+        // If user is submitting a new done exercise, create a new object includes exercise id
         if (rowId === null) {
             const exerciseDoneDto = { exerciseId, weight, sets, reps };
 
@@ -127,14 +128,16 @@ export default function Workout() {
             })
         }
 
+        // If user is editing an existing done exercise, include the id of the exercisedone to be modified
         else {
-            const dataGridExerciseDto = { rowId, weight, sets, reps };
+            const exerciseDone = { id: rowId, weight, sets, reps };
+
             fetch(`http://localhost:8080/workouts/${id}/exercises/update`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(dataGridExerciseDto),
+                body: JSON.stringify(exerciseDone),
                 credentials: "include"
             }).then(() => {
                 console.log("Exercise successfully updated");

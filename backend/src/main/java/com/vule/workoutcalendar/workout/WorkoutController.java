@@ -1,6 +1,6 @@
 package com.vule.workoutcalendar.workout;
 
-import com.vule.workoutcalendar.exercise.dto.DataGridExerciseDto;
+import com.vule.workoutcalendar.exercisedone.ExerciseDone;
 import com.vule.workoutcalendar.exercisedone.dto.ExerciseDoneDto;
 import com.vule.workoutcalendar.jwt.JwtService;
 import jakarta.validation.Valid;
@@ -105,10 +105,10 @@ public class WorkoutController {
     }
 
     @PutMapping("/{id}/exercises/update")
-    public ResponseEntity<?> updateWorkoutExercise(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id, @Valid @RequestBody DataGridExerciseDto dataGridExerciseDto) {
+    public ResponseEntity<?> updateWorkoutExercise(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id, @Valid @RequestBody ExerciseDone exerciseDone) {
         if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        workoutService.updateWorkoutExercise(jwtService.parseUsernameFromJwt(jwtToken), id, dataGridExerciseDto);
+        workoutService.updateWorkoutExercise(jwtService.parseUsernameFromJwt(jwtToken), id, exerciseDone);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Workout exercise updated successfully.");
     }
