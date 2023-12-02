@@ -1,0 +1,16 @@
+.content {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.calendarContainer {
+    display: flex;
+    border-radius: 10px !important;
+    margin-top: 10px !important;
+}
+
+@media (max-width: 768px) {
+    .calendarContainer {
+        display: block;
+    }
+}

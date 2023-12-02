@@ -100,7 +100,7 @@ export default function AllExercises() {
             />
 
             <Grid container spacing={2} sx={{ marginBottom: "30px", marginTop: "15px" }}>
-                {filteredRows(exercises).map(ex => (
+                {filteredRows(exercises).sort((a, b) => a.name > b.name ? 1 : -1).map(ex => (
                     <Grid key={ex.id} item xs={1} sm={2} md={3} sx={{ minWidth: "200px" }}>
                         <Card key={ex.id.toString()} variant="outlined">
                             <CardMedia

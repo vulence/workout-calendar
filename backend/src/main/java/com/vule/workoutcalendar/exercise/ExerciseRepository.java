@@ -23,6 +23,7 @@ public interface ExerciseRepository extends ListCrudRepository<Exercise, Integer
           INNER JOIN EXERCISE_DONE ED ON W.ID = ED.WORKOUT
           WHERE W.USER_ID = :userId AND ED.EXERCISE = :exerciseId
           GROUP BY W.DATE
+          ORDER BY W.DATE ASC
             """)
     List<ExerciseHistoryDto> findMaxWeights(@Param("userId") Integer userId, @Param("exerciseId") Integer id);
 }

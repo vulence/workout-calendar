@@ -140,8 +140,7 @@ export default function ExerciseHistory() {
                         dataset={maxWeight!}
                     />
                 </Container>
-            ) : null
-            }
+            ) : null}
         </Container>
     )
 }

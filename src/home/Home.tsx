@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
+import { Container, Box, Card, CardContent, CardHeader, Typography, Divider } from '@mui/material';
 import { Calendar, dayjsLocalizer } from 'react-big-calendar';
 import { useNavigate } from 'react-router-dom';
 import dayjs, { Dayjs } from 'dayjs';
@@ -11,6 +10,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import CustomToolbar from './CalendarToolbar';
 import { WorkoutDto, CalendarEvent } from '../types';
 import AddWorkoutModal from '../workouts/allworkouts/AddWorkoutModal';
+import styles from './home.module.css';
 
 dayjs.extend(utc);
 
@@ -61,7 +61,7 @@ export default function Home() {
     }, [workouts]);
 
     // Dialog open handler
-    const handleOpenAddWorkout = (e : { start : Date}) => {
+    const handleOpenAddWorkout = (e: { start: Date }) => {
         setSelectedDate(dayjs(e.start).set('hour', 23));
         setOpenAddWorkout(true);
     };
@@ -99,8 +99,8 @@ export default function Home() {
     };
 
     return (
-        <Container style={{ width: "100%", margin: 0, padding: 0, maxWidth: "100%" }}>
-            <Box style={{ backgroundColor: "white", borderRadius: 10 }}>
+        <Container className={styles.content}>
+            <Box className={styles.calendarContainer}>
                 <Calendar
                     selectable
                     localizer={localizer}
@@ -108,14 +108,14 @@ export default function Home() {
                     startAccessor="start"
                     endAccessor="end"
                     views={['month']}
-                    style={{ height: 500, borderRadius: 5 }}
+                    style={{ height: 500, borderRadius: 5, flex: 3 }}
                     onSelectEvent={handleClick}
                     onSelectSlot={handleOpenAddWorkout}
                     components={{
                         toolbar: CustomToolbar
                     }}
                     eventPropGetter={(event) => {
-                        let backgroundColor : string;
+                        let backgroundColor: string;
 
                         // Sets the event color based on the rating
                         switch (event.rating) {
@@ -142,6 +142,18 @@ export default function Home() {
                         return { style: { backgroundColor } }
                     }}
                 />
+
+                <Card variant="outlined" sx={{flex: 1, margin: 2, borderRadius: 10 }}>
+                    <CardHeader
+                        title="Your stats"
+                        titleTypographyProps={{fontWeight: "bold", fontSize: 25, color: "grey"}}
+                    />
+                    <Divider />
+
+                    <CardContent sx={{display: "flex"}}>
+                        <Typography>Workouts in a row: 4</Typography>
+                    </CardContent>
+                </Card>
 
                 <AddWorkoutModal
                     open={openAddWorkout}

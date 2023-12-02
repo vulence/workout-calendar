@@ -172,6 +172,7 @@ export type AllWorkoutsFilters = {
     filterYear: number | null;
     filterMonth: number | null;
     muscleGroupName: string;
+    sortByDate: string;
 }
 
 export type FilterAccordionProps = {

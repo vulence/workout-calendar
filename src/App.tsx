@@ -1,22 +1,23 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import './App.css';
 import Appbar from './Appbar';
-import AllExercises from './exercise/AllExercises';
-import AllWorkouts from './workouts/allworkouts/AllWorkouts';
-import Workout from './workouts/workout/Workout';
+import { Helmet } from 'react-helmet';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './theme';
+
+import Login from './auth/Login';
+import Register from './auth/Register';
 import ExerciseHistory from './exercise/ExerciseHistory';
 import AllMuscleGroups from './musclegroups/AllMuscleGroups';
 import Home from './home/Home';
-import { Helmet } from 'react-helmet';
-import { ThemeProvider } from '@mui/material/styles';
-import Login from './auth/Login';
-import Register from './auth/Register';
-import theme from './theme';
-
+import AllExercises from './exercise/AllExercises';
+import AllWorkouts from './workouts/allworkouts/AllWorkouts';
+import Workout from './workouts/workout/Workout';
+import Logout from "./auth/Logout";
+import Account from "./account/Account";
 import { AuthContext } from './auth/AuthContext';
 import { useContext } from 'react';
 import { AuthContextType } from './types';
-import Logout from "./auth/Logout";
 
 export default function App() {
   // Gets user authentication status and loading status from context
@@ -50,6 +51,7 @@ export default function App() {
               <Route path="/workouts" element={<AllWorkouts />} />
               <Route path="/workouts/:id" element={<Workout />} />
               <Route path="/musclegroups" element={<AllMuscleGroups />} />
+              <Route path="/account" element={<Account />} />
               <Route path="/logout" element={<Logout />} />
             </>
           }

@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import {
-    Button, Box, MenuItem, Select, Accordion, AccordionSummary, AccordionDetails, AccordionActions, Typography
+    Button, Box, MenuItem, Select, Accordion, AccordionSummary, AccordionDetails, AccordionActions, Typography, Switch, Stack, ToggleButtonGroup, ToggleButton
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import NorthIcon from '@mui/icons-material/North';
+import SouthIcon from '@mui/icons-material/South';
 import styles from './allWorkouts.module.css';
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -12,13 +14,14 @@ import { MuscleGroup, AllWorkoutsFilters, FilterAccordionProps } from '../../typ
 
 dayjs.extend(utc);
 
-export default function FilterAccordion(props : FilterAccordionProps) {
+export default function FilterAccordion(props: FilterAccordionProps) {
     // Data states
     const [muscleGroups, setMuscleGroups] = useState<Array<MuscleGroup>>([]);
     const [formValues, setFormValues] = useState<AllWorkoutsFilters>({
         filterYear: null,
         filterMonth: null,
         muscleGroupName: '',
+        sortByDate: "desc"
     });
 
     // Initialize all muscle groups
@@ -38,7 +41,7 @@ export default function FilterAccordion(props : FilterAccordionProps) {
     }, [setMuscleGroups]);
 
     // Updates the form values state
-    const handleChange = (id : string, value : number | string) => {
+    const handleChange = (id: string, value: number | string) => {
         const newValues = ({ ...formValues, [id]: value });
 
         setFormValues(newValues);
@@ -47,7 +50,7 @@ export default function FilterAccordion(props : FilterAccordionProps) {
 
     // Removes all filters
     const removeFilters = () => {
-        const newValues = ({ filterYear: null, filterMonth: null, muscleGroupName: '' });
+        const newValues = ({ filterYear: null, filterMonth: null, muscleGroupName: '', sortByDate: formValues.sortByDate});
 
         setFormValues(newValues);
         props.updateParentValues(newValues);
@@ -70,6 +73,25 @@ export default function FilterAccordion(props : FilterAccordionProps) {
                         <Typography>Filter by date</Typography>
                         <DatePicker value={formValues.filterYear ? dayjs().set('year', formValues.filterYear) : null} className={styles.datePicker} label={'year'} views={['year']} onAccept={(e) => handleChange("filterYear", e!.year())} />
                         <DatePicker value={formValues.filterMonth ? dayjs().set('month', formValues.filterMonth) : null} className={styles.datePicker} label={'month'} views={['month']} onAccept={(e) => handleChange("filterMonth", e!.month())} />
+
+                        <Typography sx={{marginTop: 2}}>Sort by date</Typography>
+                        <ToggleButtonGroup
+                            color="primary"
+                            value={formValues.sortByDate}
+                            exclusive
+                            onChange={(_, newSortByDate) => handleChange("sortByDate", newSortByDate)}
+                            sx={{ display: "block" }}
+                        >
+                            <ToggleButton value="asc">
+                                <Typography>ASC</Typography>
+                                <NorthIcon />
+                            </ToggleButton>
+                            <ToggleButton value="desc">
+                                <Typography>DESC</Typography>
+                                <SouthIcon />
+                            </ToggleButton>
+                        </ToggleButtonGroup>
+
                     </Box>
                     <Box className={styles.childBox}>
                         <Typography>Filter by muscle group</Typography>

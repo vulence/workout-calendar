@@ -36,6 +36,7 @@ export default function AllWorkouts() {
         filterYear: null,
         filterMonth: null,
         muscleGroupName: '',
+        sortByDate: 'desc'
     });
 
     // Stores burned calories for each workout
@@ -134,7 +135,7 @@ export default function AllWorkouts() {
         if (filterValues.filterMonth !== null) filteredWorkouts = filteredWorkouts.filter(workout => parseInt(workout.date.split('-')[1]) === filterValues.filterMonth! + 1);
         if (filterValues.muscleGroupName !== '') filteredWorkouts = filteredWorkouts.filter(workout => workout.muscleGroups.includes(filterValues.muscleGroupName));
 
-        return filteredWorkouts;
+        return filteredWorkouts.sort(filterValues.sortByDate === 'desc' ? ((a, b) => a.date > b.date ? -1 : 1) : ((a, b) => a.date > b.date ? 1 : -1));
     }
 
     // Filter callback function
@@ -248,7 +249,7 @@ export default function AllWorkouts() {
                 />
 
                 <Grid container spacing={2} className={styles.gridContainer}>
-                    {filterWorkouts().sort((a, b) => a.date > b.date ? -1 : 1).map((workout, index) => (
+                    {filterWorkouts().map((workout, index) => (
                         <Grid key={workout.id} item xs={1} sm={2} md={3} className={styles.gridItem}>
                             <Card key={workout.id.toString()} variant="outlined">
                                 <Tooltip title="Click to see more" placement="top" arrow>
