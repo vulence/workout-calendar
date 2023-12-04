@@ -11,6 +11,7 @@ import styles from './allWorkouts.module.css';
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { MuscleGroup, AllWorkoutsFilters, FilterAccordionProps } from '../../types';
+import { fetchMuscleGroups } from '../../api/api';
 
 dayjs.extend(utc);
 
@@ -26,26 +27,17 @@ export default function FilterAccordion(props: FilterAccordionProps) {
 
     // Initialize all muscle groups
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:8080/muscleGroups", {
-                method: "GET",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-            });
-            const result = await response.json();
-            setMuscleGroups(result);
-        };
-        fetchData();
+        fetchMuscleGroups().then(data => setMuscleGroups(data));
     }, [setMuscleGroups]);
 
     // Updates the form values state
     const handleChange = (id: string, value: number | string) => {
         const newValues = ({ ...formValues, [id]: value });
 
-        setFormValues(newValues);
-        props.updateParentValues(newValues);
+        if (value) {
+            setFormValues(newValues);
+            props.updateParentValues(newValues);
+        }
     };
 
     // Removes all filters

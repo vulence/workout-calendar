@@ -9,6 +9,7 @@ import { styled } from '@mui/material/styles';
 
 import { ExerciseDto, ExpandMoreProps, ExpandedState, AllExercisesDataGridRows } from '../types';
 import ExerciseFilter from './ExerciseFilter';
+import { fetchExercises } from '../api/api';
 
 export default function AllExercises() {
     // Data states
@@ -20,12 +21,7 @@ export default function AllExercises() {
 
     // Initialize all exercises
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:8080/exercises");
-            const result = await response.json();
-            setExercises(result);
-        };
-        fetchData();
+        fetchExercises().then(data => setExercises(data));
     }, [setExercises]);
 
     // Used for collapsable cards

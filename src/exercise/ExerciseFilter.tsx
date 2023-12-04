@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Container, Typography, Select, MenuItem } from '@mui/material';
 
 import { ExerciseFilterProps, MuscleGroup } from '../types';
+import { fetchMuscleGroups } from '../api/api';
 
 export default function ExerciseFilter(props : ExerciseFilterProps) {
     // Data states
@@ -9,15 +10,8 @@ export default function ExerciseFilter(props : ExerciseFilterProps) {
 
     // Loads all the muscle groups
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch('http://localhost:8080/muscleGroups');
-            const result = await response.json();
-
-            setMuscleGroups(result);
-        };
-
-        fetchData();
-    }, []);
+        fetchMuscleGroups().then(data => setMuscleGroups(data));
+    }, [muscleGroups]);
 
     // Handles the value changes
     const handleChange = (newMuscleGroup : string) => {

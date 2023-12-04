@@ -3,6 +3,12 @@
     max-width: 100% !important;
 }
 
+@media (max-width: 420px) {
+    .content {
+        padding: 0 !important;
+    }
+}
+
 .calendarContainer {
     display: flex;
     border-radius: 10px !important;
@@ -13,4 +19,27 @@
     .calendarContainer {
         display: block;
     }
+}
+
+.todaysWorkoutTitleDuration {
+    display: flex !important;
+    justify-content: center !important;
+    margin-bottom: 10px !important;
+}
+
+.todaysWorkoutProgress {
+    display: flex;
+    flex-direction: column;
+}
+
+.cardStats {
+    flex: 1 !important;
+    margin: 15px !important;
+    border-radius: 10% !important;
+}
+
+.workoutOverviewContent {
+    border: 1px groove grey !important;
+    margin: 20px !important;
+    border-radius: 10px !important;
 }

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
 import { DataGrid } from '@mui/x-data-grid';
 import { MuscleGroup } from '../types';
+import { fetchMuscleGroups } from '../api/api';
 
 export default function AllMuscleGroups() {
     // Data states
@@ -16,12 +17,7 @@ export default function AllMuscleGroups() {
 
     // Initialize all muscle groups
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:8080/muscleGroups");
-            const result = await response.json();
-            setMuscleGroups(result);
-        };
-        fetchData();
+        fetchMuscleGroups().then(data => setMuscleGroups(data));
     }, [setMuscleGroups])
 
     return (

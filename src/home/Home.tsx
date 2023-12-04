@@ -1,18 +1,23 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Container, Box, Card, CardContent, CardHeader, Typography, Divider } from '@mui/material';
+import { Container, Box, Card, CardContent, CardHeader, Typography, Divider, Stack } from '@mui/material';
 import { Calendar, dayjsLocalizer } from 'react-big-calendar';
 import { useNavigate } from 'react-router-dom';
+import TimerIcon from '@mui/icons-material/Timer';
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import isToday from 'dayjs/plugin/isToday';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import CustomToolbar from './CalendarToolbar';
-import { WorkoutDto, CalendarEvent } from '../types';
+import { Workout, WorkoutDto, CalendarEvent } from '../types';
 import AddWorkoutModal from '../workouts/allworkouts/AddWorkoutModal';
+import LinearProgressWithLabel from './LinearProgressWithLabel';
 import styles from './home.module.css';
+import { fetchExerciseById, fetchWorkoutById, fetchWorkouts } from '../api/api';
 
 dayjs.extend(utc);
+dayjs.extend(isToday);
 
 export default function Home() {
     const navigate = useNavigate();
@@ -21,6 +26,8 @@ export default function Home() {
     // States for workouts and the calendar events
     const [workouts, setWorkouts] = useState<Array<WorkoutDto>>([]);
     const [events, setEvents] = useState<Array<CalendarEvent>>([]);
+    const [todaysWorkout, setTodaysWorkout] = useState<Workout | null>(null);
+    const [progress, setProgress] = useState<number>(10);
 
     // Trackes the date of the selected cell in the calendar
     const [selectedDate, setSelectedDate] = useState<Dayjs | undefined>();
@@ -30,16 +37,7 @@ export default function Home() {
 
     // Gets all the workouts
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:8080/workouts", {
-                method: "GET",
-                credentials: 'include',
-            });
-
-            const result = await response.json();
-            setWorkouts(result);
-        };
-        fetchData();
+        fetchWorkouts().then(data => setWorkouts(data));
     }, [setWorkouts]);
 
     // Creates an event for each of the workout and adds it to the calendar
@@ -58,6 +56,19 @@ export default function Home() {
         });
 
         setEvents([...events, ...curEvents]);
+    }, [workouts]);
+
+    // Sets the today's workout, if it exists
+    useEffect(() => {
+        workouts.forEach(workout => {
+            const [day, month, year] = workout.date.split('-').map(value => parseInt(value, 10));
+            const selectedDate = dayjs(`${year}-${month}-${day}`);
+
+            if (selectedDate.isToday()) {
+                fetchWorkoutById(workout.id.toString()).then(data => setTodaysWorkout(data));
+                return;
+            }
+        });
     }, [workouts]);
 
     // Dialog open handler
@@ -143,15 +154,34 @@ export default function Home() {
                     }}
                 />
 
-                <Card variant="outlined" sx={{flex: 1, margin: 2, borderRadius: 10 }}>
+                <Card variant="outlined" className={styles.cardStats}>
                     <CardHeader
                         title="Your stats"
-                        titleTypographyProps={{fontWeight: "bold", fontSize: 25, color: "grey"}}
+                        titleTypographyProps={{ fontWeight: "bold", fontSize: 25, color: "grey" }}
                     />
                     <Divider />
 
-                    <CardContent sx={{display: "flex"}}>
+                    <CardContent sx={{ display: "flex" }}>
                         <Typography>Workouts in a row: 4</Typography>
+                    </CardContent>
+
+                    <CardContent className={styles.workoutOverviewContent}>
+                        <Typography sx={{ fontWeight: "bold" }}>Today's workout overview</Typography>
+                        <Divider sx={{ margin: 1 }} />
+                        {todaysWorkout ? (
+                            <>
+                                <Box className={styles.todaysWorkoutTitleDuration}>
+                                    <Typography>{todaysWorkout.title}</Typography>
+                                    <TimerIcon sx={{ marginLeft: "auto" }} />
+                                    <Typography alignSelf="center" fontSize={15}>{todaysWorkout.duration}min</Typography>
+                                </Box>
+                                <Box className={styles.todaysWorkoutProgress}>
+                                    <LinearProgressWithLabel value={progress} />
+                                </Box>
+                            </>
+                        ) : (
+                            <Typography>You don't have a workout scheduled for today.</Typography>
+                        )}
                     </CardContent>
                 </Card>
 

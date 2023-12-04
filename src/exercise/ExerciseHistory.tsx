@@ -12,6 +12,7 @@ import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 
 import { Exercise, ExerciseHistoryDto } from '../types';
+import { fetchExerciseById, fetchExerciseHistory, fetchMaxWeights } from '../api/api';
 
 export default function ExerciseHistory() {
     const { id } = useParams();
@@ -67,40 +68,17 @@ export default function ExerciseHistory() {
 
     // Initialize the exercise
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch(`http://localhost:8080/exercises/${id}`);
-            const result = await response.json();
-            setExercise(result);
-        }
-        fetchData();
+        fetchExerciseById(id!).then(data => setExercise(data));
     }, [id]);
 
     // Initialize max weights for exercise
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch(`http://localhost:8080/exercises/${id}/workouts`, {
-                method: "GET",
-                credentials: "include",
-            });
-
-            const result = await response.json();
-            setMaxWeight(result);
-        }
-        fetchData();
+        fetchMaxWeights(id!).then(data => setMaxWeight(data));
     }, [id]);
 
     // Initialize exercise history
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch(`http://localhost:8080/exercises/${id}/exerciseHistory`, {
-                method: "GET",
-                credentials: "include",
-            });
-
-            const result = await response.json();
-            setExerciseHistory(result);
-        }
-        fetchData();
+        fetchExerciseHistory(id!).then(data => setExerciseHistory(data));
     }, [id]);
 
     return (

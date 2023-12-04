@@ -1,3 +1,4 @@
+import { fetchWorkoutById } from "../../api/api";
 import { Workout, ExerciseDone } from "../../types";
 
 // Random constant for calculating calorie expenditure
@@ -5,12 +6,8 @@ const CALORIE_CONSTANT = 0.1;
 
 // Gets the workout in order to retreive exercises
 const getWorkout = async (workoutId : number) => {
-    const response = await fetch(`http://localhost:8080/workouts/${workoutId}`, {
-        method: "GET",
-        credentials: "include"
-    });
+    const workout : Workout = await fetchWorkoutById(workoutId.toString());
 
-    const workout : Workout = await response.json();
     return workout;
 };
 

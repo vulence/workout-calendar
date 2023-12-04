@@ -39,7 +39,7 @@ public class WorkoutService {
             Set<String> muscles = new HashSet<>();
 
             for (Exercise e : exercisesInWorkouts) {
-                for (String muscle : e.getMuscleGroupNames()) muscles.add(muscle);
+                muscles.addAll(e.getMuscleGroupNames());
             }
 
             WorkoutDto curWorkout = new WorkoutDto(w);

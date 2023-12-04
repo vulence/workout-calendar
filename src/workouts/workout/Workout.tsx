@@ -13,6 +13,7 @@ import AddExerciseDoneModal from './AddExerciseDoneModal';
 import EditNotesModal from './EditNotesModal';
 
 import { Workout as WorkoutType, ExerciseDto, WorkoutDataGridRows } from '../../types';
+import { fetchExercises, fetchWorkoutById } from '../../api/api';
 
 export default function Workout() {
     const { id } = useParams();
@@ -23,7 +24,7 @@ export default function Workout() {
 
     // Data states
     const [workout, setWorkout] = useState<WorkoutType>();
-    const [exercise, setExercise] = useState<Array<ExerciseDto>>();
+    const [exercises, setExercises] = useState<Array<ExerciseDto>>();
     const [name, setName] = useState<string>('');
     const [weight, setWeight] = useState<number | null>();
     const [sets, setSets] = useState<number | null>();
@@ -70,33 +71,20 @@ export default function Workout() {
 
     // Initialize the workout
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:8080/workouts/" + id, {
-                method: "GET",
-                credentials: 'include',
-            });
-            const result = await response.json();
-            setWorkout(result);
-        };
-        fetchData();
+        fetchWorkoutById(id!).then(data => setWorkout(data));
     }, [setWorkout])
 
     // Initialize exercises
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:8080/exercises")
-            const result = await response.json();
-            setExercise(result);
-        };
-        fetchData();
-    }, [setExercise])
+        fetchExercises().then(data => setExercises(data));
+    }, [setExercises])
 
     // Load data grid rows
     const loadRows = () => {
         const rows: Array<WorkoutDataGridRows> = [];
 
         workout?.exercisesDone?.forEach((exerciseDone) => {
-            const exerciseName = exercise?.find(ex => ex.id === exerciseDone.exercise.id)?.name;
+            const exerciseName = exercises?.find(ex => ex.id === exerciseDone.exercise.id)?.name;
 
             if (exerciseName !== undefined) rows.push({
                 id: exerciseDone.id,
@@ -255,7 +243,7 @@ export default function Workout() {
                 open={openExerciseDialog}
                 handleClose={handleCloseExerciseDialog}
                 handleSubmit={handleExerciseSubmit}
-                exercises={exercise!}
+                exercises={exercises!}
                 name={name}
                 weight={weight!}
                 sets={sets!}

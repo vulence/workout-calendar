@@ -26,6 +26,7 @@ import utc from 'dayjs/plugin/utc';
 import { WorkoutDto, PopoverState, CustomIcons, AllWorkoutsFilters } from '../../types';
 import { calculateTotalCaloriesForWorkout } from '../utils/calorieCalculator';
 import FilterAccordion from './FilterAccordion';
+import { fetchWorkouts } from '../../api/api';
 
 dayjs.extend(utc);
 
@@ -51,21 +52,12 @@ export default function AllWorkouts() {
 
     // Initialize all workouts
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:8080/workouts", {
-                method: "GET",
-                credentials: 'include',
-            });
-
-            const result = await response.json();
-            setWorkouts(result);
-        };
-        fetchData();
+        fetchWorkouts().then(data => setWorkouts(data));
     }, [setWorkouts]);
 
     // Calculates calories burned for each workout
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchCalories = async () => {
             try {
                 const caloriesPromises = workouts.map(async (workout) => {
                     const caloriesBurned = await calculateTotalCaloriesForWorkout(workout.id);
@@ -80,7 +72,7 @@ export default function AllWorkouts() {
             }
         };
 
-        fetchData();
+        fetchCalories();
     }, [workouts]);
 
     // Sets up rating icons
@@ -138,7 +130,7 @@ export default function AllWorkouts() {
         return filteredWorkouts.sort(filterValues.sortByDate === 'desc' ? ((a, b) => a.date > b.date ? -1 : 1) : ((a, b) => a.date > b.date ? 1 : -1));
     }
 
-    // Filter callback function
+    // Filter callback function 
     const handleFilterValues = (newFilterValues: AllWorkoutsFilters) => {
         setFilterValues(newFilterValues);
     }

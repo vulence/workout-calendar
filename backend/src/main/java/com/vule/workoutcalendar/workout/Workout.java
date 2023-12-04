@@ -80,7 +80,7 @@ public class Workout {
         return exercisesDone;
     }
 
-    public void setExercisesDone(Set<ExerciseDone> exercisesDone) {
+    public void setExercisesDone(Set<ExerciseDone>  exercisesDone) {
         this.exercisesDone = exercisesDone;
     }
 
