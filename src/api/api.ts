@@ -18,6 +18,16 @@ export async function fetchWorkoutById(workoutId: string) {
     return result;
 };
 
+export async function fetchWorkoutExercises(workoutId: string) {
+    const response = await fetch(`http://localhost:8080/workouts/${workoutId}/exercises`, {
+        method: "GET",
+        credentials: "include",
+    });
+
+    const result = await response.json();
+    return result;
+}
+
 export async function fetchExercises() {
     const response = await fetch("http://localhost:8080/exercises");
     const result = await response.json();

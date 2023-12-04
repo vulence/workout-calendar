@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Container from '@mui/material/Container';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -12,8 +11,8 @@ import WorkoutToolbar from './WorkoutToolbar';
 import AddExerciseDoneModal from './AddExerciseDoneModal';
 import EditNotesModal from './EditNotesModal';
 
-import { Workout as WorkoutType, ExerciseDto, WorkoutDataGridRows } from '../../types';
-import { fetchExercises, fetchWorkoutById } from '../../api/api';
+import { Workout as WorkoutType, WorkoutDataGridRows, Exercise } from '../../types';
+import { fetchWorkoutById, fetchWorkoutExercises } from '../../api/api';
 
 export default function Workout() {
     const { id } = useParams();
@@ -24,7 +23,6 @@ export default function Workout() {
 
     // Data states
     const [workout, setWorkout] = useState<WorkoutType>();
-    const [exercises, setExercises] = useState<Array<ExerciseDto>>();
     const [name, setName] = useState<string>('');
     const [weight, setWeight] = useState<number | null>();
     const [sets, setSets] = useState<number | null>();
@@ -74,21 +72,29 @@ export default function Workout() {
         fetchWorkoutById(id!).then(data => setWorkout(data));
     }, [setWorkout])
 
-    // Initialize exercises
-    useEffect(() => {
-        fetchExercises().then(data => setExercises(data));
-    }, [setExercises])
+    // Loads in full exercises for each exercisedone of the workout
+    useEffect(() => {{
+        if (!workout) return;
+
+        fetchWorkoutExercises(workout.id.toString()).then((exercises) => {
+            setWorkout({
+                ...workout,
+                exercisesDone: workout.exercisesDone.map((exerciseDone) => ({
+                    ...exerciseDone,
+                    exercise: exercises.find((exercise : Exercise) => exercise.id === exerciseDone.exercise.id),
+                })),
+            });
+        });
+    }}, [workout])
 
     // Load data grid rows
     const loadRows = () => {
         const rows: Array<WorkoutDataGridRows> = [];
 
         workout?.exercisesDone?.forEach((exerciseDone) => {
-            const exerciseName = exercises?.find(ex => ex.id === exerciseDone.exercise.id)?.name;
-
-            if (exerciseName !== undefined) rows.push({
+            rows.push({
                 id: exerciseDone.id,
-                exercise: exerciseName,
+                exercise: exerciseDone.exercise.name,
                 weight: exerciseDone.weight,
                 sets: exerciseDone.sets,
                 reps: exerciseDone.reps
@@ -243,7 +249,6 @@ export default function Workout() {
                 open={openExerciseDialog}
                 handleClose={handleCloseExerciseDialog}
                 handleSubmit={handleExerciseSubmit}
-                exercises={exercises!}
                 name={name}
                 weight={weight!}
                 sets={sets!}

@@ -31,16 +31,6 @@ export type Workout = {
     exercisesDone: Array<ExerciseDone>;
 };
 
-export type WorkoutDto = {
-    id: number;
-    title: string;
-    date: string;
-    notes: string;
-    duration: number;
-    rating: number;
-    muscleGroups: Array<string>;
-};
-
 export type ExerciseDone = {
     id: number;
     weight: number;
@@ -76,7 +66,6 @@ export type AddExerciseDoneModalProps = {
     open: boolean;
     handleClose: () => void;
     handleSubmit: (exerciseId : number, weight : number, sets : number, reps : number) => void;
-    exercises: Array<ExerciseDto>;
     name: string;
     weight: number;
     sets: number;
@@ -171,7 +160,6 @@ export type CalendarEvent = {
 export type AllWorkoutsFilters = {
     filterYear: number | null;
     filterMonth: number | null;
-    muscleGroupName: string;
     sortByDate: string;
 }
 

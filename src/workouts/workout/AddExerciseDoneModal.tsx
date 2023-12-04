@@ -13,12 +13,11 @@ import Switch from '@mui/material/Switch';
 
 import { AddExerciseDoneModalProps, ExerciseDto } from '../../types';
 import Typography from '@mui/material/Typography';
+import { fetchExercises } from '../../api/api';
 
 export default function AddExerciseDoneModal(props: AddExerciseDoneModalProps) {
-    // Getting all exercises from the prop
-    const exercises: Array<ExerciseDto> = props.exercises;
-
     // Data states
+    const [exercises, setExercises] = useState<Array<ExerciseDto>>([]);
     const [name, setName] = useState<string>(props.name);
     const [weight, setWeight] = useState<number>(props.weight | 0);
     const [sets, setSets] = useState<number>(props.sets | 0);
@@ -35,6 +34,11 @@ export default function AddExerciseDoneModal(props: AddExerciseDoneModalProps) {
     const handleSwitchChange = () => {
         setSwitchOn(!isSwitchOn);
     };
+
+    // Loads all exercises
+    useEffect(() => {
+        fetchExercises().then(data => setExercises(data));
+    }, []);
 
     // Synchronizes the fields if the user wants to edit an existing exercise
     useEffect(() => {
@@ -84,7 +88,7 @@ export default function AddExerciseDoneModal(props: AddExerciseDoneModalProps) {
                     className={styles.autoComplete}
                     onChange={(e, newValue) => setName(newValue?.name || '')}
                     renderInput={(params) => <TextField {...params} label="Exercise name" />}
-                    disabled={name ? true : false}
+                    disabled={props.name ? true : false}
                 />
 
                 <Box display="flex" alignItems="center" justifyContent="center" marginTop={2}>

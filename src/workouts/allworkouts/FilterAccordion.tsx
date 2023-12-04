@@ -10,25 +10,16 @@ import SouthIcon from '@mui/icons-material/South';
 import styles from './allWorkouts.module.css';
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { MuscleGroup, AllWorkoutsFilters, FilterAccordionProps } from '../../types';
-import { fetchMuscleGroups } from '../../api/api';
+import { AllWorkoutsFilters, FilterAccordionProps } from '../../types';
 
 dayjs.extend(utc);
 
 export default function FilterAccordion(props: FilterAccordionProps) {
-    // Data states
-    const [muscleGroups, setMuscleGroups] = useState<Array<MuscleGroup>>([]);
     const [formValues, setFormValues] = useState<AllWorkoutsFilters>({
         filterYear: null,
         filterMonth: null,
-        muscleGroupName: '',
         sortByDate: "desc"
     });
-
-    // Initialize all muscle groups
-    useEffect(() => {
-        fetchMuscleGroups().then(data => setMuscleGroups(data));
-    }, [setMuscleGroups]);
 
     // Updates the form values state
     const handleChange = (id: string, value: number | string) => {
@@ -84,22 +75,6 @@ export default function FilterAccordion(props: FilterAccordionProps) {
                             </ToggleButton>
                         </ToggleButtonGroup>
 
-                    </Box>
-                    <Box className={styles.childBox}>
-                        <Typography>Filter by muscle group</Typography>
-                        <Select
-                            id="muscle-group-name"
-                            value={formValues.muscleGroupName}
-                            onChange={(e) => handleChange("muscleGroupName", e.target.value)}
-                            sx={{
-                                width: "200px"
-                            }}
-                        >
-                            <MenuItem value=""><em>None</em></MenuItem>
-                            {muscleGroups.map(muscleGroup =>
-                                <MenuItem key={muscleGroup.id} value={muscleGroup.name}>{muscleGroup.name}</MenuItem>
-                            )}
-                        </Select>
                     </Box>
                 </Box>
             </AccordionDetails>

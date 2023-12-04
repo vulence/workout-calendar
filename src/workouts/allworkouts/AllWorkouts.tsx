@@ -23,7 +23,7 @@ import { pink } from '@mui/material/colors';
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
-import { WorkoutDto, PopoverState, CustomIcons, AllWorkoutsFilters } from '../../types';
+import { PopoverState, CustomIcons, AllWorkoutsFilters, Workout } from '../../types';
 import { calculateTotalCaloriesForWorkout } from '../utils/calorieCalculator';
 import FilterAccordion from './FilterAccordion';
 import { fetchWorkouts } from '../../api/api';
@@ -32,11 +32,10 @@ dayjs.extend(utc);
 
 export default function AllWorkouts() {
     // Data states
-    const [workouts, setWorkouts] = useState<Array<WorkoutDto>>([]);
+    const [workouts, setWorkouts] = useState<Array<Workout>>([]);
     const [filterValues, setFilterValues] = useState<AllWorkoutsFilters>({
         filterYear: null,
         filterMonth: null,
-        muscleGroupName: '',
         sortByDate: 'desc'
     });
 
@@ -125,7 +124,6 @@ export default function AllWorkouts() {
 
         if (filterValues.filterYear !== null) filteredWorkouts = filteredWorkouts.filter(workout => parseInt(workout.date.split('-')[2]) === filterValues.filterYear);
         if (filterValues.filterMonth !== null) filteredWorkouts = filteredWorkouts.filter(workout => parseInt(workout.date.split('-')[1]) === filterValues.filterMonth! + 1);
-        if (filterValues.muscleGroupName !== '') filteredWorkouts = filteredWorkouts.filter(workout => workout.muscleGroups.includes(filterValues.muscleGroupName));
 
         return filteredWorkouts.sort(filterValues.sortByDate === 'desc' ? ((a, b) => a.date > b.date ? -1 : 1) : ((a, b) => a.date > b.date ? 1 : -1));
     }
@@ -188,7 +186,7 @@ export default function AllWorkouts() {
     // Add a rating to a workout
     const handleRating = (workoutId: number, rating: number) => {
         // Update the rating in the state
-        const updatedWorkouts: Array<WorkoutDto> = workouts.map((w) => {
+        const updatedWorkouts: Array<Workout> = workouts.map((w) => {
             if (w.id === workoutId) {
                 // Remove the rating if the user clicks on the same rating as it already is
                 if (rating === null) {

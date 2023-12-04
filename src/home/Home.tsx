@@ -1,6 +1,5 @@
-import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Container, Box, Card, CardContent, CardHeader, Typography, Divider, Stack } from '@mui/material';
+import { Container, Box, Card, CardContent, CardHeader, Typography, Divider, Checkbox, Stack } from '@mui/material';
 import { Calendar, dayjsLocalizer } from 'react-big-calendar';
 import { useNavigate } from 'react-router-dom';
 import TimerIcon from '@mui/icons-material/Timer';
@@ -10,11 +9,11 @@ import isToday from 'dayjs/plugin/isToday';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import CustomToolbar from './CalendarToolbar';
-import { Workout, WorkoutDto, CalendarEvent } from '../types';
+import { Workout, CalendarEvent, Exercise } from '../types';
 import AddWorkoutModal from '../workouts/allworkouts/AddWorkoutModal';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
 import styles from './home.module.css';
-import { fetchExerciseById, fetchWorkoutById, fetchWorkouts } from '../api/api';
+import { fetchWorkoutById, fetchWorkoutExercises, fetchWorkouts } from '../api/api';
 
 dayjs.extend(utc);
 dayjs.extend(isToday);
@@ -24,7 +23,7 @@ export default function Home() {
     const localizer = dayjsLocalizer(dayjs);
 
     // States for workouts and the calendar events
-    const [workouts, setWorkouts] = useState<Array<WorkoutDto>>([]);
+    const [workouts, setWorkouts] = useState<Array<Workout>>([]);
     const [events, setEvents] = useState<Array<CalendarEvent>>([]);
     const [todaysWorkout, setTodaysWorkout] = useState<Workout | null>(null);
     const [progress, setProgress] = useState<number>(10);
@@ -70,6 +69,23 @@ export default function Home() {
             }
         });
     }, [workouts]);
+
+    // Loads in full exercises for each exercisedone of the workout
+    useEffect(() => {
+        {
+            if (!todaysWorkout) return;
+
+            fetchWorkoutExercises(todaysWorkout.id.toString()).then((exercises) => {
+                setTodaysWorkout({
+                    ...todaysWorkout,
+                    exercisesDone: todaysWorkout.exercisesDone.map((exerciseDone) => ({
+                        ...exerciseDone,
+                        exercise: exercises.find((exercise: Exercise) => exercise.id === exerciseDone.exercise.id),
+                    })),
+                });
+            });
+        }
+    }, [todaysWorkout]);
 
     // Dialog open handler
     const handleOpenAddWorkout = (e: { start: Date }) => {
@@ -177,6 +193,12 @@ export default function Home() {
                                 </Box>
                                 <Box className={styles.todaysWorkoutProgress}>
                                     <LinearProgressWithLabel value={progress} />
+                                    {todaysWorkout.exercisesDone.map((exerciseDone) => (
+                                        <Stack direction="row" alignItems="center" justifyContent="center" border="1px solid grey" margin="5px">
+                                            <Typography>{exerciseDone.exercise.name}</Typography>
+                                            <Checkbox defaultChecked={false} />
+                                        </Stack>
+                                    ))}
                                 </Box>
                             </>
                         ) : (

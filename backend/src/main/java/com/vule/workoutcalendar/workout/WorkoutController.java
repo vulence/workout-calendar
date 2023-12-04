@@ -36,19 +36,11 @@ public class WorkoutController {
     }
 
     @GetMapping("/{id}/exercises")
-    public ResponseEntity<?> getWorkoutDetails(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
+    public ResponseEntity<?> getWorkoutExercises(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
         if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
 
-        return ResponseEntity.ok(workoutService.getWorkoutDetails(jwtService.parseUsernameFromJwt(jwtToken), id));
+        return ResponseEntity.ok(workoutService.getWorkoutExercises(jwtService.parseUsernameFromJwt(jwtToken), id));
     }
-
-    @GetMapping("/{id}/muscleGroups")
-    public ResponseEntity<?> getWorkoutMuscleGroups(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
-        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
-
-        return ResponseEntity.ok(workoutService.getWorkoutMuscleGroups(jwtService.parseUsernameFromJwt(jwtToken), id));
-    }
-
 
     @PostMapping("/new")
     public ResponseEntity<?> create(@CookieValue(name = "jwt", required = false) String jwtToken, @Valid @RequestBody Workout workout) {

@@ -4,7 +4,6 @@ import com.vule.workoutcalendar.exercise.Exercise;
 import com.vule.workoutcalendar.exercisedone.ExerciseDone;
 import com.vule.workoutcalendar.exercisedone.dto.ExerciseDoneDto;
 import com.vule.workoutcalendar.user.UserRepository;
-import com.vule.workoutcalendar.workout.dto.WorkoutDto;
 import com.vule.workoutcalendar.exercise.ExerciseRepository;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.http.HttpStatus;
@@ -12,9 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class WorkoutService {
@@ -28,27 +25,10 @@ public class WorkoutService {
         this.users = users;
     }
 
-    public List<WorkoutDto> findAll(String username) {
+    public List<Workout> findAll(String username) {
         Integer userId = users.findByUsername(username).getId();
 
-        List<Workout> allWorkouts = workouts.findByUserId(userId);
-        List<WorkoutDto> allWorkoutsWithMuscleGroups = new ArrayList<>();
-
-        for (Workout w : allWorkouts) {
-            List<Exercise> exercisesInWorkouts = getWorkoutDetails(username, w.getId());
-            Set<String> muscles = new HashSet<>();
-
-            for (Exercise e : exercisesInWorkouts) {
-                muscles.addAll(e.getMuscleGroupNames());
-            }
-
-            WorkoutDto curWorkout = new WorkoutDto(w);
-            curWorkout.setMuscleGroups(muscles);
-
-            allWorkoutsWithMuscleGroups.add(curWorkout);
-        }
-
-        return allWorkoutsWithMuscleGroups;
+        return workouts.findByUserId(userId);
     }
 
     public Workout findById(String username, Integer id) {
@@ -57,7 +37,7 @@ public class WorkoutService {
         return workouts.findByIdAndUserId(id, userId).orElse(null);
     }
 
-    public List<Exercise> getWorkoutDetails(String username, Integer id) {
+    public List<Exercise> getWorkoutExercises(String username, Integer id) {
         Integer userId = users.findByUsername(username).getId();
 
         Workout w = workouts.findByIdAndUserId(id, userId).orElse(null);
@@ -66,17 +46,6 @@ public class WorkoutService {
         for (ExerciseDone e : w.getExercisesDone()) exercisesInWorkout.add(exercises.findById(e.getExercise().getId()).get());
 
         return exercisesInWorkout;
-    }
-
-    public Set<String> getWorkoutMuscleGroups(String username, Integer id) {
-        Set<String> workoutMuscleGroups = new HashSet<>();
-        List<Exercise> exercisesInWorkout = getWorkoutDetails(username, id);
-
-        for (Exercise e : exercisesInWorkout) {
-            workoutMuscleGroups.addAll(e.getMuscleGroupNames());
-        }
-
-        return workoutMuscleGroups;
     }
 
     public void create(String username, Workout workout) {
