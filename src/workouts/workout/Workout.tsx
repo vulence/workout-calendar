@@ -13,6 +13,7 @@ import EditNotesModal from './EditNotesModal';
 
 import { Workout as WorkoutType, WorkoutDataGridRows, Exercise } from '../../types';
 import { fetchWorkoutById, fetchWorkoutExercises } from '../../api/api';
+import { Checkbox } from '@mui/material';
 
 export default function Workout() {
     const { id } = useParams();
@@ -36,7 +37,7 @@ export default function Workout() {
             field: 'weight',
             headerName: 'Weight',
             type: 'number',
-            width: 100,
+            width: 120,
             renderCell: (params: GridRenderCellParams) => {
                 const weightValue = params.value;
                 const displayValue = weightValue === 0 ? 'Bodyweight' : weightValue;
@@ -65,6 +66,14 @@ export default function Workout() {
                 ];
             }
         },
+        { field: "checkbox", width: 400, type: 'actions', getActions: (params: GridRowParams) => [
+                <GridActionsCellItem
+                    icon={<Checkbox sx={{marginLeft: "auto"}}/>}
+                    label=""
+                    color="inherit"
+                />,
+            ]
+        }
     ];
 
     // Initialize the workout

@@ -26,7 +26,8 @@ export default function Home() {
     const [workouts, setWorkouts] = useState<Array<Workout>>([]);
     const [events, setEvents] = useState<Array<CalendarEvent>>([]);
     const [todaysWorkout, setTodaysWorkout] = useState<Workout | null>(null);
-    const [progress, setProgress] = useState<number>(10);
+    const [progress, setProgress] = useState<number>(0);
+    const [progressIncrement, setProgressIncrement] = useState<number>(0);
 
     // Trackes the date of the selected cell in the calendar
     const [selectedDate, setSelectedDate] = useState<Dayjs | undefined>();
@@ -57,14 +58,15 @@ export default function Home() {
         setEvents([...events, ...curEvents]);
     }, [workouts]);
 
-    // Sets the today's workout, if it exists
+    // Sets the today's workout, if it exists and sets progress increment
     useEffect(() => {
         workouts.forEach(workout => {
             const [day, month, year] = workout.date.split('-').map(value => parseInt(value, 10));
             const selectedDate = dayjs(`${year}-${month}-${day}`);
 
             if (selectedDate.isToday()) {
-                fetchWorkoutById(workout.id.toString()).then(data => setTodaysWorkout(data));
+                setTodaysWorkout(workout);
+                setProgressIncrement(100 / workout.exercisesDone.length);
                 return;
             }
         });
@@ -124,6 +126,15 @@ export default function Home() {
     const handleClick = (e: CalendarEvent) => {
         navigate("/workouts/" + e.id);
     };
+
+    const handleExerciseChecked = (checked : boolean) => {
+        if (checked) {
+            setProgress(progress + progressIncrement);
+        }
+        else {
+            setProgress(progress - progressIncrement);
+        }
+    }
 
     return (
         <Container className={styles.content}>
@@ -196,7 +207,7 @@ export default function Home() {
                                     {todaysWorkout.exercisesDone.map((exerciseDone) => (
                                         <Stack direction="row" alignItems="center" justifyContent="center" border="1px solid grey" margin="5px">
                                             <Typography>{exerciseDone.exercise.name}</Typography>
-                                            <Checkbox defaultChecked={false} />
+                                            <Checkbox defaultChecked={false} onChange={(e) => handleExerciseChecked(e.target.checked)} />
                                         </Stack>
                                     ))}
                                 </Box>
