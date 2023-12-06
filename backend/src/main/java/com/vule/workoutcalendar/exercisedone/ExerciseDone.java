@@ -14,6 +14,7 @@ public class ExerciseDone {
     private Integer sets;
     private Integer reps;
     private AggregateReference<Exercise, Integer> exercise;
+    private boolean completed;
     @Transient
     Workout workout;
 
@@ -22,6 +23,7 @@ public class ExerciseDone {
         this.sets = sets;
         this.reps = reps;
         this.exercise = exercise;
+        this.completed = false;
     }
 
     public Integer getId() { return id; }
@@ -57,6 +59,14 @@ public class ExerciseDone {
 
     public void setExercise(AggregateReference<Exercise, Integer> exercise) {
         this.exercise = exercise;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     public Workout getWorkout() {

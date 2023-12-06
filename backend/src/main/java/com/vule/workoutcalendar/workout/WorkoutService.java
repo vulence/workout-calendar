@@ -89,6 +89,20 @@ public class WorkoutService {
         workouts.updateRating(workoutId, rating);
     }
 
+    public void updateCompleted(String username, Integer workoutId, Integer exerciseDoneId, Boolean completed) {
+        Integer userId = users.findByUsername(username).getId();
+
+        Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
+        ExerciseDone ed = workouts.findExerciseDone(exerciseDoneId);
+        ed.setCompleted(completed);
+
+        workouts.updateExerciseDone(ed.getId(),
+                ed.getWeight(),
+                ed.getSets(),
+                ed.getReps(),
+                ed.isCompleted());
+    }
+
     public void addWorkoutExercise(String username, Integer workoutId, ExerciseDoneDto exerciseDoneDto) {
         Integer userId = users.findByUsername(username).getId();
 
@@ -118,9 +132,10 @@ public class WorkoutService {
         ed.setReps(exerciseDone.getReps());
 
         workouts.updateExerciseDone(ed.getId(),
-                                    ed.getWeight(),
-                                    ed.getSets(),
-                                    ed.getReps());
+                ed.getWeight(),
+                ed.getSets(),
+                ed.getReps(),
+                ed.isCompleted());
     }
 
     public void deleteWorkoutExercise(String username, Integer workoutId, Integer exerciseDoneId) {

@@ -37,6 +37,7 @@ export type ExerciseDone = {
     sets: number;
     reps: number;
     exercise: Exercise;
+    completed: boolean;
 };
 
 export type MuscleGroup = {

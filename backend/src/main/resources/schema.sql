@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS Exercise_Done (
     sets INTEGER,
     reps INTEGER,
     exercise INTEGER,
+    completed BOOL,
     PRIMARY KEY (id),
     FOREIGN KEY (exercise) REFERENCES Exercise(id) ON DELETE CASCADE,
     FOREIGN KEY (workout) REFERENCES Workout(id) ON DELETE CASCADE

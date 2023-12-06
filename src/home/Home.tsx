@@ -13,7 +13,7 @@ import { Workout, CalendarEvent, Exercise } from '../types';
 import AddWorkoutModal from '../workouts/allworkouts/AddWorkoutModal';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
 import styles from './home.module.css';
-import { fetchWorkoutById, fetchWorkoutExercises, fetchWorkouts } from '../api/api';
+import { fetchWorkoutById, fetchWorkoutExercises, fetchWorkouts, updateExerciseCompleted } from '../api/api';
 
 dayjs.extend(utc);
 dayjs.extend(isToday);
@@ -66,27 +66,36 @@ export default function Home() {
 
             if (selectedDate.isToday()) {
                 setTodaysWorkout(workout);
-                setProgressIncrement(100 / workout.exercisesDone.length);
+                initializeProgress(workout);
                 return;
             }
         });
     }, [workouts]);
 
+    // If there is a today's workout, set all essential elements related to progress
+    const initializeProgress = (workout: Workout) => {
+        setProgressIncrement(100 / workout.exercisesDone.length);
+
+        const count = workout.exercisesDone.filter(exerciseDone => {
+            return exerciseDone.completed;
+        }).length;
+
+        setProgress((100 / workout.exercisesDone.length) * count);
+    }
+
     // Loads in full exercises for each exercisedone of the workout
     useEffect(() => {
-        {
-            if (!todaysWorkout) return;
+        if (!todaysWorkout) return;
 
-            fetchWorkoutExercises(todaysWorkout.id.toString()).then((exercises) => {
-                setTodaysWorkout({
-                    ...todaysWorkout,
-                    exercisesDone: todaysWorkout.exercisesDone.map((exerciseDone) => ({
-                        ...exerciseDone,
-                        exercise: exercises.find((exercise: Exercise) => exercise.id === exerciseDone.exercise.id),
-                    })),
-                });
+        fetchWorkoutExercises(todaysWorkout.id.toString()).then((exercises) => {
+            setTodaysWorkout({
+                ...todaysWorkout,
+                exercisesDone: todaysWorkout.exercisesDone.map((exerciseDone) => ({
+                    ...exerciseDone,
+                    exercise: exercises.find((exercise: Exercise) => exercise.id === exerciseDone.exercise.id),
+                })),
             });
-        }
+        });
     }, [todaysWorkout]);
 
     // Dialog open handler
@@ -127,13 +136,16 @@ export default function Home() {
         navigate("/workouts/" + e.id);
     };
 
-    const handleExerciseChecked = (checked : boolean) => {
+    // Updates the status bar and the exercisedone that was marked as (not)completed
+    const handleExerciseChecked = (exerciseDoneId: number, checked: boolean) => {
         if (checked) {
             setProgress(progress + progressIncrement);
         }
         else {
             setProgress(progress - progressIncrement);
         }
+
+        updateExerciseCompleted(todaysWorkout!.id.toString(), exerciseDoneId.toString(), checked).then(data => console.log(data));
     }
 
     return (
@@ -205,9 +217,9 @@ export default function Home() {
                                 <Box className={styles.todaysWorkoutProgress}>
                                     <LinearProgressWithLabel value={progress} />
                                     {todaysWorkout.exercisesDone.map((exerciseDone) => (
-                                        <Stack direction="row" alignItems="center" justifyContent="center" border="1px solid grey" margin="5px">
+                                        <Stack key={exerciseDone.id} direction="row" alignItems="center" justifyContent="center" border="1px solid grey" margin="5px">
                                             <Typography>{exerciseDone.exercise.name}</Typography>
-                                            <Checkbox defaultChecked={false} onChange={(e) => handleExerciseChecked(e.target.checked)} />
+                                            <Checkbox defaultChecked={exerciseDone.completed} onChange={(e) => handleExerciseChecked(exerciseDone.id, e.target.checked)} />
                                         </Stack>
                                     ))}
                                 </Box>

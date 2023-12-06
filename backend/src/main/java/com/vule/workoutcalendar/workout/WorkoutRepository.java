@@ -37,10 +37,10 @@ public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> 
     @Modifying
     @Query("""
             UPDATE EXERCISE_DONE
-            SET WEIGHT = :weight, SETS = :sets, REPS = :reps
+            SET WEIGHT = :weight, SETS = :sets, REPS = :reps, COMPLETED = :completed
             WHERE ID = :id
             """)
-    void updateExerciseDone(@Param("id") Integer id, @Param("weight") Integer weight, @Param("sets") Integer sets, @Param("reps") Integer reps);
+    void updateExerciseDone(@Param("id") Integer id, @Param("weight") Integer weight, @Param("sets") Integer sets, @Param("reps") Integer reps, @Param("completed") Boolean completed);
 
     @Modifying
     @Query("""

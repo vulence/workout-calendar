@@ -1,5 +1,6 @@
 package com.vule.workoutcalendar.workout;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.vule.workoutcalendar.exercisedone.ExerciseDone;
 import com.vule.workoutcalendar.exercisedone.dto.ExerciseDoneDto;
 import com.vule.workoutcalendar.jwt.JwtService;
@@ -7,6 +8,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/workouts")
@@ -75,7 +78,16 @@ public class WorkoutController {
 
         workoutService.updateRating(jwtService.parseUsernameFromJwt(jwtToken), id, rating);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Workout rating updated successfully.");
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/setCompleted")
+    public ResponseEntity<?> updateCompleted(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id, @RequestBody ObjectNode objectNode) {
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Unauthorized - Bearer token missing or invalid."));
+
+        workoutService.updateCompleted(jwtService.parseUsernameFromJwt(jwtToken), id, objectNode.get("exerciseDoneId").asInt(), objectNode.get("completed").asBoolean());
+
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

@@ -12,7 +12,7 @@ import AddExerciseDoneModal from './AddExerciseDoneModal';
 import EditNotesModal from './EditNotesModal';
 
 import { Workout as WorkoutType, WorkoutDataGridRows, Exercise } from '../../types';
-import { fetchWorkoutById, fetchWorkoutExercises } from '../../api/api';
+import { fetchWorkoutById, fetchWorkoutExercises, updateExerciseCompleted } from '../../api/api';
 import { Checkbox } from '@mui/material';
 
 export default function Workout() {
@@ -66,14 +66,6 @@ export default function Workout() {
                 ];
             }
         },
-        { field: "checkbox", width: 400, type: 'actions', getActions: (params: GridRowParams) => [
-                <GridActionsCellItem
-                    icon={<Checkbox sx={{marginLeft: "auto"}}/>}
-                    label=""
-                    color="inherit"
-                />,
-            ]
-        }
     ];
 
     // Initialize the workout
@@ -82,19 +74,21 @@ export default function Workout() {
     }, [setWorkout])
 
     // Loads in full exercises for each exercisedone of the workout
-    useEffect(() => {{
-        if (!workout) return;
+    useEffect(() => {
+        {
+            if (!workout) return;
 
-        fetchWorkoutExercises(workout.id.toString()).then((exercises) => {
-            setWorkout({
-                ...workout,
-                exercisesDone: workout.exercisesDone.map((exerciseDone) => ({
-                    ...exerciseDone,
-                    exercise: exercises.find((exercise : Exercise) => exercise.id === exerciseDone.exercise.id),
-                })),
+            fetchWorkoutExercises(workout.id.toString()).then((exercises) => {
+                setWorkout({
+                    ...workout,
+                    exercisesDone: workout.exercisesDone.map((exerciseDone) => ({
+                        ...exerciseDone,
+                        exercise: exercises.find((exercise: Exercise) => exercise.id === exerciseDone.exercise.id),
+                    })),
+                });
             });
-        });
-    }}, [workout])
+        }
+    }, [workout])
 
     // Load data grid rows
     const loadRows = () => {
@@ -174,6 +168,10 @@ export default function Workout() {
         setRowId(params.row.id);
 
         handleOpenExerciseDialog();
+    };
+
+    const handleCheckboxClick = (params: GridRowParams) => () => {
+        // const response = await updateExerciseCompleted(id?.toString(), params.id, )
     };
 
     // Notes dialog handlers

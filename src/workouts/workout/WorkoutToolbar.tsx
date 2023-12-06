@@ -18,12 +18,7 @@ dayjs.extend(utc);
 
 export default function WorkoutToolbar(props: WorkoutToolbarProps) {
     // Time picker control state
-    const [timePickerOpen, setTimePickerOpen] = useState(false);
-
-    // Set the current duration in timepicker
-    const getTime = () => {
-        return dayjs().set('hour', Math.floor(props.workout?.duration / 60)).set('minute', props.workout?.duration - 60 * Math.floor(props.workout?.duration / 60));
-    };
+    const [timePickerOpen, setTimePickerOpen] = useState<boolean>(false);
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -37,7 +32,6 @@ export default function WorkoutToolbar(props: WorkoutToolbarProps) {
                 <Box className={styles.componentBox}>
                     <AccessTimeIcon color="primary" onClick={() => setTimePickerOpen(true)} />
                     <MobileTimePicker ampm={false}
-                        value={getTime()}
                         open={timePickerOpen}
                         className={styles.mobileTimePicker}
                         onAccept={(e) => props.handleDurationSubmit(e!.minute() + 60 * e!.hour())}
