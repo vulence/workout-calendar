@@ -100,6 +100,7 @@ export type WorkoutDataGridRows = {
     weight: number;
     sets: number;
     reps: number;
+    completed: boolean;
 };
 
 export type ExpandMoreProps = {

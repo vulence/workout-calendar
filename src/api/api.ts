@@ -1,3 +1,5 @@
+import { Workout } from "../types";
+
 /*
 * START WORKOUTS
 */
@@ -32,6 +34,29 @@ export async function fetchWorkoutExercises(workoutId: string) {
     return result;
 };
 
+export async function submitWorkout(workout : any) {
+    const response = await fetch("http://localhost:8080/workouts/new", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: 'include',
+        body: JSON.stringify(workout),
+    });
+
+    const result = await response.json();
+    return result.message;
+};
+
+export async function deleteWorkout(workoutId : string) {
+    const response = await fetch(`http://localhost:8080/workouts/${workoutId}`, {
+        method: "DELETE",
+        credentials: "include"
+    });
+
+    return response.status;
+}
+
 export async function updateExerciseCompleted(workoutId : string, exerciseDoneId: string, completed: boolean) {
     const response = await fetch(`http://localhost:8080/workouts/${workoutId}/setCompleted`, {
         method: "PUT",
@@ -44,6 +69,19 @@ export async function updateExerciseCompleted(workoutId : string, exerciseDoneId
 
     return response.status;
 };
+
+export async function setRating(workoutId : string, rating : number) {
+    const response = await fetch(`http://localhost:8080/workouts/${workoutId}/setRating`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(rating)
+    });
+
+    return response.status;
+}
 
 /*
 * END WORKOUTS

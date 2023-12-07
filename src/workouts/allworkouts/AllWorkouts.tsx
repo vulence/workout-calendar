@@ -26,7 +26,7 @@ import utc from 'dayjs/plugin/utc';
 import { PopoverState, CustomIcons, AllWorkoutsFilters, Workout } from '../../types';
 import { calculateTotalCaloriesForWorkout } from '../utils/calorieCalculator';
 import FilterAccordion from './FilterAccordion';
-import { fetchWorkouts } from '../../api/api';
+import { deleteWorkout, fetchWorkouts, setRating, submitWorkout } from '../../api/api';
 
 dayjs.extend(utc);
 
@@ -157,34 +157,22 @@ export default function AllWorkouts() {
 
     // Workout form submission
     const handleSubmit = (title: string, date: Dayjs | null, notes: string, duration: number) => {
-        const workout = { title, date, notes, duration };
+        const workout : any = { title, date, notes, duration };
 
-        fetch("http://localhost:8080/workouts/new", {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(workout),
-            credentials: 'include'
-        }).then(() => {
-            console.log("New workout added");
-        })
+        submitWorkout(workout).then((message) => console.log(message));
+        
         window.location.reload();
     }
 
     // Delete a workout
     const handleDelete = (workoutId: number) => {
-        fetch(`http://localhost:8080/workouts/${workoutId}`, {
-            method: "DELETE",
-            credentials: "include"
-        }).then(() => {
-            console.log("Workout deleted");
-        })
+        deleteWorkout(workoutId.toString()).then((data) => console.log(data));
+
         window.location.reload();
     }
 
     // Add a rating to a workout
-    const handleRating = (workoutId: number, rating: number) => {
+    const handleRating = (workoutId: number, rating: number) => {   
         // Update the rating in the state
         const updatedWorkouts: Array<Workout> = workouts.map((w) => {
             if (w.id === workoutId) {
@@ -204,17 +192,7 @@ export default function AllWorkouts() {
 
         setWorkouts(updatedWorkouts);
 
-        // Update the rating in the database
-        fetch(`http://localhost:8080/workouts/${workoutId}/setRating`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify(rating)
-        }).then(() => {
-            console.log("Workout rating successfully modified!");
-        })
+        setRating(workoutId.toString(), rating).then((data) => console.log(data));
 
         handlePopoverClose(workoutId);
     }

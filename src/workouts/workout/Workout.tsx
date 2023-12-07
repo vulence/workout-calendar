@@ -1,5 +1,5 @@
 import Container from '@mui/material/Container';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem, GridRenderCellParams, GridRowParams } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -71,23 +71,21 @@ export default function Workout() {
     // Initialize the workout
     useEffect(() => {
         fetchWorkoutById(id!).then(data => setWorkout(data));
-    }, [setWorkout])
+    }, [])
 
     // Loads in full exercises for each exercisedone of the workout
     useEffect(() => {
-        {
-            if (!workout) return;
+        if (!workout) return;
 
-            fetchWorkoutExercises(workout.id.toString()).then((exercises) => {
-                setWorkout({
-                    ...workout,
-                    exercisesDone: workout.exercisesDone.map((exerciseDone) => ({
-                        ...exerciseDone,
-                        exercise: exercises.find((exercise: Exercise) => exercise.id === exerciseDone.exercise.id),
-                    })),
-                });
+        fetchWorkoutExercises(workout.id.toString()).then((exercises) => {
+            setWorkout({
+                ...workout,
+                exercisesDone: workout.exercisesDone.map((exerciseDone) => ({
+                    ...exerciseDone,
+                    exercise: exercises.find((exercise: Exercise) => exercise.id === exerciseDone.exercise.id),
+                })),
             });
-        }
+        });
     }, [workout])
 
     // Load data grid rows
@@ -100,7 +98,8 @@ export default function Workout() {
                 exercise: exerciseDone.exercise.name,
                 weight: exerciseDone.weight,
                 sets: exerciseDone.sets,
-                reps: exerciseDone.reps
+                reps: exerciseDone.reps,
+                completed: exerciseDone.completed
             })
         })
 
@@ -168,10 +167,6 @@ export default function Workout() {
         setRowId(params.row.id);
 
         handleOpenExerciseDialog();
-    };
-
-    const handleCheckboxClick = (params: GridRowParams) => () => {
-        // const response = await updateExerciseCompleted(id?.toString(), params.id, )
     };
 
     // Notes dialog handlers

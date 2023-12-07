@@ -76,11 +76,11 @@ export default function Home() {
     const initializeProgress = (workout: Workout) => {
         setProgressIncrement(100 / workout.exercisesDone.length);
 
-        const count = workout.exercisesDone.filter(exerciseDone => {
+        const countCompletedExercises = workout.exercisesDone.filter(exerciseDone => {
             return exerciseDone.completed;
         }).length;
 
-        setProgress((100 / workout.exercisesDone.length) * count);
+        setProgress((100 / workout.exercisesDone.length) * countCompletedExercises);
     }
 
     // Loads in full exercises for each exercisedone of the workout
