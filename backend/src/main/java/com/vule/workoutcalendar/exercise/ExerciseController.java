@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/exercises")
@@ -34,13 +35,13 @@ public class ExerciseController {
 
     @GetMapping("/{id}/exerciseHistory")
     public ResponseEntity<?> findExerciseHistory(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
-        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Unauthorized - HttpOnly cookie missing or invalid."));
 
         return ResponseEntity.ok(exerciseService.findExerciseHistory(jwtService.parseUsernameFromJwt(jwtToken), id));
     }
     @GetMapping("/{id}/workouts")
     public ResponseEntity<?> findMaxWeights(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
-        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized - Bearer token missing or invalid.");
+        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Unauthorized - HttpOnly cookie missing or invalid."));
 
         return ResponseEntity.ok(exerciseService.findMaxWeights(jwtService.parseUsernameFromJwt(jwtToken), id));
     }

@@ -11,9 +11,11 @@ import WorkoutToolbar from './WorkoutToolbar';
 import AddExerciseDoneModal from './AddExerciseDoneModal';
 import EditNotesModal from './EditNotesModal';
 
-import { Workout as WorkoutType, WorkoutDataGridRows, Exercise } from '../../types';
+import { Workout as WorkoutType, WorkoutDataGridRows, Exercise, ExerciseDone } from '../../types';
 import { fetchWorkoutById, fetchWorkoutExercises, updateExerciseCompleted } from '../../api/api';
-import { Checkbox } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
+import { Checkbox, IconButton } from '@mui/material';
 
 export default function Workout() {
     const { id } = useParams();
@@ -66,27 +68,43 @@ export default function Workout() {
                 ];
             }
         },
+        {
+            field: 'completed', headerName: 'Completed', width: 120, renderCell: (params: GridRenderCellParams) => {
+                return (
+                    <Checkbox checked={params.row.completed} onChange={() => handleCompleted(params)} />
+                );
+            }
+        }
     ];
 
-    // Initialize the workout
+    // Initialize the workout and map all corresponding exercises to exercisedone objects
     useEffect(() => {
-        fetchWorkoutById(id!).then(data => setWorkout(data));
+        Promise.all([fetchWorkoutById(id!), fetchWorkoutExercises(id!.toString())]).then(
+            ([workout, exercises]) => {
+                setWorkout({
+                    ...workout,
+                    exercisesDone: workout.exercisesDone.map((exerciseDone : ExerciseDone) => ({
+                        ...exerciseDone,
+                        exercise: exercises.find((exercise : Exercise) => exercise.id === exerciseDone.exercise.id),
+                    })),
+                });
+            }
+        );
     }, [])
 
-    // Loads in full exercises for each exercisedone of the workout
-    useEffect(() => {
-        if (!workout) return;
+    // Update the exercisedone that was marked as (not)completed
+    const handleCompleted = (params: GridRenderCellParams) => {
+        const findTargetExercise = workout!.exercisesDone.find(ed => ed.id === params.id);
 
-        fetchWorkoutExercises(workout.id.toString()).then((exercises) => {
+        if (findTargetExercise) {
             setWorkout({
-                ...workout,
-                exercisesDone: workout.exercisesDone.map((exerciseDone) => ({
-                    ...exerciseDone,
-                    exercise: exercises.find((exercise: Exercise) => exercise.id === exerciseDone.exercise.id),
-                })),
+                ...workout!,
+                exercisesDone: workout!.exercisesDone.map(ed => (ed === findTargetExercise ? { ...ed, completed: !ed.completed } : ed))
             });
-        });
-    }, [workout])
+        }
+
+        updateExerciseCompleted(workout!.id.toString(), params.id.toString(), !params.row.completed).then(data => console.log(data));
+    }
 
     // Load data grid rows
     const loadRows = () => {
