@@ -38,7 +38,7 @@ export default function Home() {
     // Gets all the workouts
     useEffect(() => {
         fetchWorkouts().then(data => setWorkouts(data));
-    }, [setWorkouts]);
+    }, []);
 
     // Creates an event for each of the workout and adds it to the calendar
     useEffect(() => {
@@ -65,8 +65,8 @@ export default function Home() {
             const selectedDate = dayjs(`${year}-${month}-${day}`);
 
             if (selectedDate.isToday()) {
-                setTodaysWorkout(workout);
                 initializeProgress(workout);
+                initializeTodaysWorkout(workout);
                 return;
             }
         });
@@ -84,10 +84,8 @@ export default function Home() {
         setProgress((100 / divisor) * countCompletedExercises);
     }
 
-    // Loads in full exercises for each exercisedone of the workout
-    useEffect(() => {
-        if (!todaysWorkout) return;
-
+    // Load in all of the exercises related to today's workout
+    const initializeTodaysWorkout = (todaysWorkout: Workout) => {
         fetchWorkoutExercises(todaysWorkout.id.toString()).then((exercises) => {
             setTodaysWorkout({
                 ...todaysWorkout,
@@ -97,7 +95,7 @@ export default function Home() {
                 })),
             });
         });
-    }, [todaysWorkout]);
+    }
 
     // Dialog open handler
     const handleOpenAddWorkout = (e: { start: Date }) => {
@@ -144,6 +142,15 @@ export default function Home() {
         }
         else {
             setProgress(progress - progressIncrement);
+        }
+
+        const findTargetExercise = todaysWorkout!.exercisesDone.find(ed => ed.id === exerciseDoneId);
+
+        if (findTargetExercise) {
+            setTodaysWorkout({
+                ...todaysWorkout!,
+                exercisesDone: todaysWorkout!.exercisesDone.map(ed => (ed === findTargetExercise ? { ...ed, completed: !ed.completed } : ed))
+            });
         }
 
         updateExerciseCompleted(todaysWorkout!.id.toString(), exerciseDoneId.toString(), checked).then(data => console.log(data));
@@ -218,10 +225,14 @@ export default function Home() {
                                 <Box className={styles.todaysWorkoutProgress}>
                                     <LinearProgressWithLabel value={progress} />
                                     {todaysWorkout.exercisesDone.map((exerciseDone) => (
-                                        <Stack key={exerciseDone.id} direction="row" alignItems="center" justifyContent="center" border="1px solid grey" margin="5px">
+                                        <Box
+                                            key={exerciseDone.id}
+                                            className={styles.todaysWorkoutExercise}
+                                            sx={{backgroundColor: exerciseDone.completed ? "rgb(8, 94, 32, 0.7)" : "rgb(0, 0, 0, 0.7)"}}
+                                        >
                                             <Typography>{exerciseDone.exercise.name}</Typography>
                                             <Checkbox defaultChecked={exerciseDone.completed} onChange={(e) => handleExerciseChecked(exerciseDone.id, e.target.checked)} />
-                                        </Stack>
+                                        </Box>
                                     ))}
                                 </Box>
                             </>

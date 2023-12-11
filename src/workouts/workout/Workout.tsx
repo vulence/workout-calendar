@@ -1,21 +1,18 @@
-import Container from '@mui/material/Container';
-import React, { useEffect, useState } from 'react';
+import { Container, Fab, Checkbox, Box } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem, GridRenderCellParams, GridRowParams } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import EditIcon from '@mui/icons-material/Edit';
-import Fab from '@mui/material/Fab';
 import styles from './workout.module.css';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import WorkoutToolbar from './WorkoutToolbar';
 import AddExerciseDoneModal from './AddExerciseDoneModal';
 import EditNotesModal from './EditNotesModal';
+import { darken, styled } from '@mui/material/styles';
 
 import { Workout as WorkoutType, WorkoutDataGridRows, Exercise, ExerciseDone } from '../../types';
 import { fetchWorkoutById, fetchWorkoutExercises, updateExerciseCompleted } from '../../api/api';
-import CheckIcon from '@mui/icons-material/Check';
-import ClearIcon from '@mui/icons-material/Clear';
-import { Checkbox, IconButton } from '@mui/material';
 
 export default function Workout() {
     const { id } = useParams();
@@ -31,6 +28,31 @@ export default function Workout() {
     const [sets, setSets] = useState<number | null>();
     const [reps, setReps] = useState<number | null>();
     const [rowId, setRowId] = useState<number | null>(null);
+
+    // Initialize the workout and map all corresponding exercises to exercisedone objects
+    useEffect(() => {
+        Promise.all([fetchWorkoutById(id!), fetchWorkoutExercises(id!.toString())]).then(
+            ([workout, exercises]) => {
+                setWorkout({
+                    ...workout,
+                    exercisesDone: workout.exercisesDone.map((exerciseDone: ExerciseDone) => ({
+                        ...exerciseDone,
+                        exercise: exercises.find((exercise: Exercise) => exercise.id === exerciseDone.exercise.id),
+                    })),
+                });
+            }
+        );
+    }, [])
+
+    // Adds colored rows for completed exercises
+    const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
+        '& .super-app-theme--Completed': {
+            backgroundColor: darken(theme.palette.success.main, 0.7),
+            '&:hover': {
+                backgroundColor: darken(theme.palette.success.main, 0.6),
+            },
+        },
+    }));
 
     // Set up data grid columns
     const columns = [
@@ -71,26 +93,11 @@ export default function Workout() {
         {
             field: 'completed', headerName: 'Completed', width: 120, renderCell: (params: GridRenderCellParams) => {
                 return (
-                    <Checkbox checked={params.row.completed} onChange={() => handleCompleted(params)} />
+                    <Checkbox checked={params.row.completed} sx={{alignSelf: "center", justifySelf: "center"}} onChange={() => handleCompleted(params)} />
                 );
             }
         }
     ];
-
-    // Initialize the workout and map all corresponding exercises to exercisedone objects
-    useEffect(() => {
-        Promise.all([fetchWorkoutById(id!), fetchWorkoutExercises(id!.toString())]).then(
-            ([workout, exercises]) => {
-                setWorkout({
-                    ...workout,
-                    exercisesDone: workout.exercisesDone.map((exerciseDone : ExerciseDone) => ({
-                        ...exerciseDone,
-                        exercise: exercises.find((exercise : Exercise) => exercise.id === exerciseDone.exercise.id),
-                    })),
-                });
-            }
-        );
-    }, [])
 
     // Update the exercisedone that was marked as (not)completed
     const handleCompleted = (params: GridRenderCellParams) => {
@@ -240,7 +247,7 @@ export default function Workout() {
 
     return (
         <Container>
-            <DataGrid
+            <StyledDataGrid
                 rows={loadRows()}
                 columns={columns}
                 slots={{
@@ -256,6 +263,7 @@ export default function Workout() {
                 }}
                 className={styles.dataGrid}
                 pageSizeOptions={[10, 15]}
+                getRowClassName={(params) => params.row.completed ? 'super-app-theme--Completed' : 'super-app-theme--NotCompleted'}
                 disableRowSelectionOnClick
                 hideFooter
             />
