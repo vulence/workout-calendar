@@ -123,5 +123,6 @@ public class WorkoutController {
 
         workoutService.deleteWorkoutExercise(jwtService.parseUsernameFromJwt(jwtToken), id, exerciseDoneId);
 
-        return ResponseEntity.noContent().build();    }
+        return ResponseEntity.noContent().build();
+    }
 }

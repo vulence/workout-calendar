@@ -25,6 +25,7 @@ import utc from 'dayjs/plugin/utc';
 
 import { PopoverState, CustomIcons, AllWorkoutsFilters, Workout } from '../../types';
 import { calculateTotalCaloriesForWorkout } from '../utils/calorieCalculator';
+import { stringToDayjs } from '../utils/dateConverter';
 import FilterAccordion from './FilterAccordion';
 import { deleteWorkout, fetchWorkouts, setRating, submitWorkout } from '../../api/api';
 
@@ -125,7 +126,16 @@ export default function AllWorkouts() {
         if (filterValues.filterYear !== null) filteredWorkouts = filteredWorkouts.filter(workout => parseInt(workout.date.split('-')[2]) === filterValues.filterYear);
         if (filterValues.filterMonth !== null) filteredWorkouts = filteredWorkouts.filter(workout => parseInt(workout.date.split('-')[1]) === filterValues.filterMonth! + 1);
 
-        return filteredWorkouts.sort(filterValues.sortByDate === 'desc' ? ((a, b) => a.date > b.date ? -1 : 1) : ((a, b) => a.date > b.date ? 1 : -1));
+        if (filterValues.sortByDate === 'desc') {
+            return filteredWorkouts.sort((a, b) => {
+                return stringToDayjs(a.date).isAfter(stringToDayjs(b.date)) ? -1 : 1;
+            });
+        }
+        else {
+            return filteredWorkouts.sort((a, b) => {
+                return stringToDayjs(a.date).isAfter(stringToDayjs(b.date)) ? 1 : -1;
+            })
+        }
     }
 
     // Filter callback function 
@@ -199,10 +209,7 @@ export default function AllWorkouts() {
 
     // Checks if the date(string) is in the future
     const isLaterDate = (date: string) => {
-        const [day, month, year] = date.split('-').map(value => parseInt(value, 10));
-        const selectedDate = dayjs(`${year}-${month}-${day}`);
-
-        return selectedDate.isAfter(dayjs());
+        return stringToDayjs(date).isAfter(dayjs());
     }
 
     return (
@@ -218,7 +225,7 @@ export default function AllWorkouts() {
 
                 <Grid container spacing={2} className={styles.gridContainer}>
                     {filterWorkouts().map((workout, index) => (
-                        <Grid key={workout.id} item xs={1} sm={2} md={3} className={styles.gridItem}>
+                        <Grid key={workout.id} item xs={6} sm={4} md={3} className={styles.gridItem} direction="column" alignItems="center" justifyContent="center">
                             <Card key={workout.id.toString()} variant="outlined">
                                 <Tooltip title="Click to see more" placement="top" arrow>
                                     <CardActionArea component={Link} to={workout.id.toString()}>
@@ -278,7 +285,7 @@ export default function AllWorkouts() {
                                             name="unique-rating"
                                             value={workout.rating || 0}
                                             IconContainerComponent={IconContainer}
-                                            onChange={(event, newValue) => handleRating(workout.id, newValue!)}
+                                            onChange={(_, newValue) => handleRating(workout.id, newValue!)}
                                             highlightSelectedOnly
                                         />
                                     </Popover>

@@ -1,4 +1,4 @@
-import { Container, Fab, Checkbox, Box } from '@mui/material';
+import { Container, Fab, Checkbox } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem, GridRenderCellParams, GridRowParams } from '@mui/x-data-grid';
@@ -12,7 +12,7 @@ import EditNotesModal from './EditNotesModal';
 import { darken, styled } from '@mui/material/styles';
 
 import { Workout as WorkoutType, WorkoutDataGridRows, Exercise, ExerciseDone } from '../../types';
-import { fetchWorkoutById, fetchWorkoutExercises, updateExerciseCompleted } from '../../api/api';
+import { deleteWorkoutExerciseDone, fetchWorkoutById, fetchWorkoutExercises, submitWorkoutExerciseDone, updateExerciseDoneCompleted, updateWorkoutExerciseDone } from '../../api/api';
 
 export default function Workout() {
     const { id } = useParams();
@@ -110,7 +110,7 @@ export default function Workout() {
             });
         }
 
-        updateExerciseCompleted(workout!.id.toString(), params.id.toString(), !params.row.completed).then(data => console.log(data));
+        updateExerciseDoneCompleted(workout!.id.toString(), params.id.toString(), !params.row.completed).then(data => console.log(data));
     }
 
     // Load data grid rows
@@ -136,33 +136,15 @@ export default function Workout() {
         // If user is submitting a new done exercise, create a new object includes exercise id
         if (rowId === null) {
             const exerciseDoneDto = { exerciseId, weight, sets, reps };
-
-            fetch(`http://localhost:8080/workouts/${id}/exercises/new`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(exerciseDoneDto),
-                credentials: "include"
-            }).then(() => {
-                console.log("New exercise in the workout added.");
-            })
+            
+            submitWorkoutExerciseDone(id!.toString(), exerciseDoneDto).then(status => console.log(status)).catch(error => console.error(error));
         }
 
         // If user is editing an existing done exercise, include the id of the exercisedone to be modified
         else {
             const exerciseDone = { id: rowId, weight, sets, reps };
 
-            fetch(`http://localhost:8080/workouts/${id}/exercises/update`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(exerciseDone),
-                credentials: "include"
-            }).then(() => {
-                console.log("Exercise successfully updated");
-            })
+            updateWorkoutExerciseDone(id!.toString(), exerciseDone).then(status => console.log(status)).catch(error => console.error(error));
         }
 
         window.location.reload();
@@ -170,17 +152,9 @@ export default function Workout() {
 
     // Delete an exercise from a workout
     const handleDeleteClick = (params: GridRowParams) => () => {
-        fetch(`http://localhost:8080/workouts/${id}/exercises`, {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify(params.id)
-        }).then(() => {
-            console.log("Exercise done in workout deleted.");
-            window.location.reload();
-        }).catch((error) => {
-            console.error(error);
-        });
+        deleteWorkoutExerciseDone(id!.toString(), params.id.toString()).then(status => console.log(status)).catch(error => console.error(error));
+        
+        window.location.reload();
     };
 
     // Set parameters to the corresponding row that's being edited

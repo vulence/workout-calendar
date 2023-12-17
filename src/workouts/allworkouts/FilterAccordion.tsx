@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-    Button, Box, MenuItem, Select, Accordion, AccordionSummary, AccordionDetails, AccordionActions, Typography, Switch, Stack, ToggleButtonGroup, ToggleButton
+    Button, Box, Accordion, AccordionSummary, AccordionDetails, AccordionActions, Typography, ToggleButtonGroup, ToggleButton, Divider, IconButton
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
@@ -10,6 +10,12 @@ import SouthIcon from '@mui/icons-material/South';
 import styles from './allWorkouts.module.css';
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
+import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
+import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
+import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
+
 import { AllWorkoutsFilters, FilterAccordionProps } from '../../types';
 
 dayjs.extend(utc);
@@ -53,11 +59,11 @@ export default function FilterAccordion(props: FilterAccordionProps) {
             <AccordionDetails className={styles.accordionDetails}>
                 <Box className={styles.containerBox}>
                     <Box className={styles.childBox}>
-                        <Typography>Filter by date</Typography>
+                        <Typography sx={{marginBottom: 1}}>Filter by date</Typography>
                         <DatePicker value={formValues.filterYear ? dayjs().set('year', formValues.filterYear) : null} className={styles.datePicker} label={'year'} views={['year']} onAccept={(e) => handleChange("filterYear", e!.year())} />
                         <DatePicker value={formValues.filterMonth ? dayjs().set('month', formValues.filterMonth) : null} className={styles.datePicker} label={'month'} views={['month']} onAccept={(e) => handleChange("filterMonth", e!.month())} />
 
-                        <Typography sx={{marginTop: 2}}>Sort by date</Typography>
+                        <Typography sx={{marginTop: 2, marginBottom: 1}}>Sort by date</Typography>
                         <ToggleButtonGroup
                             color="primary"
                             value={formValues.sortByDate}
@@ -75,6 +81,12 @@ export default function FilterAccordion(props: FilterAccordionProps) {
                             </ToggleButton>
                         </ToggleButtonGroup>
 
+                    </Box>
+
+                    <Divider orientation="vertical" flexItem />
+
+                    <Box className={styles.childBox}>
+                        <Typography>Filter by rating</Typography>
                     </Box>
                 </Box>
             </AccordionDetails>

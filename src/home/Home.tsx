@@ -13,7 +13,8 @@ import { Workout, CalendarEvent, Exercise } from '../types';
 import AddWorkoutModal from '../workouts/allworkouts/AddWorkoutModal';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
 import styles from './home.module.css';
-import { fetchWorkoutById, fetchWorkoutExercises, fetchWorkouts, updateExerciseCompleted } from '../api/api';
+import { fetchWorkoutExercises, fetchWorkouts, updateExerciseDoneCompleted } from '../api/api';
+import { stringToDayjs } from '../workouts/utils/dateConverter';
 
 dayjs.extend(utc);
 dayjs.extend(isToday);
@@ -61,10 +62,7 @@ export default function Home() {
     // Sets the today's workout, if it exists and sets progress increment
     useEffect(() => {
         workouts.forEach(workout => {
-            const [day, month, year] = workout.date.split('-').map(value => parseInt(value, 10));
-            const selectedDate = dayjs(`${year}-${month}-${day}`);
-
-            if (selectedDate.isToday()) {
+            if (stringToDayjs(workout.date).isToday()) {
                 initializeProgress(workout);
                 initializeTodaysWorkout(workout);
                 return;
@@ -153,7 +151,7 @@ export default function Home() {
             });
         }
 
-        updateExerciseCompleted(todaysWorkout!.id.toString(), exerciseDoneId.toString(), checked).then(data => console.log(data));
+        updateExerciseDoneCompleted(todaysWorkout!.id.toString(), exerciseDoneId.toString(), checked).then(data => console.log(data));
     }
 
     return (

@@ -20,12 +20,17 @@
 
 .containerBox {
     display: flex !important;
+    flex-direction: row !important;
     background-color: black !important;
     height: 200px !important;
 }
 
+.childBox {
+    flex: 1 !important;
+}
+
 .datePicker {
-    margin-right: 20px !important;
+    margin-right: 15px !important;
     border: 1px solid white;
     border-radius: 5px;
     margin-right: auto;
@@ -44,9 +49,15 @@
 }
 
 .gridContainer {
-    margin: 15px 0 !important;
+    margin-top: 15px !important;
 }
 
 .gridItem {
-    min-width: 300px;
+    min-width: 280px;
+}
+
+@media screen and (max-width: 1150px) {
+    .gridItem {
+        min-width: 190px !important;
+    }
 }
