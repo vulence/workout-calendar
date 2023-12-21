@@ -34,16 +34,22 @@ public class ExerciseController {
     }
 
     @GetMapping("/{id}/exerciseHistory")
-    public ResponseEntity<?> findExerciseHistory(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
-        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Unauthorized - HttpOnly cookie missing or invalid."));
+    public ResponseEntity<?> findExerciseHistory(@RequestHeader(name = "Authorization") String jwtToken, @PathVariable Integer id) {
+        if (jwtToken == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Unauthorized - Bearer token missing or invalid."));
 
-        return ResponseEntity.ok(exerciseService.findExerciseHistory(jwtService.parseUsernameFromJwt(jwtToken), id));
+        jwtToken = jwtToken.substring(7);
+
+        return ResponseEntity.ok(exerciseService.findExerciseHistory(jwtService.parseUserIdFromJwt(jwtToken), id));
     }
     @GetMapping("/{id}/workouts")
-    public ResponseEntity<?> findMaxWeights(@CookieValue(name = "jwt", required = false) String jwtToken, @PathVariable Integer id) {
-        if (jwtToken == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Unauthorized - HttpOnly cookie missing or invalid."));
+    public ResponseEntity<?> findMaxWeights(@RequestHeader(name = "Authorization") String jwtToken, @PathVariable Integer id) {
+        if (jwtToken == null)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Unauthorized - Bearer token missing or invalid."));
 
-        return ResponseEntity.ok(exerciseService.findMaxWeights(jwtService.parseUsernameFromJwt(jwtToken), id));
+        jwtToken = jwtToken.substring(7);
+
+        return ResponseEntity.ok(exerciseService.findMaxWeights(jwtService.parseUserIdFromJwt(jwtToken), id));
     }
 
     @ResponseStatus(HttpStatus.CREATED)

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { Container, IconButton, Collapse, Typography, Grid, Card, CardActions, CardContent, CardHeader, CardMedia } from '@mui/material';
+import { Container, IconButton, Collapse, Typography, Grid, Card, CardActions, CardContent, CardHeader, CardMedia, Button } from '@mui/material';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import { Link } from "react-router-dom";
 import { Helmet } from 'react-helmet';
@@ -22,7 +22,7 @@ export default function AllExercises() {
     // Initialize all exercises
     useEffect(() => {
         fetchExercises().then(data => setExercises(data));
-    }, [setExercises]);
+    }, []);
 
     // Used for collapsable cards
     const ExpandMore = styled((props: ExpandMoreProps & React.ComponentProps<typeof IconButton>) => {
@@ -124,10 +124,16 @@ export default function AllExercises() {
                             </CardActions>
                             <Collapse in={expanded[ex.id]} timeout="auto" unmountOnExit>
                                 <CardContent>
-                                    <Typography paragraph>
+                                    <Typography>
                                         {ex.description}
                                     </Typography>
                                 </CardContent>
+                                
+                                <CardActions>
+                                    <Button sx={{marginLeft:"auto"}}>
+                                        See more
+                                    </Button>
+                                </CardActions>
                             </Collapse>
                         </Card>
                     </Grid>

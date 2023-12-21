@@ -18,12 +18,13 @@ import Account from "./account/Account";
 import { AuthContext } from './auth/AuthContext';
 import { useContext } from 'react';
 import { AuthContextType } from './types';
+import UserfrontLogin from "./auth/UserfrontLogin";
+import UserfrontRegister from "./auth/UserfrontRegister";
 
 export default function App() {
   // Gets user authentication status and loading status from context
   const { authenticated, loading } = useContext<AuthContextType>(AuthContext);
 
-  // Wait until the authentication process is finished
   if (loading) {
     return null;
   }
@@ -38,8 +39,8 @@ export default function App() {
         <Appbar />
 
         <Routes>
-          <Route path="/login" element={!authenticated ? <Login /> : <Navigate to="/home" />} />
-          <Route path="/register" element={!authenticated ? <Register /> : <Navigate to="/home" />} />
+          <Route path="/login" element={!authenticated ? <UserfrontLogin /> : <Navigate to="/home" />} />
+          <Route path="/register" element={!authenticated ? <UserfrontRegister /> : <Navigate to="/home" />} />
           <Route path="*" element={!authenticated ? <Navigate to="/login" /> : null} />
 
           {authenticated &&

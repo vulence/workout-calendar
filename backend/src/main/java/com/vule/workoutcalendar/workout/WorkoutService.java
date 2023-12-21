@@ -3,7 +3,6 @@ package com.vule.workoutcalendar.workout;
 import com.vule.workoutcalendar.exercise.Exercise;
 import com.vule.workoutcalendar.exercisedone.ExerciseDone;
 import com.vule.workoutcalendar.exercisedone.dto.ExerciseDoneDto;
-import com.vule.workoutcalendar.user.UserRepository;
 import com.vule.workoutcalendar.exercise.ExerciseRepository;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.http.HttpStatus;
@@ -17,29 +16,21 @@ import java.util.List;
 public class WorkoutService {
     private final WorkoutRepository workouts;
     private final ExerciseRepository exercises;
-    private final UserRepository users;
 
-    public WorkoutService(WorkoutRepository workouts, ExerciseRepository exercises, UserRepository users) {
+    public WorkoutService(WorkoutRepository workouts, ExerciseRepository exercises) {
         this.workouts = workouts;
         this.exercises = exercises;
-        this.users = users;
     }
 
-    public List<Workout> findAll(String username) {
-        Integer userId = users.findByUsername(username).getId();
-
+    public List<Workout> findAll(Integer userId) {
         return workouts.findByUserId(userId);
     }
 
-    public Workout findById(String username, Integer id) {
-        Integer userId = users.findByUsername(username).getId();
-
+    public Workout findById(Integer id, Integer userId) {
         return workouts.findByIdAndUserId(id, userId).orElse(null);
     }
 
-    public List<Exercise> getWorkoutExercises(String username, Integer id) {
-        Integer userId = users.findByUsername(username).getId();
-
+    public List<Exercise> getWorkoutExercises(Integer userId, Integer id) {
         Workout w = workouts.findByIdAndUserId(id, userId).orElse(null);
         List<Exercise> exercisesInWorkout = new ArrayList<>();
 
@@ -48,27 +39,23 @@ public class WorkoutService {
         return exercisesInWorkout;
     }
 
-    public void create(String username, Workout workout) {
-        workout.setuserId(users.findByUsername(username).getId());
+    public void create(Integer userId, Workout workout) {
+        workout.setuserId(userId);
 
         workouts.save(workout);
     }
 
-    public void updateNotes(String username, Integer workoutId, String notes) {
-        Integer userId = users.findByUsername(username).getId();
-
+    public void updateNotes(Integer userId, Integer workoutId, String notes) {
         Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
         workout.setNotes(notes);
 
         workouts.updateNotes(workoutId, notes);
     }
 
-    public void updateDuration(String username, Integer workoutId, Integer duration) {
+    public void updateDuration(Integer userId, Integer workoutId, Integer duration) {
         if (duration <= 1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid duration!");
         }
-
-        Integer userId = users.findByUsername(username).getId();
 
         Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
         workout.setDuration(duration);
@@ -76,12 +63,10 @@ public class WorkoutService {
         workouts.updateDuration(workoutId, duration);
     }
 
-    public void updateRating(String username, Integer workoutId, Integer rating) {
+    public void updateRating(Integer userId, Integer workoutId, Integer rating) {
         if (rating < 0 || rating > 5) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating!");
         }
-
-        Integer userId = users.findByUsername(username).getId();
 
         Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
         workout.setRating(rating);
@@ -89,9 +74,7 @@ public class WorkoutService {
         workouts.updateRating(workoutId, rating);
     }
 
-    public void updateCompleted(String username, Integer workoutId, Integer exerciseDoneId, Boolean completed) {
-        Integer userId = users.findByUsername(username).getId();
-
+    public void updateCompleted(Integer userId, Integer workoutId, Integer exerciseDoneId, Boolean completed) {
         Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
         ExerciseDone ed = workouts.findExerciseDone(exerciseDoneId);
         ed.setCompleted(completed);
@@ -103,9 +86,7 @@ public class WorkoutService {
                 ed.isCompleted());
     }
 
-    public void addWorkoutExercise(String username, Integer workoutId, ExerciseDoneDto exerciseDoneDto) {
-        Integer userId = users.findByUsername(username).getId();
-
+    public void addWorkoutExercise(Integer userId, Integer workoutId, ExerciseDoneDto exerciseDoneDto) {
         ExerciseDone ed = exerciseDoneDto.toExerciseDone();
         ed.setExercise(AggregateReference.to(exercises.findById(exerciseDoneDto.getExerciseId()).get().getId()));
 
@@ -115,15 +96,11 @@ public class WorkoutService {
         workouts.save(workout);
     }
 
-    public void delete(String username, Integer id) {
-        Integer userId = users.findByUsername(username).getId();
-
+    public void delete(Integer userId, Integer id) {
         workouts.deleteByIdAndUserId(id, userId);
     }
 
-    public void updateWorkoutExercise(String username, Integer workoutId, ExerciseDone exerciseDone) {
-        Integer userId = users.findByUsername(username).getId();
-
+    public void updateWorkoutExercise(Integer userId, Integer workoutId, ExerciseDone exerciseDone) {
         Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
         ExerciseDone ed = workouts.findExerciseDone(exerciseDone.getId());
 
@@ -138,9 +115,7 @@ public class WorkoutService {
                 ed.isCompleted());
     }
 
-    public void deleteWorkoutExercise(String username, Integer workoutId, Integer exerciseDoneId) {
-        Integer userId = users.findByUsername(username).getId();
-
+    public void deleteWorkoutExercise(Integer userId, Integer workoutId, Integer exerciseDoneId) {
         Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
         ExerciseDone ed = workouts.findExerciseDone(exerciseDoneId);
 

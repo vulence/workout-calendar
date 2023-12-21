@@ -1,17 +1,10 @@
 import React, { useEffect, useContext } from 'react';
 
-import { AuthContext } from './AuthContext';
-import { AuthContextType } from '../types';
+import Userfront from '@userfront/toolkit';
 
 export default function Logout() {
-    const { logout } = useContext<AuthContextType>(AuthContext);
-
     useEffect(() => {
-        const doLogout = async () => {
-            await logout();
-        };
-
-        doLogout();
+        Userfront.logout();
     }, []);
 
     return null;

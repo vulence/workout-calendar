@@ -1,11 +1,3 @@
-CREATE TABLE IF NOT EXISTS Users (
-    id INTEGER AUTO_INCREMENT,
-    username text,
-    email text,
-    password text,
-    PRIMARY KEY (id)
-);
-
 CREATE TABLE IF NOT EXISTS Workout (
     id INTEGER AUTO_INCREMENT,
     title text,
@@ -14,9 +6,7 @@ CREATE TABLE IF NOT EXISTS Workout (
     notes text,
     rating INTEGER,
     user_id INTEGER NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY(user_id) REFERENCES Users(id),
-    CONSTRAINT CHK_Workout CHECK ((RATING >= 0 AND RATING <= 5) OR RATING IS NULL)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS Exercise (

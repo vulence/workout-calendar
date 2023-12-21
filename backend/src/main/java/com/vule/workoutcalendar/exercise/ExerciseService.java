@@ -4,24 +4,18 @@ import com.vule.workoutcalendar.musclegroup.MuscleGroup;
 import com.vule.workoutcalendar.exercise.dto.ExerciseDto;
 import com.vule.workoutcalendar.exercise.dto.ExerciseHistoryDto;
 import com.vule.workoutcalendar.musclegroup.MuscleGroupRepository;
-import com.vule.workoutcalendar.user.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ExerciseService {
     private final ExerciseRepository exercises;
     private final MuscleGroupRepository muscleGroups;
-    private final UserRepository users;
 
-    public ExerciseService(ExerciseRepository exercises, MuscleGroupRepository muscleGroups, UserRepository users) {
+    public ExerciseService(ExerciseRepository exercises, MuscleGroupRepository muscleGroups) {
         this.exercises = exercises;
         this.muscleGroups = muscleGroups;
-        this.users = users;
     }
 
     public List<ExerciseDto> findAll() {
@@ -29,7 +23,7 @@ public class ExerciseService {
         List<ExerciseDto> allExercisesMuscleGroups = new ArrayList<ExerciseDto>();
 
         for (Exercise e : allExercises) {
-            Set<MuscleGroup> muscles = new HashSet<>();
+            Set<MuscleGroup> muscles = new TreeSet<>(Comparator.comparing(MuscleGroup::getName));
 
             for (Integer id : e.getMuscleGroupIds()) {
                 muscles.add(muscleGroups.findById(id).get());
@@ -46,15 +40,11 @@ public class ExerciseService {
         return exercises.findById(id).orElse(null);
     }
 
-    public List<ExerciseHistoryDto> findExerciseHistory(String username, Integer id) {
-        Integer userId = users.findByUsername(username).getId();
-
+    public List<ExerciseHistoryDto> findExerciseHistory(Integer userId, Integer id) {
         return exercises.findExerciseHistory(userId, id);
     }
 
-    public List<ExerciseHistoryDto> findMaxWeights(String username, Integer id) {
-        Integer userId = users.findByUsername(username).getId();
-
+    public List<ExerciseHistoryDto> findMaxWeights(Integer userId, Integer id) {
         return exercises.findMaxWeights(userId, id);
     }
 

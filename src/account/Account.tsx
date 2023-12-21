@@ -1,9 +1,12 @@
-
+import { useContext } from 'react';
 import { Box, Container, Typography, Card, CardContent, ButtonGroup, Button, Divider } from '@mui/material';
 
 import styles from './account.module.css';
+import { AuthContextType } from '../types';
+import { AuthContext } from '../auth/AuthContext';
 
 export default function Account() {
+    const { user } = useContext<AuthContextType>(AuthContext);
 
     return (
         <Container className={styles.content}>
@@ -17,8 +20,8 @@ export default function Account() {
                     <CardContent sx={{ display: "flex", flexDirection: "row" }}>
                         <img src="workhard.jpg" width="20%" height={100} />
                         <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "80%"}}>
-                            <Typography>Hello, Vukasin</Typography>
-                            <Typography color="grey">vukasinmarinkovic0@gmail.com</Typography>
+                            <Typography>Hello, {user ? user.username : "user"}</Typography>
+                            <Typography color="grey">{user ? user.email : ""}</Typography>
                         </Box>
                     </CardContent>
                 </Card>

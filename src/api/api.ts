@@ -1,4 +1,5 @@
 import { Workout } from "../types";
+import Userfront from '@userfront/toolkit';
 
 /*
 * START WORKOUTS
@@ -7,7 +8,9 @@ import { Workout } from "../types";
 export async function fetchWorkouts() {
     const response = await fetch("http://localhost:8080/workouts", {
         method: "GET",
-        credentials: 'include',
+        headers: {
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
+        },
     });
 
     const result = await response.json();
@@ -17,7 +20,9 @@ export async function fetchWorkouts() {
 export async function fetchWorkoutById(workoutId: string) {
     const response = await fetch(`http://localhost:8080/workouts/${workoutId}`, {
         method: "GET",
-        credentials: 'include',
+        headers: {
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
+        },
     });
 
     const result = await response.json();
@@ -27,7 +32,9 @@ export async function fetchWorkoutById(workoutId: string) {
 export async function fetchWorkoutExercises(workoutId: string) {
     const response = await fetch(`http://localhost:8080/workouts/${workoutId}/exercises`, {
         method: "GET",
-        credentials: "include",
+        headers: {
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
+        },
     });
 
     const result = await response.json();
@@ -39,8 +46,8 @@ export async function submitWorkout(workout : any) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
-        credentials: 'include',
         body: JSON.stringify(workout),
     });
 
@@ -53,6 +60,7 @@ export async function submitWorkoutExerciseDone(workoutId : string, exerciseDone
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
         credentials: 'include',
         body: JSON.stringify(exerciseDoneDto),
@@ -64,7 +72,9 @@ export async function submitWorkoutExerciseDone(workoutId : string, exerciseDone
 export async function deleteWorkout(workoutId : string) {
     const response = await fetch(`http://localhost:8080/workouts/${workoutId}`, {
         method: "DELETE",
-        credentials: "include"
+        headers: {
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
+        },
     });
 
     return response.status;
@@ -75,8 +85,8 @@ export async function deleteWorkoutExerciseDone(workoutId : string, exerciseDone
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
-        credentials: 'include',
         body: JSON.stringify(exerciseDoneId),
     });
 
@@ -88,8 +98,8 @@ export async function updateWorkoutExerciseDone(workoutId : string, exerciseDone
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
-        credentials: 'include',
         body: JSON.stringify(exerciseDone),
     });
 
@@ -101,8 +111,8 @@ export async function updateExerciseDoneCompleted(workoutId : string, exerciseDo
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
-        credentials: "include",
         body: JSON.stringify({ exerciseDoneId, completed })
     });
 
@@ -114,8 +124,8 @@ export async function setRating(workoutId : string, rating : number) {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
-        credentials: "include",
         body: JSON.stringify(rating)
     });
 
@@ -145,7 +155,9 @@ export async function fetchExerciseById(exerciseId: string) {
 export async function fetchMaxWeights(exerciseId: string) {
     const response = await fetch(`http://localhost:8080/exercises/${exerciseId}/workouts`, {
         method: "GET",
-        credentials: "include",
+        headers: {
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
+        },
     });
 
     const result = await response.json();
@@ -155,7 +167,9 @@ export async function fetchMaxWeights(exerciseId: string) {
 export async function fetchExerciseHistory(exerciseId: string) {
     const response = await fetch(`http://localhost:8080/exercises/${exerciseId}/exerciseHistory`, {
         method: "GET",
-        credentials: "include",
+        headers: {
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
+        },
     });
 
     const result = await response.json();

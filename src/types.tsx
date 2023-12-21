@@ -137,9 +137,6 @@ export type RegisterFormData = {
 export type AuthContextType = {
     user: User | null;
     authenticated: boolean;
-    login: (username : string, password : string) => Promise<string>;
-    register: (username : string, email : string, password : string) => Promise<string>;
-    logout: () => void;
     loading: boolean;
 }
 
