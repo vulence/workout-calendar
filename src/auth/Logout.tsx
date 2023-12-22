@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 
 import Userfront from '@userfront/toolkit';
 

@@ -123,7 +123,7 @@ export type CustomIcons = {
 }
 
 export type LoginFormData = {
-    username: string;
+    emailOrUsername: string;
     password: string;
 }
 

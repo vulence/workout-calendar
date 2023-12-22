@@ -1,26 +1,24 @@
 import { useState, useContext } from "react";
 import { Box, Button, Container, TextField, FormHelperText, OutlinedInput, InputLabel, InputAdornment, FormControl, IconButton } from '@mui/material';
+import { Link } from "react-router-dom";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import EmailIcon from '@mui/icons-material/Email';
+import Userfront from "@userfront/toolkit";
 
 import styles from './login.module.css';
+import formStyles from './form.module.css';
 import { LoginFormData } from "../types";
-import { Link } from "react-router-dom";
-import { AuthContext } from './AuthContext';
-import { AuthContextType } from '../types';
+
+Userfront.init("7n84856n");
 
 export default function Login() {
-    // Gets the authentification context
-    const { login } = useContext<AuthContextType>(AuthContext);
-
     // State for shown/hidden password field
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     // Keeps the form data (username and password)
     const [formData, setFormData] = useState<LoginFormData>({
-        username: '',
+        emailOrUsername: '',
         password: '',
     });
 
@@ -46,39 +44,42 @@ export default function Login() {
     };
 
     // Submits the login form to server
-    const handleSubmit = async () => {
-        const result = await login(formData.username, formData.password);
+    const handleSubmit = async (e : React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
         
-        if (result !== "Ok") {
-            setLoginValidText(result);
-        }
+        Userfront.login({
+            method: "password",
+            emailOrUsername: formData.emailOrUsername,
+            password: formData.password
+        })
+        .catch((error) => setLoginValidText(error.message))
     }
 
     return (
-        <Container sx={{ justifyContent: "center", alignItems: "center", display: "flex" }}>
-            <Box className={styles.boxContainer}>
-                <Box className={styles.header}>
-                    <h2 style={{ fontSize: "48px", fontWeight: 700, color: "white" }}>Login</h2>
+        <Container className={formStyles.content}>
+            <Box className={formStyles.boxContainer} component="form" onSubmit={handleSubmit}>
+                <Box className={formStyles.header}>
+                    <h2 className={formStyles.h2}>Login</h2>
                 </Box>
 
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" required error={loginValidText ? true : false}>
-                    <InputLabel htmlFor="username">
-                        Username
+                <FormControl className={formStyles.formElement} variant="outlined" required error={loginValidText ? true : false}>
+                    <InputLabel htmlFor="emailOrUsername">
+                        Email or username
                     </InputLabel>
                     <OutlinedInput
-                        id="username"
+                        id="emailOrUsername"
                         startAdornment={
                             <InputAdornment position="start">
                                 <AccountCircle />
                             </InputAdornment>
                         }
-                        label="Username"
-                        value={formData.username}
+                        label="email or username"
+                        value={formData.emailOrUsername}
                         onChange={(e) => handleChange(e)}
                     />
                 </FormControl>
 
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" required error={loginValidText ? true : false}>
+                <FormControl className={formStyles.formElement} variant="outlined" required error={loginValidText ? true : false}>
                     <InputLabel htmlFor="password">Password</InputLabel>
                     <OutlinedInput
                         id="password"
@@ -113,9 +114,9 @@ export default function Login() {
                     </Link>
 
                     <Button
+                        type="submit"
                         sx={{ m: 1 }}
                         variant="contained"
-                        onClick={handleSubmit}
                     >
                         SUBMIT
                     </Button>

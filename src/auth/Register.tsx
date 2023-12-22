@@ -1,29 +1,22 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useState } from 'react';
-import { Box, Button, Container, FormHelperText, TextField, OutlinedInput, InputLabel, InputAdornment, FormControl, IconButton } from '@mui/material';
+import { Box, Button, Container, FormHelperText, OutlinedInput, InputLabel, InputAdornment, FormControl, IconButton } from '@mui/material';
+import { Link } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import EmailIcon from '@mui/icons-material/Email';
+import Userfront from '@userfront/toolkit';
 
 import styles from './register.module.css';
-import { AuthContextType, RegisterFormData } from '../types';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from './AuthContext';
+import formStyles from './form.module.css';
+import { RegisterFormData } from '../types';
+
+Userfront.init("7n84856n");
 
 export default function Register() {
-    // Gets the authentification context
-    const { register } = useContext<AuthContextType>(AuthContext);
-
     // State for shown/hidden password field
     const [showPassword, setShowPassword] = useState<boolean>(false);
-
-    // Form validation states
-    const [usernameValidText, setUsernameValidText] = useState<string | null>(null);
-    const [emailValidText, setEmailValidText] = useState<string | null>(null);
-
-    // Allows navigation between different routes
-    let navigate = useNavigate();
 
     // Registration form data
     const [formData, setFormData] = useState<RegisterFormData>({
@@ -31,6 +24,14 @@ export default function Register() {
         email: '',
         password: '',
         confirmPassword: '',
+    });
+
+    // Error text for registration form data
+    const [errorHelperText, setErrorHelperText] = useState<RegisterFormData>({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
     });
 
     // Handlers for hiding/unhiding password
@@ -43,8 +44,12 @@ export default function Register() {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
 
-        if (id === 'email') setEmailValidText(null);
-        if (id === 'username') setUsernameValidText(null);
+        Object.keys(errorHelperText).forEach((key) => {
+            setErrorHelperText(prevState => ({
+                ...prevState,
+                [key]: ''
+            }));
+        });
 
         setFormData({
             ...formData,
@@ -53,35 +58,48 @@ export default function Register() {
     }
 
     // Submits the registration form to server
-    const handleSubmit = async () => {
-        const result = await register(formData.username, formData.email, formData.password);
+    const handleSubmit = async (e : React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
 
-        if (result === "User created") {
-            navigate("/login");
-        }
-        else {
-            displayErrorHelperText(result);
-        }
+        Userfront.signup({
+            method: "password",
+            email: formData.email,
+            username: formData.username,
+            password: formData.password,
+        })
+        .catch(error => displayErrorHelperText(error.message));
     }
 
     // Displays the error helper text if the registration data is invalid
-    const displayErrorHelperText = (errorMessage : string) => {
-        if (errorMessage === "Username is already taken") {
-            setUsernameValidText(errorMessage);
+    const displayErrorHelperText = (errorMessage: string) => {
+        if (errorMessage.toLowerCase().includes("username")) {
+            setErrorHelperText({
+                ...errorHelperText,
+                username: errorMessage,
+            });
         }
-        else if (errorMessage === "Email is already taken") {
-            setEmailValidText(errorMessage);
+        else if (errorMessage.toLowerCase().includes("email")) {
+            setErrorHelperText({
+                ...errorHelperText,
+                email: errorMessage,
+            })
+        }
+        else {
+            setErrorHelperText({
+                ...errorHelperText,
+                password: errorMessage,
+            })
         }
     }
 
     return (
-        <Container sx={{ justifyContent: "center", alignItems: "center", display: "flex" }}>
-            <Box className={styles.boxContainer}>
-                <Box className={styles.header}>
-                    <h2 style={{ fontSize: "48px", fontWeight: 700, color: "white" }}>Register</h2>
+        <Container className={formStyles.content}>
+            <Box className={formStyles.boxContainer} component="form" onSubmit={handleSubmit}>
+                <Box className={formStyles.header}>
+                    <h2 className={formStyles.h2}>Register</h2>
                 </Box>
 
-                <FormControl sx={{m: 1, width: '25ch'}} variant="outlined" required error={usernameValidText ? true : false}>
+                <FormControl className={formStyles.formElement} variant="outlined" required error={errorHelperText.username !== '' ? true : false}>
                     <InputLabel htmlFor="username">
                         Username
                     </InputLabel>
@@ -96,10 +114,10 @@ export default function Register() {
                         value={formData.username}
                         onChange={(e) => handleChange(e)}
                     />
-                    <FormHelperText id="username-helper-text" error={usernameValidText ? true : false}>{usernameValidText}</FormHelperText>
+                    <FormHelperText id="username-helper-text" error={errorHelperText.username !== '' ? true : false}>{errorHelperText.username}</FormHelperText>
                 </FormControl>
 
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" required error={emailValidText ? true : false}>
+                <FormControl className={formStyles.formElement} variant="outlined" required error={errorHelperText.email !== '' ? true : false}>
                     <InputLabel htmlFor="email">
                         Email
                     </InputLabel>
@@ -114,10 +132,10 @@ export default function Register() {
                         value={formData.email}
                         onChange={(e) => handleChange(e)}
                     />
-                    <FormHelperText id="email-helper-text" error={emailValidText ? true : false}>{emailValidText}</FormHelperText>
+                    <FormHelperText id="email-helper-text" error={errorHelperText.email !== '' ? true : false}>{errorHelperText.email}</FormHelperText>
                 </FormControl>
 
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined" required>
+                <FormControl className={formStyles.formElement} variant="outlined" required error={errorHelperText.password !== '' ? true : false}>
                     <InputLabel htmlFor="password">Password</InputLabel>
                     <OutlinedInput
                         id="password"
@@ -138,14 +156,27 @@ export default function Register() {
                         value={formData.password}
                         onChange={(e) => handleChange(e)}
                     />
+                    <FormHelperText id="password-helper-text" error={errorHelperText.password ? true : false}>{errorHelperText.password}</FormHelperText>
                 </FormControl>
-                <Button
-                    sx={{ m: 1}}
-                    variant="contained"
-                    onClick={handleSubmit}
-                >
-                    SUBMIT
-                </Button>
+
+                <Box sx={{ display: 'flex', flexDirection: "row" }}>
+                    <Link to="/login">
+                        <Button
+                            sx={{ marginRight: "30px", height: "100%" }}
+                            variant="text"
+                        >
+                            Go to login
+                        </Button>
+                    </Link>
+
+                    <Button
+                        type="submit"
+                        sx={{ m: 1 }}
+                        variant="contained"
+                    >
+                        SUBMIT
+                    </Button>
+                </Box>
             </Box>
         </Container>
     );

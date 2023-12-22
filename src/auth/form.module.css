@@ -1,0 +1,36 @@
+.content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.formElement {
+    margin: 8px !important;
+    width: 40ch !important;
+}
+
+.h2 {
+    font-size: 48px;
+    font-weight: 700;
+    color: white;
+}
+
+.boxContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 100px;
+    padding-bottom: 30px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 13px;
+    width: 60%;
+}
+
+.header {
+    display: 'flex';
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    margin-top: 30px;
+}
