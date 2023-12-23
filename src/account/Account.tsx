@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Box, Container, Typography, Card, CardContent, ButtonGroup, Button, Divider } from '@mui/material';
+import { Box, Container, Typography, Card, CardContent, Button } from '@mui/material';
 
 import styles from './account.module.css';
 import { AuthContextType } from '../types';

@@ -141,13 +141,23 @@ export async function setRating(workoutId : string, rating : number) {
 */
 
 export async function fetchExercises() {
-    const response = await fetch("http://localhost:8080/exercises");
+    const response = await fetch("http://localhost:8080/exercises", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
+        },
+    });
     const result = await response.json();
     return result;
 };
 
 export async function fetchExerciseById(exerciseId: string) {
-    const response = await fetch(`http://localhost:8080/exercises/${exerciseId}`);
+    const response = await fetch(`http://localhost:8080/exercises/${exerciseId}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
+        },
+    });
     const result = await response.json();
     return result;
 };
@@ -185,7 +195,12 @@ export async function fetchExerciseHistory(exerciseId: string) {
 */
 
 export async function fetchMuscleGroups() {
-    const response = await fetch('http://localhost:8080/muscleGroups');
+    const response = await fetch('http://localhost:8080/muscleGroups', {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
+        },
+    });
     const result = await response.json();
     return result;
 };

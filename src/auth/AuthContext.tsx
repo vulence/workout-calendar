@@ -16,7 +16,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     
-    // Checks if the user has a cookie on component mount
+    // Checks if the user has a JWT on component mount
     useEffect(() => {
         checkAuthentication();
     }, [])
@@ -24,6 +24,11 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     const checkAuthentication = () => {
         if (Userfront.tokens.accessToken) {
             setAuthenticated(true);
+            setUser({
+                id: Userfront.user.userId!.toString(),
+                username: Userfront.user.username!,
+                email: Userfront.user.email!,
+            });
         }
         setLoading(false);
     };
