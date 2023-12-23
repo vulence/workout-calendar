@@ -1,30 +1,38 @@
-# React + TypeScript + Vite
+# Workout Calendar App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the Workout Calendar App! This app helps users track their workouts and plan their fitness routines. Below, you'll find information on how to use the app, access it online, and contribute to its development.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The Workout Calendar App is designed to make workout tracking simple and effective. Users can log their daily exercises, set goals, and view their progress over time.
 
-## Expanding the ESLint configuration
+### Live Version
+**Coming Soon!** The online version of the app is currently in development and will be available soon.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Features
 
-- Configure the top-level `parserOptions` property like this:
+- Log daily workouts
+- Monitor exercise history and performance
+- [Future Feature] Social sharing and community features
+- [Future Feature] Custom workout plans
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## Technologies Used
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+The Workout Calendar App leverages the following technologies:
+
+- **Frontend:** React
+- **Backend:** Spring Boot
+- **Authentication:** Userfront Platform
+- **Database:** MySQL (local)
+- **Version Control:** Git, GitHub
+- **Deployment (Planned):** AWS Lambda
+
+## Future Development
+
+ We have exciting plans for the future of the Workout Calendar App! Here are some upcoming features:
+
+- Nutrition tracking
+- Enhanced analytics and insights
+- Custom workout plans
+
+Happy workouts! 💪🏋️‍♀️📆
