@@ -12,7 +12,7 @@ import EditNotesModal from './EditNotesModal';
 import { darken, styled } from '@mui/material/styles';
 
 import { Workout as WorkoutType, WorkoutDataGridRows, Exercise, ExerciseDone } from '../../types';
-import { deleteWorkoutExerciseDone, fetchWorkoutById, fetchWorkoutExercises, submitWorkoutExerciseDone, updateExerciseDoneCompleted, updateWorkoutExerciseDone } from '../../api/api';
+import { deleteWorkoutExerciseDone, fetchWorkoutById, fetchWorkoutExercises, setDuration, setNotes, submitWorkoutExerciseDone, updateExerciseDoneCompleted, updateWorkoutExerciseDone } from '../../api/api';
 
 export default function Workout() {
     const { id } = useParams();
@@ -137,17 +137,15 @@ export default function Workout() {
         if (rowId === null) {
             const exerciseDoneDto = { exerciseId, weight, sets, reps };
             
-            submitWorkoutExerciseDone(id!.toString(), exerciseDoneDto).then(status => console.log(status)).catch(error => console.error(error));
+            submitWorkoutExerciseDone(id!.toString(), exerciseDoneDto).then(() => window.location.reload()).catch(error => console.error(error));
         }
 
         // If user is editing an existing done exercise, include the id of the exercisedone to be modified
         else {
             const exerciseDone = { id: rowId, weight, sets, reps };
 
-            updateWorkoutExerciseDone(id!.toString(), exerciseDone).then(status => console.log(status)).catch(error => console.error(error));
+            updateWorkoutExerciseDone(id!.toString(), exerciseDone).then(() => {}).catch(error => console.error(error));
         }
-
-        window.location.reload();
     };
 
     // Delete an exercise from a workout
@@ -194,29 +192,12 @@ export default function Workout() {
 
     // Notes form submission
     const handleNotesSubmit = (notes: string) => {
-        fetch(`http://localhost:8080/workouts/${id}/setNotes`, {
-            method: "PUT",
-            credentials: "include",
-            body: notes
-        }).then(() => {
-            console.log("Workout notes successfully modified.");
-        })
-
-        setOpenNotesDialog(false);
+        setNotes(id!.toString(), notes).then(() => setOpenNotesDialog(false));
     };
 
     // Duration submission
     const handleDurationSubmit = (minutes: number) => {
-        fetch(`http://localhost:8080/workouts/${id}/setDuration`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify(minutes)
-        }).then(() => {
-            console.log("Workout duration successfully modified.");
-        })
-
-        window.location.reload();
+        setDuration(id!.toString(), minutes).then(() => window.location.reload());
     };
 
     return (

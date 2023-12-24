@@ -4,7 +4,7 @@ import com.vule.workoutcalendar.musclegroup.MuscleGroup;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("EXERCISE_MUSCLE_GROUP")
+@Table("exercise_muscle_group")
 public class MuscleGroupRef {
     private AggregateReference<MuscleGroup, Integer> muscleGroup;
     private String name;

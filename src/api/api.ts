@@ -1,12 +1,14 @@
 import { Workout } from "../types";
 import Userfront from '@userfront/toolkit';
 
+const API_URL = "http://localhost:8080";
+
 /*
 * START WORKOUTS
 */
 
 export async function fetchWorkouts() {
-    const response = await fetch("http://localhost:8080/workouts", {
+    const response = await fetch(`${API_URL}/workouts`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
@@ -18,7 +20,7 @@ export async function fetchWorkouts() {
 };
 
 export async function fetchWorkoutById(workoutId: string) {
-    const response = await fetch(`http://localhost:8080/workouts/${workoutId}`, {
+    const response = await fetch(`${API_URL}/workouts/${workoutId}`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
@@ -30,7 +32,7 @@ export async function fetchWorkoutById(workoutId: string) {
 };
 
 export async function fetchWorkoutExercises(workoutId: string) {
-    const response = await fetch(`http://localhost:8080/workouts/${workoutId}/exercises`, {
+    const response = await fetch(`${API_URL}/workouts/${workoutId}/exercises`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
@@ -42,7 +44,7 @@ export async function fetchWorkoutExercises(workoutId: string) {
 };
 
 export async function submitWorkout(workout : any) {
-    const response = await fetch("http://localhost:8080/workouts/new", {
+    const response = await fetch(`${API_URL}/workouts/new`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -56,7 +58,7 @@ export async function submitWorkout(workout : any) {
 };
 
 export async function submitWorkoutExerciseDone(workoutId : string, exerciseDoneDto : any) {
-    const response = await fetch(`http://localhost:8080/workouts/${workoutId}/exercises/new`, {
+    const response = await fetch(`${API_URL}/workouts/${workoutId}/exercises/new`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -70,7 +72,7 @@ export async function submitWorkoutExerciseDone(workoutId : string, exerciseDone
 };
 
 export async function deleteWorkout(workoutId : string) {
-    const response = await fetch(`http://localhost:8080/workouts/${workoutId}`, {
+    const response = await fetch(`${API_URL}/workouts/${workoutId}`, {
         method: "DELETE",
         headers: {
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
@@ -81,7 +83,7 @@ export async function deleteWorkout(workoutId : string) {
 };
 
 export async function deleteWorkoutExerciseDone(workoutId : string, exerciseDoneId : string) {
-    const response = await fetch(`http://localhost:8080/workouts/${workoutId}/exercises`, {
+    const response = await fetch(`${API_URL}/workouts/${workoutId}/exercises`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
@@ -94,7 +96,7 @@ export async function deleteWorkoutExerciseDone(workoutId : string, exerciseDone
 }
 
 export async function updateWorkoutExerciseDone(workoutId : string, exerciseDone : any) {
-    const response = await fetch(`http://localhost:8080/workouts/${workoutId}/exercises/update`, {
+    const response = await fetch(`${API_URL}/workouts/${workoutId}/exercises/update`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -107,7 +109,7 @@ export async function updateWorkoutExerciseDone(workoutId : string, exerciseDone
 };
 
 export async function updateExerciseDoneCompleted(workoutId : string, exerciseDoneId: string, completed: boolean) {
-    const response = await fetch(`http://localhost:8080/workouts/${workoutId}/setCompleted`, {
+    const response = await fetch(`${API_URL}/workouts/${workoutId}/setCompleted`, {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',
@@ -120,7 +122,7 @@ export async function updateExerciseDoneCompleted(workoutId : string, exerciseDo
 };
 
 export async function setRating(workoutId : string, rating : number) {
-    const response = await fetch(`http://localhost:8080/workouts/${workoutId}/setRating`, {
+    const response = await fetch(`${API_URL}/workouts/${workoutId}/setRating`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -130,7 +132,34 @@ export async function setRating(workoutId : string, rating : number) {
     });
 
     return response.status;
-}
+};
+
+export async function setDuration(workoutId : string, minutes : number) {
+    const response = await fetch(`${API_URL}/workouts/${workoutId}/setDuration`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
+        },
+        body: JSON.stringify(minutes)
+    });
+
+    return response.status;
+};
+
+export async function setNotes(workoutId : string, notes : string) {
+    const response = await fetch(`${API_URL}/workouts/${workoutId}/setNotes`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
+        },
+        body: notes
+    });
+
+    return response.status;
+};
+
 
 /*
 * END WORKOUTS
@@ -141,7 +170,7 @@ export async function setRating(workoutId : string, rating : number) {
 */
 
 export async function fetchExercises() {
-    const response = await fetch("http://localhost:8080/exercises", {
+    const response = await fetch(`${API_URL}/exercises`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
@@ -152,7 +181,7 @@ export async function fetchExercises() {
 };
 
 export async function fetchExerciseById(exerciseId: string) {
-    const response = await fetch(`http://localhost:8080/exercises/${exerciseId}`, {
+    const response = await fetch(`${API_URL}/exercises/${exerciseId}`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
@@ -163,7 +192,7 @@ export async function fetchExerciseById(exerciseId: string) {
 };
 
 export async function fetchMaxWeights(exerciseId: string) {
-    const response = await fetch(`http://localhost:8080/exercises/${exerciseId}/workouts`, {
+    const response = await fetch(`${API_URL}/exercises/${exerciseId}/workouts`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
@@ -175,7 +204,7 @@ export async function fetchMaxWeights(exerciseId: string) {
 };
 
 export async function fetchExerciseHistory(exerciseId: string) {
-    const response = await fetch(`http://localhost:8080/exercises/${exerciseId}/exerciseHistory`, {
+    const response = await fetch(`${API_URL}/exercises/${exerciseId}/exerciseHistory`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
@@ -195,7 +224,7 @@ export async function fetchExerciseHistory(exerciseId: string) {
 */
 
 export async function fetchMuscleGroups() {
-    const response = await fetch('http://localhost:8080/muscleGroups', {
+    const response = await fetch(`${API_URL}/muscleGroups`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`

@@ -13,7 +13,7 @@ import { Workout, CalendarEvent, Exercise } from '../types';
 import AddWorkoutModal from '../workouts/allworkouts/AddWorkoutModal';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
 import styles from './home.module.css';
-import { fetchWorkoutExercises, fetchWorkouts, updateExerciseDoneCompleted } from '../api/api';
+import { fetchWorkoutExercises, fetchWorkouts, submitWorkout, updateExerciseDoneCompleted } from '../api/api';
 import { stringToDayjs } from '../workouts/utils/dateConverter';
 
 dayjs.extend(utc);
@@ -110,16 +110,8 @@ export default function Home() {
     const handleSubmit = (title: string, date: Dayjs | null, notes: string, duration: number) => {
         const workout = { title, date, notes, duration };
 
-        fetch("http://localhost:8080/workouts/new", {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(workout),
-            credentials: 'include'
-        }).then(() => {
-            console.log("New workout added");
-        })
+        submitWorkout(workout).then(message => console.log(message));
+
         window.location.reload();
     }
 

@@ -156,7 +156,7 @@ export default function Register() {
                         value={formData.password}
                         onChange={(e) => handleChange(e)}
                     />
-                    <FormHelperText id="password-helper-text" error={errorHelperText.password ? true : false}>{errorHelperText.password}</FormHelperText>
+                    <FormHelperText id="password-helper-text" error={errorHelperText.password ? true : false}>At least 16 characters OR at least 8 characters including a number and a letter.</FormHelperText>
                 </FormControl>
 
                 <Box sx={{ display: 'flex', flexDirection: "row" }}>
