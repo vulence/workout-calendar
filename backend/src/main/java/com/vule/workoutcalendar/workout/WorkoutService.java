@@ -107,6 +107,7 @@ public class WorkoutService {
         ed.setWeight(exerciseDone.getWeight());
         ed.setSets(exerciseDone.getSets());
         ed.setReps(exerciseDone.getReps());
+        ed.setCompleted(false);
 
         workouts.updateExerciseDone(ed.getId(),
                 ed.getWeight(),

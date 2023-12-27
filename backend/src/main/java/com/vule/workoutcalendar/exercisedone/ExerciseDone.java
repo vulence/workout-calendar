@@ -18,12 +18,20 @@ public class ExerciseDone {
     @Transient
     Workout workout;
 
-    public ExerciseDone(Integer weight, Integer sets, Integer reps, AggregateReference<Exercise, Integer> exercise) {
+    public ExerciseDone() {}
+
+    public ExerciseDone(Integer weight, Integer sets, Integer reps) {
         this.weight = weight;
         this.sets = sets;
         this.reps = reps;
-        this.exercise = exercise;
         this.completed = false;
+    }
+
+    public ExerciseDone(Integer id, Integer weight, Integer sets, Integer reps) {
+        this.id = id;
+        this.weight = weight;
+        this.sets = sets;
+        this.reps = reps;
     }
 
     public Integer getId() { return id; }

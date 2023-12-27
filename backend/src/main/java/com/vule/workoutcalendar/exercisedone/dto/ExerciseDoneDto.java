@@ -50,6 +50,6 @@ public class ExerciseDoneDto {
     }
 
     public ExerciseDone toExerciseDone() {
-        return new ExerciseDone(weight, sets, reps, null);
+        return new ExerciseDone(weight, sets, reps);
     }
 }

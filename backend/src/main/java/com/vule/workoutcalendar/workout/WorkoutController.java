@@ -94,7 +94,7 @@ public class WorkoutController {
 
     @PutMapping("/{id}/exercises/update")
     @RequiresJwtToken
-    public ResponseEntity<?> updateWorkoutExercise(@RequestAttribute(name = "Authorization") String jwtToken, @PathVariable Integer id, @Valid @RequestBody ExerciseDone exerciseDone) {
+    public ResponseEntity<?> updateWorkoutExercise(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @Valid @RequestBody ExerciseDone exerciseDone) {
         workoutService.updateWorkoutExercise(jwtService.parseUserIdFromJwt(jwtToken), id, exerciseDone);
         return ResponseEntity.noContent().build();
     }

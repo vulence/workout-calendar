@@ -146,6 +146,8 @@ export default function Workout() {
 
             updateWorkoutExerciseDone(id!.toString(), exerciseDone).then(() => {}).catch(error => console.error(error));
         }
+
+        window.location.reload();
     };
 
     // Delete an exercise from a workout
