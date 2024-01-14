@@ -13,7 +13,7 @@ import { Workout, CalendarEvent, Exercise } from '../types';
 import AddWorkoutModal from '../workouts/allworkouts/AddWorkoutModal';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
 import styles from './home.module.css';
-import { fetchWorkoutExercises, fetchWorkouts, submitWorkout, updateExerciseDoneCompleted } from '../api/api';
+import { fetchWorkoutExercises, fetchWorkouts, submitWorkout, updateWorkoutExerciseCompleted } from '../api/api';
 import { stringToDayjs } from '../workouts/utils/dateConverter';
 
 dayjs.extend(utc);
@@ -69,11 +69,11 @@ export default function Home() {
 
     // If there is a today's workout, set all essential elements related to progress
     const initializeProgress = (workout: Workout) => {
-        const divisor : number = workout.exercisesDone.length > 0 ? workout.exercisesDone.length : 1;
+        const divisor : number = workout.workoutExercises.length > 0 ? workout.workoutExercises.length : 1;
         setProgressIncrement(100 / divisor);
 
-        const countCompletedExercises = workout.exercisesDone.filter(exerciseDone => {
-            return exerciseDone.completed;
+        const countCompletedExercises = workout.workoutExercises.filter(workoutExercise => {
+            return workoutExercise.completed;
         }).length;
 
         setProgress((100 / divisor) * countCompletedExercises);
@@ -84,9 +84,9 @@ export default function Home() {
         fetchWorkoutExercises(todaysWorkout.id.toString()).then((exercises) => {
             setTodaysWorkout({
                 ...todaysWorkout,
-                exercisesDone: todaysWorkout.exercisesDone.map((exerciseDone) => ({
-                    ...exerciseDone,
-                    exercise: exercises.find((exercise: Exercise) => exercise.id === exerciseDone.exercise.id),
+                workoutExercises: todaysWorkout.workoutExercises.map((workoutExercise) => ({
+                    ...workoutExercise,
+                    exercise: exercises.find((exercise: Exercise) => exercise.id === workoutExercise.exercise.id),
                 })),
             });
         });
@@ -122,8 +122,8 @@ export default function Home() {
         navigate("/workouts/" + e.id);
     };
 
-    // Updates the status bar and the exercisedone that was marked as (not)completed
-    const handleExerciseChecked = (exerciseDoneId: number, checked: boolean) => {
+    // Updates the status bar and the workoutExercise that was marked as (not)completed
+    const handleExerciseChecked = (workoutExerciseId: number, checked: boolean) => {
         if (checked) {
             setProgress(progress + progressIncrement);
         }
@@ -131,16 +131,16 @@ export default function Home() {
             setProgress(progress - progressIncrement);
         }
 
-        const findTargetExercise = todaysWorkout!.exercisesDone.find(ed => ed.id === exerciseDoneId);
+        const findTargetExercise = todaysWorkout!.workoutExercises.find(ed => ed.id === workoutExerciseId);
 
         if (findTargetExercise) {
             setTodaysWorkout({
                 ...todaysWorkout!,
-                exercisesDone: todaysWorkout!.exercisesDone.map(ed => (ed === findTargetExercise ? { ...ed, completed: !ed.completed } : ed))
+                workoutExercises: todaysWorkout!.workoutExercises.map(ed => (ed === findTargetExercise ? { ...ed, completed: !ed.completed } : ed))
             });
         }
 
-        updateExerciseDoneCompleted(todaysWorkout!.id.toString(), exerciseDoneId.toString(), checked).then(data => console.log(data));
+        updateWorkoutExerciseCompleted(todaysWorkout!.id.toString(), workoutExerciseId.toString(), checked).then(data => console.log(data));
     }
 
     return (
@@ -211,14 +211,14 @@ export default function Home() {
                                 </Box>
                                 <Box className={styles.todaysWorkoutProgress}>
                                     <LinearProgressWithLabel value={progress} />
-                                    {todaysWorkout.exercisesDone.map((exerciseDone) => (
+                                    {todaysWorkout.workoutExercises.map((workoutExercise) => (
                                         <Box
-                                            key={exerciseDone.id}
+                                            key={workoutExercise.id}
                                             className={styles.todaysWorkoutExercise}
-                                            sx={{backgroundColor: exerciseDone.completed ? "rgb(8, 94, 32, 0.7)" : "rgb(0, 0, 0, 0.7)"}}
+                                            sx={{backgroundColor: workoutExercise.completed ? "rgb(8, 94, 32, 0.7)" : "rgb(0, 0, 0, 0.7)"}}
                                         >
-                                            <Typography>{exerciseDone.exercise.name}</Typography>
-                                            <Checkbox defaultChecked={exerciseDone.completed} onChange={(e) => handleExerciseChecked(exerciseDone.id, e.target.checked)} />
+                                            <Typography>{workoutExercise.exercise.name}</Typography>
+                                            <Checkbox defaultChecked={workoutExercise.completed} onChange={(e) => handleExerciseChecked(workoutExercise.id, e.target.checked)} />
                                         </Box>
                                     ))}
                                 </Box>

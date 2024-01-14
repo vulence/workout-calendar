@@ -1,7 +1,7 @@
 package com.vule.workoutcalendar.workout;
 
 import com.vule.workoutcalendar.exercise.Exercise;
-import com.vule.workoutcalendar.exercisedone.ExerciseDone;
+import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.ListCrudRepository;
@@ -31,8 +31,8 @@ public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> 
     @Query("""
             SELECT E.*
             FROM EXERCISE E
-            INNER JOIN EXERCISE_DONE ED ON ED.WORKOUT = :workoutId
-            WHERE E.ID = ED.EXERCISE
+            INNER JOIN WORKOUT_EXERCISE WE ON WE.WORKOUT = :workoutId
+            WHERE E.ID = WE.EXERCISE
             """)
     Optional<List<Exercise>> findWorkoutExercises(@Param("workoutId") Integer workoutId, @Param("userId") Integer userId);
 
@@ -46,26 +46,26 @@ public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> 
 
     @Query("""
            SELECT *
-           FROM EXERCISE_DONE
+           FROM WORKOUT_EXERCISE
            WHERE ID = :id
             """)
-    ExerciseDone findExerciseDone(@Param("id") Integer id);
+    WorkoutExercise findWorkoutExercise(@Param("id") Integer id);
 
     @Modifying
     @Query("""
-            UPDATE EXERCISE_DONE
+            UPDATE WORKOUT_EXERCISE
             SET WEIGHT = :weight, SETS = :sets, REPS = :reps, COMPLETED = :completed
             WHERE ID = :id
             """)
-    void updateExerciseDone(@Param("id") Integer id, @Param("weight") Integer weight, @Param("sets") Integer sets, @Param("reps") Integer reps, @Param("completed") Boolean completed);
+    void updateWorkoutExercise(@Param("id") Integer id, @Param("weight") Integer weight, @Param("sets") Integer sets, @Param("reps") Integer reps, @Param("completed") Boolean completed);
 
     @Modifying
     @Query("""
           DELETE
-          FROM EXERCISE_DONE
+          FROM WORKOUT_EXERCISE
           WHERE ID = :id
             """)
-    void deleteExerciseDone(@Param("id") Integer id);
+    void deleteWorkoutExercise(@Param("id") Integer id);
 
     @Modifying
     @Query("""

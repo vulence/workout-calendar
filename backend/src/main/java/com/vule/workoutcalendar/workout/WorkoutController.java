@@ -2,8 +2,8 @@ package com.vule.workoutcalendar.workout;
 
 import com.vule.workoutcalendar.annotation.RequiresJwtToken;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.vule.workoutcalendar.exercisedone.ExerciseDone;
-import com.vule.workoutcalendar.exercisedone.dto.ExerciseDoneDto;
+import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
+import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
 import com.vule.workoutcalendar.jwt.JwtService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -80,7 +80,7 @@ public class WorkoutController {
     @PutMapping("/{id}/setCompleted")
     @RequiresJwtToken
     public ResponseEntity<?> updateCompleted(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @RequestBody ObjectNode objectNode) {
-        workoutService.updateCompleted(jwtService.parseUserIdFromJwt(jwtToken), id, objectNode.get("exerciseDoneId").asInt(), objectNode.get("completed").asBoolean());
+        workoutService.updateCompleted(jwtService.parseUserIdFromJwt(jwtToken), id, objectNode.get("workoutExerciseId").asInt(), objectNode.get("completed").asBoolean());
         return ResponseEntity.noContent().build();
     }
 
@@ -93,22 +93,22 @@ public class WorkoutController {
 
     @PutMapping("/{id}/exercises/new")
     @RequiresJwtToken
-    public ResponseEntity<?> addWorkoutExercise(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @Valid @RequestBody ExerciseDoneDto exerciseDoneDto) {
-        workoutService.addWorkoutExercise(jwtService.parseUserIdFromJwt(jwtToken), id, exerciseDoneDto);
+    public ResponseEntity<?> addWorkoutExercise(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @Valid @RequestBody WorkoutExerciseDto workoutExerciseDto) {
+        workoutService.addWorkoutExercise(jwtService.parseUserIdFromJwt(jwtToken), id, workoutExerciseDto);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}/exercises/update")
     @RequiresJwtToken
-    public ResponseEntity<?> updateWorkoutExercise(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @Valid @RequestBody ExerciseDone exerciseDone) {
-        workoutService.updateWorkoutExercise(jwtService.parseUserIdFromJwt(jwtToken), id, exerciseDone);
+    public ResponseEntity<?> updateWorkoutExercise(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @Valid @RequestBody WorkoutExercise workoutExercise) {
+        workoutService.updateWorkoutExercise(jwtService.parseUserIdFromJwt(jwtToken), id, workoutExercise);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}/exercises")
     @RequiresJwtToken
-    public ResponseEntity<?> deleteWorkoutExercise(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @RequestBody Integer exerciseDoneId) {
-        workoutService.deleteWorkoutExercise(jwtService.parseUserIdFromJwt(jwtToken), id, exerciseDoneId);
+    public ResponseEntity<?> deleteWorkoutExercise(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @RequestBody Integer workoutExerciseId) {
+        workoutService.deleteWorkoutExercise(jwtService.parseUserIdFromJwt(jwtToken), id, workoutExerciseId);
         return ResponseEntity.noContent().build();
     }
 }

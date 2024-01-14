@@ -9,19 +9,19 @@ import java.util.List;
 
 public interface ExerciseRepository extends ListCrudRepository<Exercise, Integer> {
     @Query("""
-           SELECT W.DATE, ED.*
+           SELECT W.DATE, WE.*
            FROM WORKOUT W
-           INNER JOIN EXERCISE_DONE ED ON W.ID = ED.WORKOUT
-           WHERE W.USER_ID = :userId AND ED.EXERCISE = :exerciseId
+           INNER JOIN WORKOUT_EXERCISE WE ON W.ID = WE.WORKOUT
+           WHERE W.USER_ID = :userId AND WE.EXERCISE = :exerciseId
            ORDER BY W.DATE ASC
             """)
     List<ExerciseHistoryDto> findExerciseHistory(@Param("userId") Integer userId, @Param("exerciseId") Integer id);
 
     @Query("""
-          SELECT W.DATE, MAX(ED.WEIGHT) AS Weight
+          SELECT W.DATE, MAX(WE.WEIGHT) AS Weight
           FROM WORKOUT W
-          INNER JOIN EXERCISE_DONE ED ON W.ID = ED.WORKOUT
-          WHERE W.USER_ID = :userId AND ED.EXERCISE = :exerciseId
+          INNER JOIN WORKOUT_EXERCISE WE ON W.ID = WE.WORKOUT
+          WHERE W.USER_ID = :userId AND WE.EXERCISE = :exerciseId
           GROUP BY W.DATE
           ORDER BY W.DATE ASC
             """)

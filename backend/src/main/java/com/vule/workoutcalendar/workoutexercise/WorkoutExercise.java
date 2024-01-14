@@ -1,4 +1,4 @@
-package com.vule.workoutcalendar.exercisedone;
+package com.vule.workoutcalendar.workoutexercise;
 
 import com.vule.workoutcalendar.exercise.Exercise;
 import com.vule.workoutcalendar.workout.Workout;
@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 
-public class ExerciseDone {
+public class WorkoutExercise {
 
     @Id
     private Integer id;
@@ -18,16 +18,16 @@ public class ExerciseDone {
     @Transient
     Workout workout;
 
-    public ExerciseDone() {}
+    public WorkoutExercise() {}
 
-    public ExerciseDone(Integer weight, Integer sets, Integer reps) {
+    public WorkoutExercise(Integer weight, Integer sets, Integer reps) {
         this.weight = weight;
         this.sets = sets;
         this.reps = reps;
         this.completed = false;
     }
 
-    public ExerciseDone(Integer id, Integer weight, Integer sets, Integer reps) {
+    public WorkoutExercise(Integer id, Integer weight, Integer sets, Integer reps) {
         this.id = id;
         this.weight = weight;
         this.sets = sets;

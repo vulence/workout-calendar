@@ -11,11 +11,11 @@ import Autocomplete from '@mui/material/Autocomplete';
 import styles from './workout.module.css';
 import Switch from '@mui/material/Switch';
 
-import { AddExerciseDoneModalProps, ExerciseDto } from '../../types';
+import { AddWorkoutExerciseModalProps, ExerciseDto } from '../../types';
 import Typography from '@mui/material/Typography';
 import { fetchExercises } from '../../api/api';
 
-export default function AddExerciseDoneModal(props: AddExerciseDoneModalProps) {
+export default function AddWorkoutExerciseModal(props: AddWorkoutExerciseModalProps) {
     // Data states
     const [exercises, setExercises] = useState<Array<ExerciseDto>>([]);
     const [name, setName] = useState<string>(props.name);

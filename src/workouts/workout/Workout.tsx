@@ -7,12 +7,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import styles from './workout.module.css';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import WorkoutToolbar from './WorkoutToolbar';
-import AddExerciseDoneModal from './AddExerciseDoneModal';
+import AddWorkoutExerciseModal from './AddWorkoutExerciseModal';
 import EditNotesModal from './EditNotesModal';
 import { darken, styled } from '@mui/material/styles';
 
-import { Workout as WorkoutType, WorkoutDataGridRows, Exercise, ExerciseDone } from '../../types';
-import { deleteWorkoutExerciseDone, fetchWorkoutById, fetchWorkoutExercises, setDuration, setNotes, submitWorkoutExerciseDone, updateExerciseDoneCompleted, updateWorkoutExerciseDone } from '../../api/api';
+import { Workout as WorkoutType, WorkoutDataGridRows, Exercise, WorkoutExercise } from '../../types';
+import { deleteWorkoutExercise, fetchWorkoutById, fetchWorkoutExercises, setDuration, setNotes, submitWorkoutExercise, updateWorkoutExerciseCompleted, updateWorkoutExercise } from '../../api/api';
 
 export default function Workout() {
     const { id } = useParams();
@@ -29,15 +29,15 @@ export default function Workout() {
     const [reps, setReps] = useState<number | null>();
     const [rowId, setRowId] = useState<number | null>(null);
 
-    // Initialize the workout and map all corresponding exercises to exercisedone objects
+    // Initialize the workout and map all corresponding exercises to workoutExercise objects
     useEffect(() => {
         Promise.all([fetchWorkoutById(id!), fetchWorkoutExercises(id!.toString())]).then(
             ([workout, exercises]) => {
                 setWorkout({
                     ...workout,
-                    exercisesDone: workout.exercisesDone.map((exerciseDone: ExerciseDone) => ({
-                        ...exerciseDone,
-                        exercise: exercises.find((exercise: Exercise) => exercise.id === exerciseDone.exercise.id),
+                    workoutExercises: workout.workoutExercises.map((workoutExercise: WorkoutExercise) => ({
+                        ...workoutExercise,
+                        exercise: exercises.find((exercise: Exercise) => exercise.id === workoutExercise.exercise.id),
                     })),
                 });
             }
@@ -99,32 +99,32 @@ export default function Workout() {
         }
     ];
 
-    // Update the exercisedone that was marked as (not)completed
+    // Update the workoutExercise that was marked as (not)completed
     const handleCompleted = (params: GridRenderCellParams) => {
-        const findTargetExercise = workout!.exercisesDone.find(ed => ed.id === params.id);
+        const findTargetExercise = workout!.workoutExercises.find(ed => ed.id === params.id);
 
         if (findTargetExercise) {
             setWorkout({
                 ...workout!,
-                exercisesDone: workout!.exercisesDone.map(ed => (ed === findTargetExercise ? { ...ed, completed: !ed.completed } : ed))
+                workoutExercises: workout!.workoutExercises.map(ed => (ed === findTargetExercise ? { ...ed, completed: !ed.completed } : ed))
             });
         }
 
-        updateExerciseDoneCompleted(workout!.id.toString(), params.id.toString(), !params.row.completed).then(data => console.log(data));
+        updateWorkoutExerciseCompleted(workout!.id.toString(), params.id.toString(), !params.row.completed).then(data => console.log(data));
     }
 
     // Load data grid rows
     const loadRows = () => {
         const rows: Array<WorkoutDataGridRows> = [];
 
-        workout?.exercisesDone?.forEach((exerciseDone) => {
+        workout?.workoutExercises?.forEach((workoutExercise) => {
             rows.push({
-                id: exerciseDone.id,
-                exercise: exerciseDone.exercise.name,
-                weight: exerciseDone.weight,
-                sets: exerciseDone.sets,
-                reps: exerciseDone.reps,
-                completed: exerciseDone.completed
+                id: workoutExercise.id,
+                exercise: workoutExercise.exercise.name,
+                weight: workoutExercise.weight,
+                sets: workoutExercise.sets,
+                reps: workoutExercise.reps,
+                completed: workoutExercise.completed
             })
         })
 
@@ -135,22 +135,22 @@ export default function Workout() {
     const handleExerciseSubmit = async (exerciseId: number, weight: number, sets: number, reps: number) => {
         // If user is submitting a new done exercise, create a new object includes exercise id
         if (rowId === null) {
-            const exerciseDoneDto = { exerciseId, weight, sets, reps };
+            const workoutExerciseDto = { exerciseId, weight, sets, reps };
             
-            submitWorkoutExerciseDone(id!.toString(), exerciseDoneDto).then(() => window.location.reload()).catch(error => console.error(error));
+            submitWorkoutExercise(id!.toString(), workoutExerciseDto).then(() => window.location.reload()).catch(error => console.error(error));
         }
 
-        // If user is editing an existing done exercise, include the id of the exercisedone to be modified
+        // If user is editing an existing done exercise, include the id of the workoutExercise to be modified
         else {
-            const exerciseDone = { id: rowId, weight, sets, reps };
+            const workoutExercise = { id: rowId, weight, sets, reps };
 
-            updateWorkoutExerciseDone(id!.toString(), exerciseDone).then(() => {}).catch(error => console.error(error));
+            updateWorkoutExercise(id!.toString(), workoutExercise).then(() => {}).catch(error => console.error(error));
         }
     };
 
     // Delete an exercise from a workout
     const handleDeleteClick = (params: GridRowParams) => () => {
-        deleteWorkoutExerciseDone(id!.toString(), params.id.toString()).then(status => console.log(status)).catch(error => console.error(error));
+        deleteWorkoutExercise(id!.toString(), params.id.toString()).then(status => console.log(status)).catch(error => console.error(error));
         
         window.location.reload();
     };
@@ -228,7 +228,7 @@ export default function Workout() {
                 Add Exercise
             </Fab>
 
-            <AddExerciseDoneModal
+            <AddWorkoutExerciseModal
                 open={openExerciseDialog}
                 handleClose={handleCloseExerciseDialog}
                 handleSubmit={handleExerciseSubmit}

@@ -1,7 +1,7 @@
 package com.vule.workoutcalendar.workout;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.vule.workoutcalendar.exercisedone.ExerciseDone;
+import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
@@ -18,7 +18,7 @@ public class Workout {
     private Integer duration;
     private Integer rating;
     private Integer userId;
-    private Set<ExerciseDone> exercisesDone = new HashSet<>();
+    private Set<WorkoutExercise> workoutExercises = new HashSet<>();
 
     public Workout(String title, LocalDate date, String notes, Integer duration, Integer rating) {
         this.title = title;
@@ -76,21 +76,21 @@ public class Workout {
         this.rating = rating;
     }
 
-    public Set<ExerciseDone> getExercisesDone() {
-        return exercisesDone;
+    public Set<WorkoutExercise> getWorkoutExercises() {
+        return workoutExercises;
     }
 
-    public void setExercisesDone(Set<ExerciseDone>  exercisesDone) {
-        this.exercisesDone = exercisesDone;
+    public void setWorkoutExercises(Set<WorkoutExercise> WorkoutExercises) {
+        this.workoutExercises = WorkoutExercises;
     }
 
-    public void addExerciseDone(ExerciseDone exerciseDone) {
-        exercisesDone.add(exerciseDone);
-        exerciseDone.setWorkout(this);
+    public void addWorkoutExercise(WorkoutExercise workoutExercise) {
+        workoutExercises.add(workoutExercise);
+        workoutExercise.setWorkout(this);
     }
 
-    public void removeExerciseDone(ExerciseDone ed) {
-        exercisesDone.remove(ed);
+    public void removeWorkoutExercise(WorkoutExercise we) {
+        workoutExercises.remove(we);
     }
 
     public Integer getuserId() {

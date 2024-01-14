@@ -1,10 +1,10 @@
-package com.vule.workoutcalendar.exercisedone.dto;
+package com.vule.workoutcalendar.workoutexercise.dto;
 
-import com.vule.workoutcalendar.exercisedone.ExerciseDone;
+import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-public class ExerciseDoneDto {
+public class WorkoutExerciseDto {
     @NotNull
     @Positive(message = "Exercise ID has to be a positive number")
     private Integer exerciseId;
@@ -49,7 +49,7 @@ public class ExerciseDoneDto {
         this.reps = reps;
     }
 
-    public ExerciseDone toExerciseDone() {
-        return new ExerciseDone(weight, sets, reps);
+    public WorkoutExercise toWorkoutExercise() {
+        return new WorkoutExercise(weight, sets, reps);
     }
 }

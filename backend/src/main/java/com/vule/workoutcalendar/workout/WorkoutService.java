@@ -1,17 +1,15 @@
 package com.vule.workoutcalendar.workout;
 
 import com.vule.workoutcalendar.exercise.Exercise;
-import com.vule.workoutcalendar.exercisedone.ExerciseDone;
-import com.vule.workoutcalendar.exercisedone.dto.ExerciseDoneDto;
+import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
+import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
 import com.vule.workoutcalendar.exercise.ExerciseRepository;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -75,24 +73,24 @@ public class WorkoutService {
         workouts.updateRating(workoutId, rating);
     }
 
-    public void updateCompleted(Integer userId, Integer workoutId, Integer exerciseDoneId, Boolean completed) {
+    public void updateCompleted(Integer userId, Integer workoutId, Integer WorkoutExerciseId, Boolean completed) {
         Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
-        ExerciseDone ed = workouts.findExerciseDone(exerciseDoneId);
-        ed.setCompleted(completed);
+        WorkoutExercise we = workouts.findWorkoutExercise(WorkoutExerciseId);
+        we.setCompleted(completed);
 
-        workouts.updateExerciseDone(ed.getId(),
-                ed.getWeight(),
-                ed.getSets(),
-                ed.getReps(),
-                ed.isCompleted());
+        workouts.updateWorkoutExercise(we.getId(),
+                we.getWeight(),
+                we.getSets(),
+                we.getReps(),
+                we.isCompleted());
     }
 
-    public void addWorkoutExercise(Integer userId, Integer workoutId, ExerciseDoneDto exerciseDoneDto) {
-        ExerciseDone ed = exerciseDoneDto.toExerciseDone();
-        ed.setExercise(AggregateReference.to(exercises.findById(exerciseDoneDto.getExerciseId()).get().getId()));
+    public void addWorkoutExercise(Integer userId, Integer workoutId, WorkoutExerciseDto workoutExerciseDto) {
+        WorkoutExercise we = workoutExerciseDto.toWorkoutExercise();
+        we.setExercise(AggregateReference.to(exercises.findById(workoutExerciseDto.getExerciseId()).get().getId()));
 
         Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
-        workout.addExerciseDone(ed);
+        workout.addWorkoutExercise(we);
 
         workouts.save(workout);
     }
@@ -101,28 +99,28 @@ public class WorkoutService {
         workouts.deleteByIdAndUserId(id, userId);
     }
 
-    public void updateWorkoutExercise(Integer userId, Integer workoutId, ExerciseDone exerciseDone) {
+    public void updateWorkoutExercise(Integer userId, Integer workoutId, WorkoutExercise workoutExercise) {
         Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
-        ExerciseDone ed = workouts.findExerciseDone(exerciseDone.getId());
+        WorkoutExercise we = workouts.findWorkoutExercise(workoutExercise.getId());
 
-        ed.setWeight(exerciseDone.getWeight());
-        ed.setSets(exerciseDone.getSets());
-        ed.setReps(exerciseDone.getReps());
-        ed.setCompleted(false);
+        we.setWeight(workoutExercise.getWeight());
+        we.setSets(workoutExercise.getSets());
+        we.setReps(workoutExercise.getReps());
+        we.setCompleted(false);
 
-        workouts.updateExerciseDone(ed.getId(),
-                ed.getWeight(),
-                ed.getSets(),
-                ed.getReps(),
-                ed.isCompleted());
+        workouts.updateWorkoutExercise(we.getId(),
+                we.getWeight(),
+                we.getSets(),
+                we.getReps(),
+                we.isCompleted());
     }
 
-    public void deleteWorkoutExercise(Integer userId, Integer workoutId, Integer exerciseDoneId) {
+    public void deleteWorkoutExercise(Integer userId, Integer workoutId, Integer WorkoutExerciseId) {
         Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
-        ExerciseDone ed = workouts.findExerciseDone(exerciseDoneId);
+        WorkoutExercise we = workouts.findWorkoutExercise(WorkoutExerciseId);
 
-        workout.removeExerciseDone(ed);
+        workout.removeWorkoutExercise(we);
 
-        workouts.deleteExerciseDone(exerciseDoneId);
+        workouts.deleteWorkoutExercise(WorkoutExerciseId);
     }
 }

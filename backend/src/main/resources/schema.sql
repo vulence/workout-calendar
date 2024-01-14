@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS exercise_done;
+DROP TABLE IF EXISTS workout_exercise;
 DROP TABLE IF EXISTS exercise_muscle_group;
 DROP TABLE IF EXISTS workout;
 DROP TABLE IF EXISTS exercise;
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS exercise (
     description text
 );
 
-CREATE TABLE IF NOT EXISTS exercise_done (
+CREATE TABLE IF NOT EXISTS workout_exercise (
     id SERIAL PRIMARY KEY,
     workout INTEGER NOT NULL,
     weight INTEGER,

@@ -68,7 +68,7 @@ export async function submitWorkout(workout : any) {
     return result.message;
 };
 
-export async function submitWorkoutExerciseDone(workoutId : string, exerciseDoneDto : any) {
+export async function submitWorkoutExercise(workoutId : string, workoutExerciseDto : any) {
     const response = await fetch(`${API_URL}/workouts/${workoutId}/exercises/new`, {
         method: "PUT",
         headers: {
@@ -76,7 +76,7 @@ export async function submitWorkoutExerciseDone(workoutId : string, exerciseDone
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
         credentials: 'include',
-        body: JSON.stringify(exerciseDoneDto),
+        body: JSON.stringify(workoutExerciseDto),
     });
 
     return response.status;
@@ -93,40 +93,40 @@ export async function deleteWorkout(workoutId : string) {
     return response.status;
 };
 
-export async function deleteWorkoutExerciseDone(workoutId : string, exerciseDoneId : string) {
+export async function deleteWorkoutExercise(workoutId : string, workoutExerciseId : string) {
     const response = await fetch(`${API_URL}/workouts/${workoutId}/exercises`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
-        body: JSON.stringify(exerciseDoneId),
+        body: JSON.stringify(workoutExerciseId),
     });
 
     return response.status;
 }
 
-export async function updateWorkoutExerciseDone(workoutId : string, exerciseDone : any) {
+export async function updateWorkoutExercise(workoutId : string, workoutExercise : any) {
     const response = await fetch(`${API_URL}/workouts/${workoutId}/exercises/update`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
-        body: JSON.stringify(exerciseDone),
+        body: JSON.stringify(workoutExercise),
     });
 
     return response.status;
 };
 
-export async function updateExerciseDoneCompleted(workoutId : string, exerciseDoneId: string, completed: boolean) {
+export async function updateWorkoutExerciseCompleted(workoutId : string, workoutExerciseId: string, completed: boolean) {
     const response = await fetch(`${API_URL}/workouts/${workoutId}/setCompleted`, {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
-        body: JSON.stringify({ exerciseDoneId, completed })
+        body: JSON.stringify({ workoutExerciseId, completed })
     });
 
     return response.status;

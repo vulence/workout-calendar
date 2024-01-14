@@ -28,10 +28,10 @@ export type Workout = {
     notes: string;
     duration: number;
     rating: number;
-    exercisesDone: Array<ExerciseDone>;
+    workoutExercises: Array<WorkoutExercise>;
 };
 
-export type ExerciseDone = {
+export type WorkoutExercise = {
     id: number;
     weight: number;
     sets: number;
@@ -63,7 +63,7 @@ export type WorkoutToolbarProps = {
     workout: Workout;
 };
 
-export type AddExerciseDoneModalProps = {
+export type AddWorkoutExerciseModalProps = {
     open: boolean;
     handleClose: () => void;
     handleSubmit: (exerciseId : number, weight : number, sets : number, reps : number) => void;
