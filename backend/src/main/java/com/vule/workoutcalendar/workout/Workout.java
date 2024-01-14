@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.vule.workoutcalendar.exercisedone.ExerciseDone;
 import org.springframework.data.annotation.Id;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,14 +13,14 @@ public class Workout {
     private Integer id;
     private String title;
     @JsonFormat(pattern="dd-MM-yyyy")
-    private LocalDateTime date;
+    private LocalDate date;
     private String notes;
     private Integer duration;
     private Integer rating;
     private Integer userId;
     private Set<ExerciseDone> exercisesDone = new HashSet<>();
 
-    public Workout(String title, LocalDateTime date, String notes, Integer duration, Integer rating) {
+    public Workout(String title, LocalDate date, String notes, Integer duration, Integer rating) {
         this.title = title;
         this.date = date;
         this.notes = notes;
@@ -44,11 +44,11 @@ public class Workout {
         this.title = title;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

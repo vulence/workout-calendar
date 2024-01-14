@@ -41,34 +41,31 @@ export default function Home() {
         fetchWorkouts().then(data => setWorkouts(data));
     }, []);
 
-    // Creates an event for each of the workout and adds it to the calendar
+    // Creates an event for each of the workout and adds it to the calendar, as well as setting today's workout if it exists
     useEffect(() => {
         const curEvents: CalendarEvent[] = [];
 
         workouts.forEach(workout => {
-            const parts = workout.date.split("-");
-
-            const year = parseInt(parts[2]);
-            const month = parseInt(parts[1]) - 1;
-            const day = parseInt(parts[0]);
-
-            const newEvent: CalendarEvent = { id: workout.id, title: workout.title, start: new Date(year, month, day), end: new Date(year, month, day), rating: workout.rating };
-            curEvents.push(newEvent);
-        });
-
-        setEvents([...events, ...curEvents]);
-    }, [workouts]);
-
-    // Sets the today's workout, if it exists and sets progress increment
-    useEffect(() => {
-        workouts.forEach(workout => {
+            curEvents.push(createEvent(workout.date, workout.id, workout.title, workout.rating));
+            
             if (stringToDayjs(workout.date).isToday()) {
                 initializeProgress(workout);
                 initializeTodaysWorkout(workout);
                 return;
             }
         });
+
+        setEvents([...events, ...curEvents]);
     }, [workouts]);
+
+    const createEvent = (stringDate: string, id: number, title: string, rating: number) : CalendarEvent => {
+        const parts = stringDate.split("-");
+        const year = parseInt(parts[2]);
+        const month = parseInt(parts[1]) - 1;
+        const day = parseInt(parts[0]);
+
+        return {id: id, title: title, start: new Date(year, month, day), end: new Date(year, month, day), rating: rating}
+    }
 
     // If there is a today's workout, set all essential elements related to progress
     const initializeProgress = (workout: Workout) => {

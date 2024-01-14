@@ -1,11 +1,22 @@
-import { Workout } from "../types";
 import Userfront from '@userfront/toolkit';
-
+    
 const API_URL = "http://localhost:8080";
 
 /*
 * START WORKOUTS
 */
+
+export async function fetchTodaysWorkout() {
+    const response = await fetch(`${API_URL}/workouts/findTodaysWorkout`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
+        },
+    });
+
+    const result = await response.json();
+    return result;
+}
 
 export async function fetchWorkouts() {
     const response = await fetch(`${API_URL}/workouts`, {

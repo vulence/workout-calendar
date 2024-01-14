@@ -4,11 +4,13 @@ import com.vule.workoutcalendar.exercise.Exercise;
 import com.vule.workoutcalendar.exercisedone.ExerciseDone;
 import com.vule.workoutcalendar.exercisedone.dto.ExerciseDoneDto;
 import com.vule.workoutcalendar.exercise.ExerciseRepository;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +32,12 @@ public class WorkoutService {
         return workouts.findByIdAndUserId(id, userId).orElse(null);
     }
 
+    public Workout findTodaysWorkout(Integer userId) {
+        return workouts.findTodaysWorkout(userId, LocalDate.now()).orElse(null);
+    }
+
     public List<Exercise> getWorkoutExercises(Integer userId, Integer id) {
-        Workout w = workouts.findByIdAndUserId(id, userId).orElse(null);
-        List<Exercise> exercisesInWorkout = new ArrayList<>();
-
-        for (ExerciseDone e : w.getExercisesDone()) exercisesInWorkout.add(exercises.findById(e.getExercise().getId()).get());
-
-        return exercisesInWorkout;
+        return workouts.findWorkoutExercises(id, userId).orElse(null);
     }
 
     public void create(Integer userId, Workout workout) {

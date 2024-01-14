@@ -1,11 +1,13 @@
 package com.vule.workoutcalendar.workout;
 
+import com.vule.workoutcalendar.exercise.Exercise;
 import com.vule.workoutcalendar.exercisedone.ExerciseDone;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,21 @@ public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> 
             WHERE id = :workoutId AND user_id = :userId
             """)
     Optional<Workout> findByIdAndUserId(@Param("workoutId") Integer workoutId, @Param("userId") Integer userId);
+
+    @Query("""
+            SELECT *
+            FROM WORKOUT
+            WHERE user_id = :userId AND date = :today
+            """)
+    Optional<Workout> findTodaysWorkout(@Param("userId") Integer userId, @Param("today") LocalDate today);
+
+    @Query("""
+            SELECT E.*
+            FROM EXERCISE E
+            INNER JOIN EXERCISE_DONE ED ON ED.WORKOUT = :workoutId
+            WHERE E.ID = ED.EXERCISE
+            """)
+    Optional<List<Exercise>> findWorkoutExercises(@Param("workoutId") Integer workoutId, @Param("userId") Integer userId);
 
     @Modifying
     @Query("""

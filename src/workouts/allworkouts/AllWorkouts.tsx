@@ -20,6 +20,7 @@ import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { pink } from '@mui/material/colors';
+import { Watch } from 'react-loader-spinner';
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
@@ -50,9 +51,12 @@ export default function AllWorkouts() {
     const [popoverState, setPopoverState] = useState<PopoverState>({});
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
+    const [loading, setLoading] = useState<boolean>(false);
+
     // Initialize all workouts
     useEffect(() => {
-        fetchWorkouts().then(data => setWorkouts(data));
+        setLoading(true);
+        fetchWorkouts().then((data) => {setWorkouts(data); setLoading(false);});
     }, [setWorkouts]);
 
     // Calculates calories burned for each workout
@@ -221,6 +225,20 @@ export default function AllWorkouts() {
             <Container>
                 <FilterAccordion
                     updateParentValues={handleFilterValues}
+                />
+
+                <Watch
+                    visible={loading}
+                    height="80"
+                    width="80"
+                    radius="48"
+                    color="white"
+                    ariaLabel="watch-loading"
+                    wrapperStyle={{
+                        justifyContent: "center",
+                        marginTop: "50px"
+                    }}
+                    wrapperClass=""
                 />
 
                 <Grid container spacing={2} className={styles.gridContainer}>
