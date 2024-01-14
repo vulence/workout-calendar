@@ -2,6 +2,7 @@ package com.vule.workoutcalendar.workout;
 
 import com.vule.workoutcalendar.exercise.Exercise;
 import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
+import com.vule.workoutcalendar.workoutexercise.WorkoutExerciseRepository;
 import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
 import com.vule.workoutcalendar.exercise.ExerciseRepository;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
@@ -16,10 +17,12 @@ import java.util.List;
 public class WorkoutService {
     private final WorkoutRepository workouts;
     private final ExerciseRepository exercises;
+    private final WorkoutExerciseRepository workoutExercises;
 
-    public WorkoutService(WorkoutRepository workouts, ExerciseRepository exercises) {
+    public WorkoutService(WorkoutRepository workouts, ExerciseRepository exercises, WorkoutExerciseRepository workoutExercises) {
         this.workouts = workouts;
         this.exercises = exercises;
+        this.workoutExercises = workoutExercises;
     }
 
     public List<Workout> findAll(Integer userId) {
@@ -34,8 +37,16 @@ public class WorkoutService {
         return workouts.findTodaysWorkout(userId, LocalDate.now()).orElse(null);
     }
 
-    public List<Exercise> getWorkoutExercises(Integer userId, Integer id) {
-        return workouts.findWorkoutExercises(id, userId).orElse(null);
+    public List<WorkoutExercise> getWorkoutExercises(Integer id) {
+        List<WorkoutExercise> allExercises = workoutExercises.findWorkoutExercises(id).orElse(null);
+
+        if (allExercises == null) return null;
+
+        for (WorkoutExercise we : allExercises) {
+            we.setExerciseName(exercises.findExerciseName(we.getExerciseId()));
+        }
+
+        return allExercises;
     }
 
     public void create(Integer userId, Workout workout) {
@@ -87,12 +98,10 @@ public class WorkoutService {
 
     public void addWorkoutExercise(Integer userId, Integer workoutId, WorkoutExerciseDto workoutExerciseDto) {
         WorkoutExercise we = workoutExerciseDto.toWorkoutExercise();
-        we.setExercise(AggregateReference.to(exercises.findById(workoutExerciseDto.getExerciseId()).get().getId()));
+        we.setWorkoutId(workoutId);
+        we.setExerciseId(workoutExerciseDto.getExerciseId());
 
-        Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
-        workout.addWorkoutExercise(we);
-
-        workouts.save(workout);
+        workoutExercises.save(we);
     }
 
     public void delete(Integer userId, Integer id) {
@@ -116,11 +125,8 @@ public class WorkoutService {
     }
 
     public void deleteWorkoutExercise(Integer userId, Integer workoutId, Integer WorkoutExerciseId) {
-        Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
         WorkoutExercise we = workouts.findWorkoutExercise(WorkoutExerciseId);
 
-        workout.removeWorkoutExercise(we);
-
-        workouts.deleteWorkoutExercise(WorkoutExerciseId);
+        workoutExercises.delete(we);
     }
 }

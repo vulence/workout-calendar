@@ -23,6 +23,7 @@ export default function Workout() {
 
     // Data states
     const [workout, setWorkout] = useState<WorkoutType>();
+    const [workoutExercises, setWorkoutExercises] = useState<WorkoutExercise[]>();
     const [name, setName] = useState<string>('');
     const [weight, setWeight] = useState<number | null>();
     const [sets, setSets] = useState<number | null>();
@@ -32,14 +33,9 @@ export default function Workout() {
     // Initialize the workout and map all corresponding exercises to workoutExercise objects
     useEffect(() => {
         Promise.all([fetchWorkoutById(id!), fetchWorkoutExercises(id!.toString())]).then(
-            ([workout, exercises]) => {
-                setWorkout({
-                    ...workout,
-                    workoutExercises: workout.workoutExercises.map((workoutExercise: WorkoutExercise) => ({
-                        ...workoutExercise,
-                        exercise: exercises.find((exercise: Exercise) => exercise.id === workoutExercise.exercise.id),
-                    })),
-                });
+            ([workout, workoutExercises]) => {
+                setWorkout(workout);
+                setWorkoutExercises(workoutExercises);
             }
         );
     }, [])
@@ -101,14 +97,7 @@ export default function Workout() {
 
     // Update the workoutExercise that was marked as (not)completed
     const handleCompleted = (params: GridRenderCellParams) => {
-        const findTargetExercise = workout!.workoutExercises.find(ed => ed.id === params.id);
-
-        if (findTargetExercise) {
-            setWorkout({
-                ...workout!,
-                workoutExercises: workout!.workoutExercises.map(ed => (ed === findTargetExercise ? { ...ed, completed: !ed.completed } : ed))
-            });
-        }
+        setWorkoutExercises(prevState => prevState!.map(we => (we.id === params.id ? {...we, completed: !we.completed} : we)));
 
         updateWorkoutExerciseCompleted(workout!.id.toString(), params.id.toString(), !params.row.completed).then(data => console.log(data));
     }
@@ -117,10 +106,10 @@ export default function Workout() {
     const loadRows = () => {
         const rows: Array<WorkoutDataGridRows> = [];
 
-        workout?.workoutExercises?.forEach((workoutExercise) => {
+        workoutExercises?.forEach((workoutExercise) => {
             rows.push({
                 id: workoutExercise.id,
-                exercise: workoutExercise.exercise.name,
+                exercise: workoutExercise.exerciseName,
                 weight: workoutExercise.weight,
                 sets: workoutExercise.sets,
                 reps: workoutExercise.reps,

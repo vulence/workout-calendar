@@ -50,6 +50,6 @@ public class WorkoutExerciseDto {
     }
 
     public WorkoutExercise toWorkoutExercise() {
-        return new WorkoutExercise(weight, sets, reps);
+        return WorkoutExercise.fromWorkoutExerciseDto(this);
     }
 }

@@ -22,14 +22,14 @@ CREATE TABLE IF NOT EXISTS exercise (
 
 CREATE TABLE IF NOT EXISTS workout_exercise (
     id SERIAL PRIMARY KEY,
-    workout INTEGER NOT NULL,
+    workout_id INTEGER NOT NULL,
     weight INTEGER,
     sets INTEGER,
     reps INTEGER,
-    exercise INTEGER,
+    exercise_id INTEGER NOT NULL,
     completed BOOLEAN,
-    FOREIGN KEY (exercise) REFERENCES exercise(id) ON DELETE CASCADE,
-    FOREIGN KEY (workout) REFERENCES workout(id) ON DELETE CASCADE
+    FOREIGN KEY (exercise_id) REFERENCES exercise(id) ON DELETE CASCADE,
+    FOREIGN KEY (workout_id) REFERENCES workout(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS muscle_group (

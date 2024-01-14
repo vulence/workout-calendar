@@ -8,11 +8,19 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ExerciseRepository extends ListCrudRepository<Exercise, Integer> {
+
+    @Query("""
+            SELECT NAME
+            FROM EXERCISE
+            WHERE ID = :exerciseId
+            """)
+    String findExerciseName(@Param("exerciseId") Integer exerciseId);
+
     @Query("""
            SELECT W.DATE, WE.*
            FROM WORKOUT W
-           INNER JOIN WORKOUT_EXERCISE WE ON W.ID = WE.WORKOUT
-           WHERE W.USER_ID = :userId AND WE.EXERCISE = :exerciseId
+           INNER JOIN WORKOUT_EXERCISE WE ON W.ID = WE.WORKOUT_ID
+           WHERE W.USER_ID = :userId AND WE.EXERCISE_ID = :exerciseId
            ORDER BY W.DATE ASC
             """)
     List<ExerciseHistoryDto> findExerciseHistory(@Param("userId") Integer userId, @Param("exerciseId") Integer id);
@@ -21,7 +29,7 @@ public interface ExerciseRepository extends ListCrudRepository<Exercise, Integer
           SELECT W.DATE, MAX(WE.WEIGHT) AS Weight
           FROM WORKOUT W
           INNER JOIN WORKOUT_EXERCISE WE ON W.ID = WE.WORKOUT
-          WHERE W.USER_ID = :userId AND WE.EXERCISE = :exerciseId
+          WHERE W.USER_ID = :userId AND WE.EXERCISE_ID = :exerciseId
           GROUP BY W.DATE
           ORDER BY W.DATE ASC
             """)

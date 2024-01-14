@@ -18,7 +18,6 @@ public class Workout {
     private Integer duration;
     private Integer rating;
     private Integer userId;
-    private Set<WorkoutExercise> workoutExercises = new HashSet<>();
 
     public Workout(String title, LocalDate date, String notes, Integer duration, Integer rating) {
         this.title = title;
@@ -74,23 +73,6 @@ public class Workout {
 
     public void setRating(Integer rating) {
         this.rating = rating;
-    }
-
-    public Set<WorkoutExercise> getWorkoutExercises() {
-        return workoutExercises;
-    }
-
-    public void setWorkoutExercises(Set<WorkoutExercise> WorkoutExercises) {
-        this.workoutExercises = WorkoutExercises;
-    }
-
-    public void addWorkoutExercise(WorkoutExercise workoutExercise) {
-        workoutExercises.add(workoutExercise);
-        workoutExercise.setWorkout(this);
-    }
-
-    public void removeWorkoutExercise(WorkoutExercise we) {
-        workoutExercises.remove(we);
     }
 
     public Integer getuserId() {

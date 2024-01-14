@@ -9,7 +9,7 @@ import isToday from 'dayjs/plugin/isToday';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import CustomToolbar from './CalendarToolbar';
-import { Workout, CalendarEvent, Exercise } from '../types';
+import { Workout, CalendarEvent, WorkoutExercise } from '../types';
 import AddWorkoutModal from '../workouts/allworkouts/AddWorkoutModal';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
 import styles from './home.module.css';
@@ -27,6 +27,7 @@ export default function Home() {
     const [workouts, setWorkouts] = useState<Array<Workout>>([]);
     const [events, setEvents] = useState<Array<CalendarEvent>>([]);
     const [todaysWorkout, setTodaysWorkout] = useState<Workout | null>(null);
+    const [todaysWorkoutExercises, setTodaysWorkoutExercises] = useState<WorkoutExercise[] | null>(null);
     const [progress, setProgress] = useState<number>(0);
     const [progressIncrement, setProgressIncrement] = useState<number>(0);
 
@@ -49,7 +50,7 @@ export default function Home() {
             curEvents.push(createEvent(workout.date, workout.id, workout.title, workout.rating));
             
             if (stringToDayjs(workout.date).isToday()) {
-                initializeProgress(workout);
+                setTodaysWorkout(workout);
                 initializeTodaysWorkout(workout);
                 return;
             }
@@ -68,11 +69,11 @@ export default function Home() {
     }
 
     // If there is a today's workout, set all essential elements related to progress
-    const initializeProgress = (workout: Workout) => {
-        const divisor : number = workout.workoutExercises.length > 0 ? workout.workoutExercises.length : 1;
+    const initializeProgress = (workoutExercises : WorkoutExercise[]) => {
+        const divisor : number = workoutExercises.length > 0 ? workoutExercises.length : 1;
         setProgressIncrement(100 / divisor);
 
-        const countCompletedExercises = workout.workoutExercises.filter(workoutExercise => {
+        const countCompletedExercises = workoutExercises.filter(workoutExercise => {
             return workoutExercise.completed;
         }).length;
 
@@ -81,14 +82,9 @@ export default function Home() {
 
     // Load in all of the exercises related to today's workout
     const initializeTodaysWorkout = (todaysWorkout: Workout) => {
-        fetchWorkoutExercises(todaysWorkout.id.toString()).then((exercises) => {
-            setTodaysWorkout({
-                ...todaysWorkout,
-                workoutExercises: todaysWorkout.workoutExercises.map((workoutExercise) => ({
-                    ...workoutExercise,
-                    exercise: exercises.find((exercise: Exercise) => exercise.id === workoutExercise.exercise.id),
-                })),
-            });
+        fetchWorkoutExercises(todaysWorkout.id.toString()).then((workoutExercises) => {
+            setTodaysWorkoutExercises(workoutExercises);
+            initializeProgress(workoutExercises);
         });
     }
 
@@ -131,16 +127,9 @@ export default function Home() {
             setProgress(progress - progressIncrement);
         }
 
-        const findTargetExercise = todaysWorkout!.workoutExercises.find(ed => ed.id === workoutExerciseId);
+        setTodaysWorkoutExercises(prevState => prevState!.map(we => we.id === workoutExerciseId ? {...we, completed: !we.completed} : we));
 
-        if (findTargetExercise) {
-            setTodaysWorkout({
-                ...todaysWorkout!,
-                workoutExercises: todaysWorkout!.workoutExercises.map(ed => (ed === findTargetExercise ? { ...ed, completed: !ed.completed } : ed))
-            });
-        }
-
-        updateWorkoutExerciseCompleted(todaysWorkout!.id.toString(), workoutExerciseId.toString(), checked).then(data => console.log(data));
+        updateWorkoutExerciseCompleted(todaysWorkoutExercises![0].workoutId.toString(), workoutExerciseId.toString(), checked).then(data => console.log(data));
     }
 
     return (
@@ -202,7 +191,7 @@ export default function Home() {
                     <CardContent className={styles.workoutOverviewContent}>
                         <Typography sx={{ fontWeight: "bold" }}>Today's workout overview</Typography>
                         <Divider sx={{ margin: 1 }} />
-                        {todaysWorkout ? (
+                        {todaysWorkout && todaysWorkoutExercises ? (
                             <>
                                 <Box className={styles.todaysWorkoutTitleDuration}>
                                     <Typography>{todaysWorkout.title}</Typography>
@@ -211,13 +200,13 @@ export default function Home() {
                                 </Box>
                                 <Box className={styles.todaysWorkoutProgress}>
                                     <LinearProgressWithLabel value={progress} />
-                                    {todaysWorkout.workoutExercises.map((workoutExercise) => (
+                                    {todaysWorkoutExercises.map((workoutExercise) => (
                                         <Box
                                             key={workoutExercise.id}
                                             className={styles.todaysWorkoutExercise}
                                             sx={{backgroundColor: workoutExercise.completed ? "rgb(8, 94, 32, 0.7)" : "rgb(0, 0, 0, 0.7)"}}
                                         >
-                                            <Typography>{workoutExercise.exercise.name}</Typography>
+                                            <Typography>{workoutExercise.exerciseName}</Typography>
                                             <Checkbox defaultChecked={workoutExercise.completed} onChange={(e) => handleExerciseChecked(workoutExercise.id, e.target.checked)} />
                                         </Box>
                                     ))}

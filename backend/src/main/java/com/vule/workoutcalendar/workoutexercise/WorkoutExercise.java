@@ -1,42 +1,38 @@
 package com.vule.workoutcalendar.workoutexercise;
 
-import com.vule.workoutcalendar.exercise.Exercise;
-import com.vule.workoutcalendar.workout.Workout;
+import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.jdbc.core.mapping.AggregateReference;
+import org.springframework.data.relational.core.mapping.Column;
 
 public class WorkoutExercise {
 
     @Id
     private Integer id;
+    @Transient
+    private String exerciseName;
     private Integer weight;
     private Integer sets;
     private Integer reps;
-    private AggregateReference<Exercise, Integer> exercise;
     private boolean completed;
-    @Transient
-    Workout workout;
+
+    private Integer workoutId;
+    private Integer exerciseId;
 
     public WorkoutExercise() {}
-
-    public WorkoutExercise(Integer weight, Integer sets, Integer reps) {
-        this.weight = weight;
-        this.sets = sets;
-        this.reps = reps;
-        this.completed = false;
-    }
-
-    public WorkoutExercise(Integer id, Integer weight, Integer sets, Integer reps) {
-        this.id = id;
-        this.weight = weight;
-        this.sets = sets;
-        this.reps = reps;
-    }
 
     public Integer getId() { return id; }
 
     public void setId(Integer id) {this.id = id;}
+
+    public String getExerciseName() {
+        return exerciseName;
+    }
+
+    public void setExerciseName(String exerciseName) {
+        this.exerciseName = exerciseName;
+    }
+
     public Integer getWeight() {
         return weight;
     }
@@ -61,14 +57,6 @@ public class WorkoutExercise {
         this.reps = reps;
     }
 
-    public AggregateReference<Exercise, Integer> getExercise() {
-        return exercise;
-    }
-
-    public void setExercise(AggregateReference<Exercise, Integer> exercise) {
-        this.exercise = exercise;
-    }
-
     public boolean isCompleted() {
         return completed;
     }
@@ -77,11 +65,28 @@ public class WorkoutExercise {
         this.completed = completed;
     }
 
-    public Workout getWorkout() {
-        return workout;
+    public Integer getWorkoutId() {
+        return workoutId;
     }
 
-    public void setWorkout(Workout workout) {
-        this.workout = workout;
+    public void setWorkoutId(Integer workoutId) {
+        this.workoutId = workoutId;
+    }
+
+    public Integer getExerciseId() {
+        return exerciseId;
+    }
+
+    public void setExerciseId(Integer exerciseId) {
+        this.exerciseId = exerciseId;
+    }
+
+    public static WorkoutExercise fromWorkoutExerciseDto(WorkoutExerciseDto workoutExerciseDto) {
+        WorkoutExercise we = new WorkoutExercise();
+        we.setWeight(workoutExerciseDto.getWeight());
+        we.setSets(workoutExerciseDto.getSets());
+        we.setReps(workoutExerciseDto.getReps());
+
+        return we;
     }
 }

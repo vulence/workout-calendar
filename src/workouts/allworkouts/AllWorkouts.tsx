@@ -56,6 +56,7 @@ export default function AllWorkouts() {
     // Initialize all workouts
     useEffect(() => {
         setLoading(true);
+
         fetchWorkouts().then((data) => {setWorkouts(data); setLoading(false);});
     }, [setWorkouts]);
 
@@ -64,7 +65,7 @@ export default function AllWorkouts() {
         const fetchCalories = async () => {
             try {
                 const caloriesPromises = workouts.map(async (workout) => {
-                    const caloriesBurned = await calculateTotalCaloriesForWorkout(workout.id);
+                    const caloriesBurned = await calculateTotalCaloriesForWorkout(workout);
                     return caloriesBurned;
                 });
 

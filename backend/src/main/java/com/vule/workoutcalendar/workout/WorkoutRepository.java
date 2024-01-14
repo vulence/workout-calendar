@@ -28,14 +28,6 @@ public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> 
             """)
     Optional<Workout> findTodaysWorkout(@Param("userId") Integer userId, @Param("today") LocalDate today);
 
-    @Query("""
-            SELECT E.*
-            FROM EXERCISE E
-            INNER JOIN WORKOUT_EXERCISE WE ON WE.WORKOUT = :workoutId
-            WHERE E.ID = WE.EXERCISE
-            """)
-    Optional<List<Exercise>> findWorkoutExercises(@Param("workoutId") Integer workoutId, @Param("userId") Integer userId);
-
     @Modifying
     @Query("""
             DELETE

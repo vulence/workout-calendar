@@ -28,16 +28,17 @@ export type Workout = {
     notes: string;
     duration: number;
     rating: number;
-    workoutExercises: Array<WorkoutExercise>;
 };
 
 export type WorkoutExercise = {
     id: number;
+    exerciseName: string;
     weight: number;
     sets: number;
     reps: number;
-    exercise: Exercise;
     completed: boolean;
+    workoutId: number;
+    exerciseId: number;
 };
 
 export type MuscleGroup = {
