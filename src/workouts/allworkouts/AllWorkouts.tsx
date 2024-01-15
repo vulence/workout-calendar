@@ -28,7 +28,7 @@ import { PopoverState, CustomIcons, AllWorkoutsFilters, Workout } from '../../ty
 import { calculateTotalCaloriesForWorkout } from '../utils/calorieCalculator';
 import { stringToDayjs } from '../utils/dateConverter';
 import FilterAccordion from './FilterAccordion';
-import { deleteWorkout, fetchWorkouts, setRating, submitWorkout } from '../../api/api';
+import { deleteWorkout, fetchWorkouts, submitWorkout, updateWorkout } from '../../api/api';
 
 dayjs.extend(utc);
 
@@ -174,16 +174,12 @@ export default function AllWorkouts() {
     const handleSubmit = (title: string, date: Dayjs | null, notes: string, duration: number) => {
         const workout : any = { title, date, notes, duration };
 
-        submitWorkout(workout).then((message) => console.log(message));
-        
-        window.location.reload();
+        submitWorkout(workout).then((message) => {console.log(message); window.location.reload();});
     }
 
     // Delete a workout
     const handleDelete = (workoutId: number) => {
-        deleteWorkout(workoutId.toString()).then((data) => console.log(data));
-
-        window.location.reload();
+        deleteWorkout(workoutId.toString()).then((data) => {console.log(data); window.location.reload();});
     }
 
     // Add a rating to a workout
@@ -207,7 +203,7 @@ export default function AllWorkouts() {
 
         setWorkouts(updatedWorkouts);
 
-        setRating(workoutId.toString(), rating).then((data) => console.log(data));
+        updateWorkout(workoutId.toString(), {"field": "rating", "rating": rating}).then((data) => console.log(data));
 
         handlePopoverClose(workoutId);
     }

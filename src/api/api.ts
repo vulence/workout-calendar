@@ -16,7 +16,7 @@ export async function fetchTodaysWorkout() {
 
     const result = await response.json();
     return result;
-}
+};
 
 export async function fetchWorkouts() {
     const response = await fetch(`${API_URL}/workouts`, {
@@ -69,14 +69,27 @@ export async function submitWorkout(workout : any) {
 };
 
 export async function submitWorkoutExercise(workoutId : string, workoutExerciseDto : any) {
-    const response = await fetch(`${API_URL}/workouts/${workoutId}/exercises/new`, {
-        method: "PUT",
+    const response = await fetch(`${API_URL}/workouts/${workoutId}/exercises`, {
+        method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
         credentials: 'include',
         body: JSON.stringify(workoutExerciseDto),
+    });
+
+    return response.status;
+};
+
+export async function updateWorkout(workoutId : string, objectNode : any) {
+    const response = await fetch(`${API_URL}/workouts/${workoutId}/update`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
+        },
+        body: JSON.stringify(objectNode),
     });
 
     return response.status;
@@ -131,46 +144,6 @@ export async function updateWorkoutExerciseCompleted(workoutId : string, workout
 
     return response.status;
 };
-
-export async function setRating(workoutId : string, rating : number) {
-    const response = await fetch(`${API_URL}/workouts/${workoutId}/setRating`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
-        },
-        body: JSON.stringify(rating)
-    });
-
-    return response.status;
-};
-
-export async function setDuration(workoutId : string, minutes : number) {
-    const response = await fetch(`${API_URL}/workouts/${workoutId}/setDuration`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
-        },
-        body: JSON.stringify(minutes)
-    });
-
-    return response.status;
-};
-
-export async function setNotes(workoutId : string, notes : string) {
-    const response = await fetch(`${API_URL}/workouts/${workoutId}/setNotes`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
-        },
-        body: notes
-    });
-
-    return response.status;
-};
-
 
 /*
 * END WORKOUTS

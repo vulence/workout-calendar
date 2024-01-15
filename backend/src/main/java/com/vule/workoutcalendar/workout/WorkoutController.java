@@ -6,6 +6,7 @@ import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
 import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
 import com.vule.workoutcalendar.jwt.JwtService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,42 +57,7 @@ public class WorkoutController {
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Workout created successfully."));
     }
 
-    @PutMapping("/{id}/setNotes")
-    @RequiresJwtToken
-    public ResponseEntity<?> updateNotes(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @RequestBody String notes) {
-        workoutService.updateNotes(jwtService.parseUserIdFromJwt(jwtToken), id, notes);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{id}/setDuration")
-    @RequiresJwtToken
-    public ResponseEntity<?> updateDuration(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @RequestBody Integer duration) {
-        workoutService.updateDuration(jwtService.parseUserIdFromJwt(jwtToken), id, duration);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{id}/setRating")
-    @RequiresJwtToken
-    public ResponseEntity<?> updateRating(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @RequestBody Integer rating) {
-        workoutService.updateRating(jwtService.parseUserIdFromJwt(jwtToken), id, rating);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{id}/setCompleted")
-    @RequiresJwtToken
-    public ResponseEntity<?> updateCompleted(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @RequestBody ObjectNode objectNode) {
-        workoutService.updateCompleted(jwtService.parseUserIdFromJwt(jwtToken), id, objectNode.get("workoutExerciseId").asInt(), objectNode.get("completed").asBoolean());
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/{id}")
-    @RequiresJwtToken
-    public ResponseEntity<?> delete(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id) {
-        workoutService.delete(jwtService.parseUserIdFromJwt(jwtToken), id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{id}/exercises/new")
+    @PostMapping("/{id}/exercises")
     @RequiresJwtToken
     public ResponseEntity<?> addWorkoutExercise(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @Valid @RequestBody WorkoutExerciseDto workoutExerciseDto) {
         workoutService.addWorkoutExercise(jwtService.parseUserIdFromJwt(jwtToken), id, workoutExerciseDto);
@@ -102,6 +68,27 @@ public class WorkoutController {
     @RequiresJwtToken
     public ResponseEntity<?> updateWorkoutExercise(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @Valid @RequestBody WorkoutExercise workoutExercise) {
         workoutService.updateWorkoutExercise(jwtService.parseUserIdFromJwt(jwtToken), id, workoutExercise);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/update")
+    @RequiresJwtToken
+    public ResponseEntity<?> update(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @NotNull @RequestBody ObjectNode objectNode) {
+        workoutService.update(jwtService.parseUserIdFromJwt(jwtToken), id, objectNode);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/setCompleted")
+    @RequiresJwtToken
+    public ResponseEntity<?> updateWorkoutExerciseCompleted(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @NotNull @RequestBody ObjectNode objectNode) {
+        workoutService.updateWorkoutExerciseCompleted(jwtService.parseUserIdFromJwt(jwtToken), id, objectNode.get("workoutExerciseId").asInt(), objectNode.get("completed").asBoolean());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    @RequiresJwtToken
+    public ResponseEntity<?> delete(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id) {
+        workoutService.delete(jwtService.parseUserIdFromJwt(jwtToken), id);
         return ResponseEntity.noContent().build();
     }
 

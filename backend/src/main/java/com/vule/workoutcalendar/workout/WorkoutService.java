@@ -1,11 +1,10 @@
 package com.vule.workoutcalendar.workout;
 
-import com.vule.workoutcalendar.exercise.Exercise;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
 import com.vule.workoutcalendar.workoutexercise.WorkoutExerciseRepository;
 import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
 import com.vule.workoutcalendar.exercise.ExerciseRepository;
-import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -55,41 +54,38 @@ public class WorkoutService {
         workouts.save(workout);
     }
 
-    public void updateNotes(Integer userId, Integer workoutId, String notes) {
-        Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
-        workout.setNotes(notes);
+    public void update(Integer userId, Integer workoutId, ObjectNode objectNode) {
+        String field = objectNode.get("field").asText().toLowerCase();
 
-        workouts.updateNotes(workoutId, notes);
-    }
+        switch (field) {
+            case "notes":
+                if (objectNode.get("notes") == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect JSON format.");
 
-    public void updateDuration(Integer userId, Integer workoutId, Integer duration) {
-        if (duration <= 1) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid duration!");
+                workouts.updateNotes(workoutId, objectNode.get("notes").asText());
+                break;
+            case "duration":
+                if (objectNode.get("duration") == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid JSON format.");
+
+                int duration = objectNode.get("duration").asInt();
+                if (duration <= 1) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid duration value.");
+                workouts.updateDuration(workoutId, duration);
+                break;
+            case "rating":
+                if (objectNode.get("rating") == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid JSON format.");
+
+                int rating = objectNode.get("rating").asInt();
+                if (rating < 0 || rating > 5) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating value.");
+                workouts.updateRating(workoutId, rating);
+                break;
         }
-
-        Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
-        workout.setDuration(duration);
-
-        workouts.updateDuration(workoutId, duration);
     }
 
-    public void updateRating(Integer userId, Integer workoutId, Integer rating) {
-        if (rating < 0 || rating > 5) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating!");
-        }
-
+    public void updateWorkoutExerciseCompleted(Integer userId, Integer workoutId, Integer WorkoutExerciseId, Boolean completed) {
         Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
-        workout.setRating(rating);
-
-        workouts.updateRating(workoutId, rating);
-    }
-
-    public void updateCompleted(Integer userId, Integer workoutId, Integer WorkoutExerciseId, Boolean completed) {
-        Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
-        WorkoutExercise we = workouts.findWorkoutExercise(WorkoutExerciseId);
+        WorkoutExercise we = workoutExercises.findWorkoutExercise(WorkoutExerciseId);
         we.setCompleted(completed);
 
-        workouts.updateWorkoutExercise(we.getId(),
+        workoutExercises.updateWorkoutExercise(we.getId(),
                 we.getWeight(),
                 we.getSets(),
                 we.getReps(),
@@ -110,14 +106,14 @@ public class WorkoutService {
 
     public void updateWorkoutExercise(Integer userId, Integer workoutId, WorkoutExercise workoutExercise) {
         Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
-        WorkoutExercise we = workouts.findWorkoutExercise(workoutExercise.getId());
+        WorkoutExercise we = workoutExercises.findWorkoutExercise(workoutExercise.getId());
 
         we.setWeight(workoutExercise.getWeight());
         we.setSets(workoutExercise.getSets());
         we.setReps(workoutExercise.getReps());
         we.setCompleted(false);
 
-        workouts.updateWorkoutExercise(we.getId(),
+        workoutExercises.updateWorkoutExercise(we.getId(),
                 we.getWeight(),
                 we.getSets(),
                 we.getReps(),
@@ -125,7 +121,7 @@ public class WorkoutService {
     }
 
     public void deleteWorkoutExercise(Integer userId, Integer workoutId, Integer WorkoutExerciseId) {
-        WorkoutExercise we = workouts.findWorkoutExercise(WorkoutExerciseId);
+        WorkoutExercise we = workoutExercises.findWorkoutExercise(WorkoutExerciseId);
 
         workoutExercises.delete(we);
     }

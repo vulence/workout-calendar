@@ -11,8 +11,8 @@ import AddWorkoutExerciseModal from './AddWorkoutExerciseModal';
 import EditNotesModal from './EditNotesModal';
 import { darken, styled } from '@mui/material/styles';
 
-import { Workout as WorkoutType, WorkoutDataGridRows, Exercise, WorkoutExercise } from '../../types';
-import { deleteWorkoutExercise, fetchWorkoutById, fetchWorkoutExercises, setDuration, setNotes, submitWorkoutExercise, updateWorkoutExerciseCompleted, updateWorkoutExercise } from '../../api/api';
+import { Workout as WorkoutType, WorkoutDataGridRows, WorkoutExercise } from '../../types';
+import { deleteWorkoutExercise, fetchWorkoutById, fetchWorkoutExercises, updateWorkout, submitWorkoutExercise, updateWorkoutExerciseCompleted, updateWorkoutExercise } from '../../api/api';
 
 export default function Workout() {
     const { id } = useParams();
@@ -181,12 +181,12 @@ export default function Workout() {
 
     // Notes form submission
     const handleNotesSubmit = (notes: string) => {
-        setNotes(id!.toString(), notes).then(() => setOpenNotesDialog(false));
+        updateWorkout(id!.toString(), {"field": "notes", "notes": notes}).then(() => setOpenNotesDialog(false));
     };
 
     // Duration submission
     const handleDurationSubmit = (minutes: number) => {
-        setDuration(id!.toString(), minutes).then(() => window.location.reload());
+        updateWorkout(id!.toString(), {"field": "duration", "duration": minutes}).then(() => window.location.reload());
     };
 
     return (
