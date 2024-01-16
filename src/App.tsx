@@ -47,7 +47,7 @@ export default function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/exercises" element={<AllExercises />} />
               <Route path="/exercises/:id/history" element={<ExerciseHistory />} />
-              <Route path="/workouts" element={<AllWorkouts />} />
+              <Route path="/workouts/?" element={<AllWorkouts />} />
               <Route path="/workouts/:id" element={<Workout />} />
               <Route path="/musclegroups" element={<AllMuscleGroups />} />
               <Route path="/account" element={<Account />} />

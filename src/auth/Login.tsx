@@ -6,7 +6,6 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Userfront from "@userfront/toolkit";
 
-import styles from './login.module.css';
 import formStyles from './form.module.css';
 import { LoginFormData } from "../types";
 

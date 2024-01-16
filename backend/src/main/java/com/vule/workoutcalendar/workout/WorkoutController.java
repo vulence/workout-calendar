@@ -49,7 +49,7 @@ public class WorkoutController {
     @GetMapping("/{id}/exercises")
     @RequiresJwtToken
     public ResponseEntity<?> getWorkoutExercises(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id) {
-        return ResponseEntity.ok(workoutService.getWorkoutExercises(id));
+        return ResponseEntity.ok(workoutService.getWorkoutExercises(jwtService.parseUserIdFromJwt(jwtToken), id));
     }
 
     @PostMapping("/new")

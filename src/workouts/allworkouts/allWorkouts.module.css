@@ -56,6 +56,13 @@
     min-width: 280px;
 }
 
+.paginationBox {
+    display: flex !important;
+    width: 100% !important;
+    justify-content: center !important;
+    margin: 10px !important;
+}
+
 @media screen and (max-width: 1150px) {
     .gridItem {
         min-width: 190px !important;

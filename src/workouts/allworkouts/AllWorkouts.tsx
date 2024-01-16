@@ -1,11 +1,11 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import {
-    Container, Box, Card, CardActions, CardContent, CardHeader, CardActionArea, Fab, Popover, IconButton, Grid, Typography, Rating, Tooltip, Divider
+    Container, Box, Card, CardActions, CardContent, CardHeader, CardActionArea, Fab, Popover, IconButton, Grid, Typography, Rating, Tooltip, Divider, Pagination
 } from '@mui/material';
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers/';
+import { LocalizationProvider } from '@mui/x-date-pickers/';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import { Helmet } from 'react-helmet';
@@ -33,7 +33,8 @@ import { deleteWorkout, fetchWorkouts, submitWorkout, updateWorkout } from '../.
 dayjs.extend(utc);
 
 export default function AllWorkouts() {
-    const [queryParams] = useSearchParams();
+    const [queryParams, setQueryParams] = useSearchParams();
+    const page = parseInt(queryParams.get("page") || '1');
 
     // Data states
     const [workouts, setWorkouts] = useState<Array<Workout>>([]);
@@ -59,10 +60,8 @@ export default function AllWorkouts() {
     useEffect(() => {
         setLoading(true);
 
-        const page = queryParams.get("page");
-
-        fetchWorkouts(page ? page : "1").then((data) => {setWorkouts(data); setLoading(false);});
-    }, [setWorkouts]);
+        fetchWorkouts(page.toString()).then((data) => {setWorkouts(data); setLoading(false);});
+    }, [page]);
 
     // Calculates calories burned for each workout
     useEffect(() => {
@@ -312,6 +311,10 @@ export default function AllWorkouts() {
                             </Card>
                         </Grid>
                     ))}
+
+                    <Box className={styles.paginationBox}>
+                        <Pagination variant="outlined" size="large" page={page} count={10} onChange={(_, page) => setQueryParams(`?page=${page}`)} />
+                    </Box>
                 </Grid>
 
                 <Fab className={styles.fab} color="primary" variant="extended" aria-label="add" onClick={handleOpenAddWorkout}>
