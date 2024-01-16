@@ -133,7 +133,7 @@ export default function Workout() {
         else {
             const workoutExercise = { id: rowId, weight, sets, reps };
 
-            updateWorkoutExercise(id!.toString(), workoutExercise).then(() => {}).catch(error => console.error(error));
+            updateWorkoutExercise(id!.toString(), workoutExercise).then(() => window.location.reload()).catch(error => console.error(error));
         }
     };
 

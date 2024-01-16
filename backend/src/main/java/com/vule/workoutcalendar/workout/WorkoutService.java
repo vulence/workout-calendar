@@ -65,27 +65,29 @@ public class WorkoutService {
             case "notes":
                 if (objectNode.get("notes") == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect JSON format.");
 
-                workouts.updateNotes(workoutId, objectNode.get("notes").asText());
+                workouts.updateNotes(workoutId, userId, objectNode.get("notes").asText());
                 break;
             case "duration":
                 if (objectNode.get("duration") == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid JSON format.");
 
                 int duration = objectNode.get("duration").asInt();
                 if (duration <= 1) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid duration value.");
-                workouts.updateDuration(workoutId, duration);
+                workouts.updateDuration(workoutId, userId, duration);
                 break;
             case "rating":
                 if (objectNode.get("rating") == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid JSON format.");
 
                 int rating = objectNode.get("rating").asInt();
                 if (rating < 0 || rating > 5) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating value.");
-                workouts.updateRating(workoutId, rating);
+                workouts.updateRating(workoutId, userId, rating);
                 break;
         }
     }
 
     public void updateWorkoutExerciseCompleted(Integer userId, Integer workoutId, Integer WorkoutExerciseId, Boolean completed) {
-        Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
+        if (workouts.findByIdAndUserId(workoutId, userId).orElse(null) == null)
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
+
         WorkoutExercise we = workoutExercises.findWorkoutExercise(WorkoutExerciseId);
         we.setCompleted(completed);
 
@@ -97,6 +99,9 @@ public class WorkoutService {
     }
 
     public void addWorkoutExercise(Integer userId, Integer workoutId, WorkoutExerciseDto workoutExerciseDto) {
+        if (workouts.findByIdAndUserId(workoutId, userId).orElse(null) == null)
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
+
         WorkoutExercise we = workoutExerciseDto.toWorkoutExercise();
         we.setWorkoutId(workoutId);
         we.setExerciseId(workoutExerciseDto.getExerciseId());
@@ -109,24 +114,21 @@ public class WorkoutService {
     }
 
     public void updateWorkoutExercise(Integer userId, Integer workoutId, WorkoutExercise workoutExercise) {
-        Workout workout = workouts.findByIdAndUserId(workoutId, userId).get();
-        WorkoutExercise we = workoutExercises.findWorkoutExercise(workoutExercise.getId());
+        if (workouts.findByIdAndUserId(workoutId, userId).orElse(null) == null)
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
 
-        we.setWeight(workoutExercise.getWeight());
-        we.setSets(workoutExercise.getSets());
-        we.setReps(workoutExercise.getReps());
-        we.setCompleted(false);
-
-        workoutExercises.updateWorkoutExercise(we.getId(),
-                we.getWeight(),
-                we.getSets(),
-                we.getReps(),
-                we.isCompleted());
+        workoutExercises.updateWorkoutExercise(workoutExercise.getId(),
+                workoutExercise.getWeight(),
+                workoutExercise.getSets(),
+                workoutExercise.getReps(),
+                workoutExercise.isCompleted());
     }
 
     public void deleteWorkoutExercise(Integer userId, Integer workoutId, Integer WorkoutExerciseId) {
-        WorkoutExercise we = workoutExercises.findWorkoutExercise(WorkoutExerciseId);
+        if (workouts.findByIdAndUserId(workoutId, userId).orElse(null) == null)
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
 
+        WorkoutExercise we = workoutExercises.findWorkoutExercise(WorkoutExerciseId);
         workoutExercises.delete(we);
     }
 }

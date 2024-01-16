@@ -49,17 +49,17 @@ public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> 
     @Query("""
             UPDATE WORKOUT
             SET NOTES = :notes
-            WHERE ID = :id
+            WHERE ID = :id AND user_id = :userId
             """)
-    void updateNotes(@Param("id") Integer id, @Param("notes") String notes);
+    void updateNotes(@Param("id") Integer id, @Param("userId") Integer userId, @Param("notes") String notes);
 
     @Modifying
     @Query("""
             UPDATE WORKOUT
             SET DURATION = :duration
-            WHERE ID = :id
+            WHERE ID = :id AND user_id = :userId
             """)
-    void updateDuration(@Param("id") Integer id, @Param("duration") Integer duration);
+    void updateDuration(@Param("id") Integer id, @Param("userId") Integer userId, @Param("duration") Integer duration);
 
     @Modifying
     @Query("""
@@ -67,5 +67,5 @@ public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> 
            SET RATING = :rating
            WHERE ID = :id
             """)
-    void updateRating(@Param("id") Integer id, @Param("rating") Integer rating);
+    void updateRating(@Param("id") Integer id, @Param("userId") Integer userId, @Param("rating") Integer rating);
 }
