@@ -21,6 +21,8 @@ public class WorkoutController {
     private final WorkoutService workoutService;
     private final JwtService jwtService;
 
+    private static final int DEFAULT_PAGE_SIZE = 12;
+
     public WorkoutController(WorkoutService workoutService, JwtService jwtService) {
         this.workoutService = workoutService;
         this.jwtService = jwtService;
@@ -28,8 +30,8 @@ public class WorkoutController {
 
     @GetMapping("")
     @RequiresJwtToken
-    public ResponseEntity<?> findAll(@RequestAttribute(name = "jwtToken") String jwtToken) {
-        return ResponseEntity.ok(workoutService.findAll(jwtService.parseUserIdFromJwt(jwtToken)));
+    public ResponseEntity<?> findAll(@RequestAttribute(name = "jwtToken") String jwtToken, @RequestParam(required = false, defaultValue = "0") int page) {
+        return ResponseEntity.ok(workoutService.findAll(jwtService.parseUserIdFromJwt(jwtToken), page, DEFAULT_PAGE_SIZE));
     }
 
     @GetMapping("/{id}")

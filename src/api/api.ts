@@ -18,8 +18,8 @@ export async function fetchTodaysWorkout() {
     return result;
 };
 
-export async function fetchWorkouts() {
-    const response = await fetch(`${API_URL}/workouts`, {
+export async function fetchWorkouts(page = "0") {
+    const response = await fetch(`${API_URL}/workouts?page=${page}`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`

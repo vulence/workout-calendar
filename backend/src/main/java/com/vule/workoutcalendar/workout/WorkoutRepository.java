@@ -10,7 +10,18 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> {
+
     List<Workout> findByUserId(Integer userId);
+
+    @Query("""
+            SELECT *
+            FROM WORKOUT
+            WHERE user_id = :userId
+            ORDER BY DATE desc
+            LIMIT :limit
+            OFFSET :offset
+            """)
+    List<Workout> findByUserIdPaged(@Param("userId") Integer userId, @Param("limit") Integer limit, @Param("offset") Integer offset);
 
     @Query("""
             SELECT *

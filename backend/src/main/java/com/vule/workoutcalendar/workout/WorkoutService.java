@@ -24,8 +24,12 @@ public class WorkoutService {
         this.workoutExercises = workoutExercises;
     }
 
-    public List<Workout> findAll(Integer userId) {
-        return workouts.findByUserId(userId);
+    public List<Workout> findAll(Integer userId, int page, int size) {
+        if (page <= 0) return workouts.findByUserId(userId);
+        else {
+            int offset = (page - 1) * size;
+            return workouts.findByUserIdPaged(userId, size, offset);
+        }
     }
 
     public Workout findById(Integer id, Integer userId) {

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import {
     Container, Box, Card, CardActions, CardContent, CardHeader, CardActionArea, Fab, Popover, IconButton, Grid, Typography, Rating, Tooltip, Divider
 } from '@mui/material';
-import { Link } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers/';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -33,6 +33,8 @@ import { deleteWorkout, fetchWorkouts, submitWorkout, updateWorkout } from '../.
 dayjs.extend(utc);
 
 export default function AllWorkouts() {
+    const [queryParams] = useSearchParams();
+
     // Data states
     const [workouts, setWorkouts] = useState<Array<Workout>>([]);
     const [filterValues, setFilterValues] = useState<AllWorkoutsFilters>({
@@ -57,7 +59,9 @@ export default function AllWorkouts() {
     useEffect(() => {
         setLoading(true);
 
-        fetchWorkouts().then((data) => {setWorkouts(data); setLoading(false);});
+        const page = queryParams.get("page");
+
+        fetchWorkouts(page ? page : "1").then((data) => {setWorkouts(data); setLoading(false);});
     }, [setWorkouts]);
 
     // Calculates calories burned for each workout
