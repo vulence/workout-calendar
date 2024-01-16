@@ -42,6 +42,18 @@ export async function fetchWorkoutById(workoutId: string) {
     return result;
 };
 
+export async function fetchWorkoutsCount() {
+    const response = await fetch(`${API_URL}/workouts/count`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
+        },
+    });
+
+    const result = await response.json();
+    return result;
+}
+
 export async function fetchWorkoutExercises(workoutId: string) {
     const response = await fetch(`${API_URL}/workouts/${workoutId}/exercises`, {
         method: "GET",

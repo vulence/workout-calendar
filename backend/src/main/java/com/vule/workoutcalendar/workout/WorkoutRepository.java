@@ -37,6 +37,13 @@ public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> 
             """)
     Optional<Workout> findTodaysWorkout(@Param("userId") Integer userId, @Param("today") LocalDate today);
 
+    @Query("""
+            SELECT COUNT(*)
+            FROM WORKOUT
+            WHERE user_id = :userId
+            """)
+    Integer getWorkoutCount(@Param("userId") Integer userId);
+
     @Modifying
     @Query("""
             DELETE

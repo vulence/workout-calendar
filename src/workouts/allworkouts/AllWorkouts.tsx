@@ -28,7 +28,7 @@ import { PopoverState, CustomIcons, AllWorkoutsFilters, Workout } from '../../ty
 import { calculateTotalCaloriesForWorkout } from '../utils/calorieCalculator';
 import { stringToDayjs } from '../utils/dateConverter';
 import FilterAccordion from './FilterAccordion';
-import { deleteWorkout, fetchWorkouts, submitWorkout, updateWorkout } from '../../api/api';
+import { deleteWorkout, fetchWorkouts, fetchWorkoutsCount, submitWorkout, updateWorkout } from '../../api/api';
 
 dayjs.extend(utc);
 
@@ -38,6 +38,7 @@ export default function AllWorkouts() {
 
     // Data states
     const [workouts, setWorkouts] = useState<Array<Workout>>([]);
+    const [workoutsCount, setWorkoutsCount] = useState<number>(0);
     const [filterValues, setFilterValues] = useState<AllWorkoutsFilters>({
         filterYear: null,
         filterMonth: null,
@@ -56,10 +57,15 @@ export default function AllWorkouts() {
 
     const [loading, setLoading] = useState<boolean>(false);
 
+    // Initialize workout count to set the number of pages
+    useEffect(() => {
+        setLoading(true);
+        fetchWorkoutsCount().then((data) => { setWorkoutsCount(data); setLoading(false); });
+    }, []);
+
     // Initialize all workouts
     useEffect(() => {
         setLoading(true);
-
         fetchWorkouts(page.toString()).then((data) => {setWorkouts(data); setLoading(false);});
     }, [page]);
 
@@ -313,7 +319,7 @@ export default function AllWorkouts() {
                     ))}
 
                     <Box className={styles.paginationBox}>
-                        <Pagination variant="outlined" size="large" page={page} count={10} onChange={(_, page) => setQueryParams(`?page=${page}`)} />
+                        <Pagination variant="outlined" size="large" page={page} count={Math.ceil(workoutsCount / 12)} onChange={(_, page) => setQueryParams(`?page=${page}`)} />
                     </Box>
                 </Grid>
 

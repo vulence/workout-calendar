@@ -40,6 +40,10 @@ public class WorkoutService {
         return workouts.findTodaysWorkout(userId, LocalDate.now()).orElse(null);
     }
 
+    public int getWorkoutCount(Integer userId) {
+        return workouts.getWorkoutCount(userId);
+    }
+
     public List<WorkoutExercise> getWorkoutExercises(Integer userId, Integer id) {
         if (workouts.findByIdAndUserId(id, userId).orElse(null) == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");

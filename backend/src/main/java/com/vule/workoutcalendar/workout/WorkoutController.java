@@ -46,6 +46,12 @@ public class WorkoutController {
         return ResponseEntity.ok(workoutService.findTodaysWorkout(jwtService.parseUserIdFromJwt(jwtToken)));
     }
 
+    @GetMapping("/count")
+    @RequiresJwtToken
+    public ResponseEntity<?> getWorkoutCount(@RequestAttribute(name = "jwtToken") String jwtToken) {
+        return ResponseEntity.ok(workoutService.getWorkoutCount(jwtService.parseUserIdFromJwt(jwtToken)));
+    }
+
     @GetMapping("/{id}/exercises")
     @RequiresJwtToken
     public ResponseEntity<?> getWorkoutExercises(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id) {
