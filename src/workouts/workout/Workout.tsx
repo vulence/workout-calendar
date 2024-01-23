@@ -1,4 +1,4 @@
-import { Container, Fab, Checkbox } from '@mui/material';
+import { Container, Fab, Checkbox, Skeleton } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem, GridRenderCellParams, GridRowParams } from '@mui/x-data-grid';
@@ -30,15 +30,20 @@ export default function Workout() {
     const [reps, setReps] = useState<number | null>();
     const [rowId, setRowId] = useState<number | null>(null);
 
+    const [loadingExercises, setLoadingExercises] = useState<boolean>(true);
+
     // Initialize the workout and map all corresponding exercises to workoutExercise objects
     useEffect(() => {
+        setLoadingExercises(true);
+
         Promise.all([fetchWorkoutById(id!), fetchWorkoutExercises(id!.toString())]).then(
             ([workout, workoutExercises]) => {
                 setWorkout(workout);
                 setWorkoutExercises(workoutExercises);
+                setLoadingExercises(false);
             }
         );
-    }, [])
+    }, []);
 
     // Adds colored rows for completed exercises
     const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
@@ -139,9 +144,7 @@ export default function Workout() {
 
     // Delete an exercise from a workout
     const handleDeleteClick = (params: GridRowParams) => () => {
-        deleteWorkoutExercise(id!.toString(), params.id.toString()).then(status => console.log(status)).catch(error => console.error(error));
-        
-        window.location.reload();
+        deleteWorkoutExercise(id!.toString(), params.id.toString()).then((status) => {console.log(status); window.location.reload();}).catch(error => console.error(error));
     };
 
     // Set parameters to the corresponding row that's being edited
@@ -191,31 +194,41 @@ export default function Workout() {
 
     return (
         <Container>
-            <StyledDataGrid
-                rows={loadRows()}
-                columns={columns}
-                slots={{
-                    toolbar: WorkoutToolbar,
-                }}
-                slotProps={{
-                    toolbar: { handleOpenNotesDialog, handleDurationSubmit, workout }
-                }}
-                initialState={{
-                    pagination: {
-                        paginationModel: { page: 0, pageSize: 15 },
-                    },
-                }}
-                className={styles.dataGrid}
-                pageSizeOptions={[10, 15]}
-                getRowClassName={(params) => params.row.completed ? 'super-app-theme--Completed' : 'super-app-theme--NotCompleted'}
-                disableRowSelectionOnClick
-                hideFooter
-            />
-
-            <Fab className={styles.fab} color="primary" variant="extended" aria-label="add" onClick={handleOpenExerciseDialog}>
-                <FitnessCenterIcon sx={{ mr: 1 }} />
-                Add Exercise
-            </Fab>
+            {loadingExercises ? (
+                <>
+                <Skeleton animation="wave" variant="rectangular" width="50%" height={20} />
+                <Skeleton animation="wave" variant="rectangular" width="20%" sx={{marginTop: "10px"}} />
+                <Skeleton animation="wave" variant="rectangular" width="20%" sx={{marginTop: "10px"}} />
+                </>
+            ) : (
+                <>
+                <StyledDataGrid
+                    rows={loadRows()}
+                    columns={columns}
+                    slots={{
+                        toolbar: WorkoutToolbar,
+                    }}
+                    slotProps={{
+                        toolbar: { handleOpenNotesDialog, handleDurationSubmit, workout }
+                    }}
+                    initialState={{
+                        pagination: {
+                            paginationModel: { page: 0, pageSize: 15 },
+                        },
+                    }}
+                    className={styles.dataGrid}
+                    pageSizeOptions={[10, 15]}
+                    getRowClassName={(params) => params.row.completed ? 'super-app-theme--Completed' : 'super-app-theme--NotCompleted'}
+                    disableRowSelectionOnClick
+                    hideFooter
+                />
+    
+                <Fab className={styles.fab} color="primary" variant="extended" aria-label="add" onClick={handleOpenExerciseDialog}>
+                    <FitnessCenterIcon sx={{ mr: 1 }} />
+                    Add Exercise
+                </Fab>
+                </>
+            )}
 
             <AddWorkoutExerciseModal
                 open={openExerciseDialog}

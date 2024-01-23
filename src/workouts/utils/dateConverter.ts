@@ -4,10 +4,14 @@ import utc from "dayjs/plugin/utc";
 
 dayjs.extend(utc);
 
-export const stringToDayjs = (stringDate : string) => {
+export const stringToDayjs = (stringDate: string) => {
     const [day, month, year] = stringDate.split('-').map(value => parseInt(value, 10));
 
-    const date : Dayjs = dayjs(`${year}-${month}-${day}`);
+    const date: Dayjs = dayjs(`${year}-${month}-${day}`);
 
     return date;
-}
+};
+
+export const isLaterDate = (date: string) => {
+    return stringToDayjs(date).isAfter(dayjs());
+};

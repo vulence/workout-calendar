@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import {
     Container, Box, Card, CardActions, CardContent, CardHeader, CardActionArea, Fab, Popover, IconButton, Grid, Typography, Rating, Tooltip, Divider, Pagination
 } from '@mui/material';
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -26,7 +26,7 @@ import utc from 'dayjs/plugin/utc';
 
 import { PopoverState, CustomIcons, AllWorkoutsFilters, Workout } from '../../types';
 import { calculateTotalCaloriesForWorkout } from '../utils/calorieCalculator';
-import { stringToDayjs } from '../utils/dateConverter';
+import { stringToDayjs, isLaterDate } from '../utils/dateConverter';
 import FilterAccordion from './FilterAccordion';
 import { deleteWorkout, fetchWorkouts, fetchWorkoutsCount, submitWorkout, updateWorkout } from '../../api/api';
 
@@ -217,11 +217,6 @@ export default function AllWorkouts() {
         handlePopoverClose(workoutId);
     }
 
-    // Checks if the date(string) is in the future
-    const isLaterDate = (date: string) => {
-        return stringToDayjs(date).isAfter(dayjs());
-    }
-
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Helmet>
@@ -319,7 +314,7 @@ export default function AllWorkouts() {
                     ))}
 
                     <Box className={styles.paginationBox}>
-                        <Pagination variant="outlined" size="large" page={page} count={Math.ceil(workoutsCount / 12)} onChange={(_, page) => setQueryParams(`?page=${page}`)} />
+                        <Pagination variant="outlined" size="large" page={page} count={Math.ceil(workoutsCount / 12)} onChange={(_, page) => {setWorkouts([]); setQueryParams(`?page=${page}`)}} />
                     </Box>
                 </Grid>
 
