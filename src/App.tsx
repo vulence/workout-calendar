@@ -15,6 +15,7 @@ import AllWorkouts from './workouts/allworkouts/AllWorkouts';
 import Workout from './workouts/workout/Workout';
 import Logout from "./auth/Logout";
 import Account from "./account/Account";
+import GuestHome from "./guestHome/guestHome";
 import { AuthContext } from './auth/AuthContext';
 import { useContext } from 'react';
 import { AuthContextType } from './types';
@@ -31,12 +32,13 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <div className="App">
         <Helmet>
-          <title>Workout Calendar</title>
+          <title>Rise & Grind</title>
         </Helmet>
 
         <Appbar />
 
         <Routes>
+          <Route path="/guestHome" element={<GuestHome />} />
           <Route path="/login" element={!authenticated ? <Login /> : <Navigate to="/home" />} />
           <Route path="/register" element={!authenticated ? <Register /> : <Navigate to="/home" />} />
           <Route path="*" element={!authenticated ? <Navigate to="/login" /> : null} />

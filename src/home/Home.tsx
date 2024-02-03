@@ -28,7 +28,7 @@ export default function Home() {
     const [events, setEvents] = useState<Array<CalendarEvent>>([]);
     const [todaysWorkout, setTodaysWorkout] = useState<Workout | null>(null);
     const [todaysWorkoutExercises, setTodaysWorkoutExercises] = useState<WorkoutExercise[] | null>(null);
-    const [loadingTodaysWorkout, setLoadingTodaysWorkout] = useState<boolean>(true);
+    const [loadingTodaysWorkout, setLoadingTodaysWorkout] = useState<boolean>(false);
     const [progress, setProgress] = useState<number>(0);
     const [progressIncrement, setProgressIncrement] = useState<number>(0);
 

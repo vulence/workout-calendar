@@ -26,6 +26,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from './auth/AuthContext';
 import { useContext } from 'react';
 import { AuthContextType, IconMap } from './types';
+import { Button } from '@mui/material';
 
 const pages = ['Workouts', 'Exercises', 'Muscle Groups'];
 const settings = ['Workouts', 'Exercises', 'Account', 'Logout'];
@@ -140,7 +141,7 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            Workout Calendar
+            Rise & Grind
           </Typography>
 
           <IconButton component={Link} to="/home">
