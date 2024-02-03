@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import './App.css';
 import Appbar from './Appbar';
+import Footer from './Footer';
 import { Helmet } from 'react-helmet';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
@@ -41,7 +42,7 @@ export default function App() {
           <Route path="/guestHome" element={<GuestHome />} />
           <Route path="/login" element={!authenticated ? <Login /> : <Navigate to="/home" />} />
           <Route path="/register" element={!authenticated ? <Register /> : <Navigate to="/home" />} />
-          <Route path="*" element={!authenticated ? <Navigate to="/login" /> : null} />
+          <Route path="*" element={!authenticated ? <Navigate to="/guestHome" /> : null} />
 
           {authenticated &&
             <>
@@ -57,6 +58,8 @@ export default function App() {
             </>
           }
         </Routes>
+
+        <Footer />
       </div>
     </ThemeProvider>
   )
