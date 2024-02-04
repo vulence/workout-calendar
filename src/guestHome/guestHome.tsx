@@ -1,4 +1,4 @@
-import { Box, Typography, Button, Stack, Card, CardContent, Avatar, IconButton } from "@mui/material";
+import { Box, Typography, Button, Stack, Card, CardContent, Avatar, IconButton, Rating } from "@mui/material";
 import { useState, useEffect } from 'react';
 import styles from "./guestHome.module.css";
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
@@ -107,10 +107,11 @@ export default function GuestHome() {
                 <animated.div style={{ display: "flex", alignItems: "center", justifyContent: "center", ...springProps }}>
                     <Card key={currentTestimonial} variant="outlined" className={styles.testimonialCard}>
                         <CardContent>
-                            <Typography>{testimonials[currentTestimonial].quote}</Typography>
+                            <Typography fontSize={20}>"{testimonials[currentTestimonial].quote}"</Typography>
                             <Box className={styles.testimonialAuthor}>
                                 <Avatar className={styles.testimonialAvatar}>{testimonials[currentTestimonial].name[1]}</Avatar>
                                 <Typography>{testimonials[currentTestimonial].name}</Typography>
+                                <Rating defaultValue={testimonials[currentTestimonial].rating} />
                             </Box>
                         </CardContent>
                     </Card>

@@ -122,6 +122,15 @@
 .testimonialCard {
     width: 50%;
     margin: 30px;
+    border-radius: 16px;
+    box-shadow: 0 20px 20px rgba(255, 255, 255, 0.2);
+    transform: perspective(1000px) rotateY(10deg);
+}
+
+@media (max-width: 400px) {
+    .testimonialCard {
+        width: 100%;
+    }
 }
 
 .testimonialAuthor {
