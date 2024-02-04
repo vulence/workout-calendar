@@ -41,7 +41,7 @@ export default function CustomToolbar(toolbarProps: { onNavigate: any; label: an
                         </MenuItem>
                     ))}
                 </Select>
-                <Button variant="outlined" style={{ display: "flex", width: "100%", color: "red", borderWidth: 1, borderColor: "black" }} onClick={() => resetDate()}>RESET</Button>
+                <Button variant="outlined" style={{ display: "flex", width: "100%", color: "red", borderWidth: 1, borderColor: "black"}} onClick={() => resetDate()}>RESET</Button>
             </Box>
             <Button variant="contained" style={{ marginLeft: "auto", height: 50, backgroundColor: "white" }} onClick={() => onNavigate('NEXT')}>{'>'}</Button>
         </Box>
