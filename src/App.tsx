@@ -3,23 +3,30 @@ import './App.css';
 import Appbar from './Appbar';
 import Footer from './Footer';
 import { Helmet } from 'react-helmet';
-import { ThemeProvider } from '@mui/material/styles';
+import {
+  experimental_extendTheme as materialExtendTheme,
+  Experimental_CssVarsProvider as MaterialCssVarsProvider,
+  THEME_ID as MATERIAL_THEME_ID,
+} from '@mui/material/styles';
+import { CssVarsProvider as JoyCssVarsProvider } from '@mui/joy/styles';
 import theme from './theme';
+import joyTheme from './joyTheme';
 
 import Login from './auth/Login';
 import Register from './auth/Register';
 import ExerciseHistory from './exercise/ExerciseHistory';
-import AllMuscleGroups from './musclegroups/AllMuscleGroups';
-import Home from './home/Home';
+import Dashboard from './dashboard/Dashboard';
 import AllExercises from './exercise/AllExercises';
 import AllWorkouts from './workouts/allworkouts/AllWorkouts';
 import Workout from './workouts/workout/Workout';
 import Logout from "./auth/Logout";
 import Account from "./account/Account";
-import GuestHome from "./guestHome/guestHome";
+import Landing from "./landing/Landing";;
 import { AuthContext } from './auth/AuthContext';
 import { useContext } from 'react';
 import { AuthContextType } from './types';
+
+const materialTheme = materialExtendTheme(theme);
 
 export default function App() {
   // Gets user authentication status and loading status from context
@@ -30,37 +37,43 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className="App">
-        <Helmet>
-          <title>Rise & Grind</title>
-        </Helmet>
+    <MaterialCssVarsProvider theme={{ [MATERIAL_THEME_ID]: materialTheme }}>
+      <JoyCssVarsProvider theme={joyTheme}>
+        <div className="App">
+          <Helmet>
+            <title>Rise & Grind</title>
+          </Helmet>
 
-        <Appbar />
+          <header>
+            <Appbar />
+          </header>
 
-        <Routes>
-          <Route path="/guestHome" element={<GuestHome />} />
-          <Route path="/login" element={!authenticated ? <Login /> : <Navigate to="/home" />} />
-          <Route path="/register" element={!authenticated ? <Register /> : <Navigate to="/home" />} />
-          <Route path="*" element={!authenticated ? <Navigate to="/guestHome" /> : null} />
+          <main>
+            <Routes>
+              <Route path="/" element={!authenticated ? <Landing /> : <Navigate to="/dashboard" />} />
+              <Route path="*" element={!authenticated ? <Navigate to="/" /> : null} />
+              <Route path="/login" element={!authenticated ? <Login /> : <Navigate to="/dashboard" />} />
+              <Route path="/register" element={!authenticated ? <Register /> : <Navigate to="/dashboard" />} />
 
-          {authenticated &&
-            <>
-              <Route path="/" element={<Navigate to="/home" />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/exercises" element={<AllExercises />} />
-              <Route path="/exercises/:id/history" element={<ExerciseHistory />} />
-              <Route path="/workouts/?" element={<AllWorkouts />} />
-              <Route path="/workouts/:id" element={<Workout />} />
-              <Route path="/musclegroups" element={<AllMuscleGroups />} />
-              <Route path="/account" element={<Account />} />
-              <Route path="/logout" element={<Logout />} />
-            </>
-          }
-        </Routes>
+              {authenticated &&
+                <>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/exercises" element={<AllExercises />} />
+                  <Route path="/exercises/:id/history" element={<ExerciseHistory />} />
+                  <Route path="/workouts/?" element={<AllWorkouts />} />
+                  <Route path="/workouts/:id" element={<Workout />} />
+                  <Route path="/account" element={<Account />} />
+                  <Route path="/logout" element={<Logout />} />
+                </>
+              }
+            </Routes>
+          </main>
 
-        <Footer />
-      </div>
-    </ThemeProvider>
+          <footer>
+            <Footer />
+          </footer>
+        </div>
+      </JoyCssVarsProvider>
+    </MaterialCssVarsProvider>
   )
 }

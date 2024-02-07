@@ -26,9 +26,8 @@ import { Link } from "react-router-dom";
 import { AuthContext } from './auth/AuthContext';
 import { useContext } from 'react';
 import { AuthContextType, IconMap } from './types';
-import { Button } from '@mui/material';
 
-const pages = ['Workouts', 'Exercises', 'Muscle Groups'];
+const pages = ['Workouts', 'Exercises'];
 const settings = ['Workouts', 'Exercises', 'Account', 'Logout'];
 
 function ResponsiveAppBar() {
@@ -99,7 +98,7 @@ function ResponsiveAppBar() {
             <IconButton
               size="large"
               edge="start"
-              color="inherit"
+              color="default"
               aria-label="menu"
               sx={{ mr: 2 }}
               onClick={toggleDrawer(true)}
@@ -122,7 +121,7 @@ function ResponsiveAppBar() {
             {list()}
           </SwipeableDrawer>
 
-          <IconButton component={Link} to="/home" sx={{ marginLeft: "auto" }}>
+          <IconButton component={Link} to="/dashboard" sx={{ marginLeft: "auto" }}>
             <FitnessCenterIcon sx={{ marginLeft: "auto", display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           </IconButton>
 
@@ -130,21 +129,21 @@ function ResponsiveAppBar() {
             variant="h6"
             noWrap
             component={Link}
-            to="/home"
+            to="/dashboard"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'Caveat',
               fontWeight: 700,
               fontSize: 25,
-              color: 'inherit',
+              color: 'white',
               textDecoration: 'none',
             }}
           >
             Rise & Grind
           </Typography>
 
-          <IconButton component={Link} to="/home">
+          <IconButton component={Link} to="/dashboard">
             <FitnessCenterIcon sx={{ marginLeft: "auto", display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           </IconButton>
 

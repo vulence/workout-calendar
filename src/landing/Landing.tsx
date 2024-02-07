@@ -1,6 +1,6 @@
 import { Box, Typography, Button, Stack, Card, CardContent, Avatar, IconButton, Rating } from "@mui/material";
 import { useState, useEffect } from 'react';
-import styles from "./guestHome.module.css";
+import styles from "./landing.module.css";
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
@@ -10,7 +10,7 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useNavigate } from "react-router-dom";
 import { useSpring, animated } from "@react-spring/web";
 
-export default function GuestHome() {
+export default function Landing() {
     const navigate = useNavigate();
 
     const [currentTestimonial, setCurrentTestimonial] = useState<number>(0);

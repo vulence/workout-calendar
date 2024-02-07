@@ -7,6 +7,7 @@ public class MuscleGroup {
     private Integer id;
     private String name;
     private String description;
+    private Integer exerciseCount;
 
     public MuscleGroup(String name, String description) {
         this.name = name;
@@ -35,5 +36,13 @@ public class MuscleGroup {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getExerciseCount() {
+        return exerciseCount;
+    }
+
+    public void setExerciseCount(Integer exerciseCount) {
+        this.exerciseCount = exerciseCount;
     }
 }

@@ -12,14 +12,14 @@ import CustomToolbar from './CalendarToolbar';
 import { Workout, CalendarEvent, WorkoutExercise } from '../types';
 import AddWorkoutModal from '../workouts/allworkouts/AddWorkoutModal';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
-import styles from './home.module.css';
+import styles from './dashboard.module.css';
 import { fetchWorkoutExercises, fetchWorkouts, submitWorkout, updateWorkoutExerciseCompleted } from '../api/api';
 import { stringToDayjs } from '../workouts/utils/dateConverter';
 
 dayjs.extend(utc);
 dayjs.extend(isToday);
 
-export default function Home() {
+export default function Dashboard() {
     const navigate = useNavigate();
     const localizer = dayjsLocalizer(dayjs);
 

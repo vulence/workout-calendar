@@ -45,6 +45,7 @@ export type MuscleGroup = {
     id: number;
     name: string;
     description: string;
+    exerciseCount: number;
 };
 
 export type ExerciseHistoryToolbarProps = {
@@ -165,8 +166,4 @@ export type AllWorkoutsFilters = {
 
 export type FilterAccordionProps = {
     updateParentValues: (newValues : AllWorkoutsFilters) => void;
-}
-
-export type ExerciseFilterProps = {
-    updateParentValues: (muscleGroupName : string) => void;
 }
