@@ -2,7 +2,8 @@ import { Accordion, AccordionSummary, AccordionDetails, Typography, ListItemCont
 import { MuscleGroup } from "../types";
 
 interface MuscleGroupAccordionProps {
-    muscleGroup: MuscleGroup
+    muscleGroup: MuscleGroup,
+    handleClick: (muscleGroupId: number) => void
 }
 
 export default function MuscleGroupAccordion(props: MuscleGroupAccordionProps) {
@@ -12,6 +13,7 @@ export default function MuscleGroupAccordion(props: MuscleGroupAccordionProps) {
                 marginBottom: "10px",
                 borderRadius: "20px"
             }}
+            onChange={(_, expanded) => expanded ? props.handleClick(props.muscleGroup.id) : null}
         >
             <AccordionSummary>
                 <ListItemContent>

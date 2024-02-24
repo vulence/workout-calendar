@@ -33,6 +33,20 @@ const joyTheme = extendTheme({
                     },
                 }
             }
+        },
+        JoyCard: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: "black"
+                }
+            }
+        },
+        JoyCardOverflow: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: "black"
+                }
+            }
         }
     },
 });

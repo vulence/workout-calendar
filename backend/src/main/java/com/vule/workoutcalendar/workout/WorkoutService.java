@@ -5,6 +5,7 @@ import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
 import com.vule.workoutcalendar.workoutexercise.WorkoutExerciseRepository;
 import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
 import com.vule.workoutcalendar.exercise.ExerciseRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

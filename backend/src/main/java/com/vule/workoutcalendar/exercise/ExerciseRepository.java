@@ -10,6 +10,14 @@ import java.util.List;
 public interface ExerciseRepository extends ListCrudRepository<Exercise, Integer> {
 
     @Query("""
+            SELECT E.*
+            FROM EXERCISE E
+            INNER JOIN EXERCISE_MUSCLE_GROUP EMG ON EMG.MUSCLE_GROUP = :muscleGroupId
+            WHERE E.ID = EMG.EXERCISE
+            """)
+    List<Exercise> findByMuscleGroup(@Param("muscleGroupId") Integer muscleGroupId);
+
+    @Query("""
             SELECT NAME
             FROM EXERCISE
             WHERE ID = :exerciseId

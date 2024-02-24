@@ -18,22 +18,12 @@ public class ExerciseService {
         this.muscleGroups = muscleGroups;
     }
 
-    public List<ExerciseDto> findAll() {
-        List<Exercise> allExercises = exercises.findAll();
-        List<ExerciseDto> allExercisesMuscleGroups = new ArrayList<ExerciseDto>();
+    public List<Exercise> findAll() {
+        return exercises.findAll();
+    }
 
-        for (Exercise e : allExercises) {
-            Set<MuscleGroup> muscles = new TreeSet<>(Comparator.comparing(MuscleGroup::getName));
-
-            for (Integer id : e.getMuscleGroupIds()) {
-                muscles.add(muscleGroups.findById(id).get());
-            }
-
-            allExercisesMuscleGroups.add(new ExerciseDto(e.getId(), e.getName(), e.getDescription(), muscles));
-        }
-
-
-        return allExercisesMuscleGroups;
+    public List<Exercise> findByMuscleGroup(Integer muscleGroupId) {
+        return exercises.findByMuscleGroup(muscleGroupId);
     }
 
     public Exercise findById(Integer id) {

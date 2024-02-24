@@ -20,7 +20,6 @@ import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import { pink } from '@mui/material/colors';
-import { Watch } from 'react-loader-spinner';
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
@@ -29,6 +28,7 @@ import { calculateTotalCaloriesForWorkout } from '../utils/calorieCalculator';
 import { stringToDayjs, isLaterDate } from '../utils/dateConverter';
 import FilterAccordion from './FilterAccordion';
 import { deleteWorkout, fetchWorkouts, fetchWorkoutsCount, submitWorkout, updateWorkout } from '../../api/api';
+import Overlay from '../../common/Overlay';
 
 dayjs.extend(utc);
 
@@ -224,24 +224,12 @@ export default function AllWorkouts() {
             </Helmet>
 
             <Container>
+                <Overlay isLoading={loading} />
+
                 <FilterAccordion
                     updateParentValues={handleFilterValues}
                 />
-
-                <Watch
-                    visible={loading}
-                    height="80"
-                    width="80"
-                    radius="48"
-                    color="white"
-                    ariaLabel="watch-loading"
-                    wrapperStyle={{
-                        justifyContent: "center",
-                        marginTop: "50px"
-                    }}
-                    wrapperClass=""
-                />
-
+                
                 <Grid container spacing={2} className={styles.gridContainer}>
                     {filterWorkouts().map((workout, index) => (
                         <Grid key={workout.id} item xs={6} sm={4} md={3} className={styles.gridItem} direction="column" alignItems="center" justifyContent="center">
@@ -277,14 +265,16 @@ export default function AllWorkouts() {
                                     </Tooltip>
 
                                     <Tooltip title={workout.rating ? "Rating: " + workout.rating + "/5" : "Rate this workout"} arrow>
-                                        <IconButton
-                                            aria-owns={popoverState[workout.id] ? `mouse-over-popover-${workout.id}` : undefined}
-                                            aria-haspopup="true"
-                                            onClick={(e) => handlePopoverOpen(workout.id, e)}
-                                            disabled={isLaterDate(workout.date)}
-                                        >
-                                            {workout.rating ? customIcons[workout.rating].icon : customIcons[0].icon}
-                                        </IconButton>
+                                        <span>
+                                            <IconButton
+                                                aria-owns={popoverState[workout.id] ? `mouse-over-popover-${workout.id}` : undefined}
+                                                aria-haspopup="true"
+                                                onClick={(e) => handlePopoverOpen(workout.id, e)}
+                                                disabled={isLaterDate(workout.date)}
+                                            >
+                                                {workout.rating ? customIcons[workout.rating].icon : customIcons[0].icon}
+                                            </IconButton>
+                                        </span>
                                     </Tooltip>
                                     <Popover
                                         id={`mouse-over-popover-${workout.id}`}
@@ -314,7 +304,7 @@ export default function AllWorkouts() {
                     ))}
 
                     <Box className={styles.paginationBox}>
-                        <Pagination variant="outlined" size="large" page={page} count={Math.ceil(workoutsCount / 12)} onChange={(_, page) => {setWorkouts([]); setQueryParams(`?page=${page}`)}} />
+                        <Pagination variant="outlined" size="large" page={page} count={Math.ceil(workoutsCount / 12)} onChange={(_, page) => setQueryParams(`?page=${page}`)} />
                     </Box>
                 </Grid>
 

@@ -172,9 +172,22 @@ export async function fetchExercises() {
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
     });
+    
     const result = await response.json();
     return result;
 };
+
+export async function fetchExercisesByMuscleGroup(muscleGroupId: string) {
+    const response = await fetch(`${API_URL}/exercises/muscleGroups/${muscleGroupId}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${Userfront.tokens.accessToken}`,
+        }
+    });
+
+    const result = await response.json();
+    return result;
+}
 
 export async function fetchExerciseById(exerciseId: string) {
     const response = await fetch(`${API_URL}/exercises/${exerciseId}`, {
