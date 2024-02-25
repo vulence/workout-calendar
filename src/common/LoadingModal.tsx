@@ -1,11 +1,11 @@
 import { Watch } from 'react-loader-spinner';
-import './Overlay.css';
+import './LoadingModal.css';
 
 interface OverlayProps {
     isLoading: boolean;
 }
 
-export default function Overlay(props: OverlayProps) {
+export default function LoadingModal(props: OverlayProps) {
     return (
         <>
             {props.isLoading && (

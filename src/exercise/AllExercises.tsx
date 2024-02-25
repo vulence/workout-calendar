@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Container } from '@mui/material';
 import { Helmet } from 'react-helmet';
-import { Watch } from 'react-loader-spinner';
 import { AccordionGroup } from '@mui/joy';
 
 import { Exercise, MuscleGroup } from '../types';
 import { fetchExercisesByMuscleGroup, fetchMuscleGroups } from '../api/api';
 import MuscleGroupAccordion from './MuscleGroupAccordion';
-import ExerciseCard from './ExerciseCard';
-import Overlay from '../common/Overlay';
+import LoadingModal from '../common/LoadingModal';
 
 interface MuscleGroupExercises {
     [id: number]: Exercise[];
@@ -41,7 +39,7 @@ export default function AllExercises() {
                 <title>All Exercises</title>
             </Helmet>
 
-            <Overlay isLoading={loading} />
+            <LoadingModal isLoading={loading} />
 
             <AccordionGroup
                 transition="0.2s"

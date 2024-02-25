@@ -28,7 +28,7 @@ import { calculateTotalCaloriesForWorkout } from '../utils/calorieCalculator';
 import { stringToDayjs, isLaterDate } from '../utils/dateConverter';
 import FilterAccordion from './FilterAccordion';
 import { deleteWorkout, fetchWorkouts, fetchWorkoutsCount, submitWorkout, updateWorkout } from '../../api/api';
-import Overlay from '../../common/Overlay';
+import LoadingModal from '../../common/LoadingModal';
 
 dayjs.extend(utc);
 
@@ -224,7 +224,7 @@ export default function AllWorkouts() {
             </Helmet>
 
             <Container>
-                <Overlay isLoading={loading} />
+                <LoadingModal isLoading={loading} />
 
                 <FilterAccordion
                     updateParentValues={handleFilterValues}
