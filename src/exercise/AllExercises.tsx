@@ -43,14 +43,12 @@ export default function AllExercises() {
 
             <Overlay isLoading={loading} />
 
-            <ExerciseCard />
-
             <AccordionGroup
                 transition="0.2s"
                 sx={{ marginTop: "10px", borderRadius: "30px" }}
             >
                 {muscleGroups.sort((a, b) => a.name > b.name ? 1 : -1).map((muscleGroup) => (
-                    <MuscleGroupAccordion key={muscleGroup.id} muscleGroup={muscleGroup} handleClick={handleAccordionExpand} />
+                    <MuscleGroupAccordion key={muscleGroup.id} muscleGroup={muscleGroup} exercises={muscleGroupExercises[muscleGroup.id]} handleClick={handleAccordionExpand} />
                 ))}
             </AccordionGroup>
         </Container>

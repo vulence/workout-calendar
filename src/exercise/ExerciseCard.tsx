@@ -1,13 +1,17 @@
-import { Card, CardContent, CardCover, CardOverflow, Divider, IconButton, Typography } from "@mui/joy";
+import { Card, CardContent, CardCover, CardOverflow, IconButton, Typography } from "@mui/joy";
 import Favorite from '@mui/icons-material/Favorite';
+import { Exercise } from "../types";
 
-export default function ExerciseCard() {
+interface ExerciseCardProps {
+    exercise: Exercise
+}
 
+export default function ExerciseCard(props: ExerciseCardProps) {
     return (
-        <Card variant="outlined" sx={{ height: 220, width: 280 }}>
+        <Card variant="outlined" sx={{ height: 200, width: 280 }}>
             <CardCover>
                 <img
-                    src="https://caliberstrong.com/wp-content/uploads/2020/04/how-to-bench-press.jpg"
+                    src={props.exercise.imageUrl}
                     loading="lazy"
                     alt=""
                 />
@@ -18,34 +22,28 @@ export default function ExerciseCard() {
                         'linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)',
                 }}
             />
-            <CardContent sx={{ justifyContent: "flex-end" }}>
+            <CardContent orientation="vertical" sx={{ justifyContent: "flex-end" }}>
                 <Typography level="title-md" sx={{ color: 'white' }}>
-                    Bench press
+                    {props.exercise.name}
                 </Typography>
                 <Typography level="body-sm" sx={{ color: "white" }}>
-                    Chest
+                    {props.exercise.description.slice(0, 60) + "..."}
                 </Typography>
 
-                <CardOverflow>
-                    <CardContent orientation="horizontal">
-                        <Typography level="body-xs"></Typography>
-                        <IconButton
-                            aria-label="Like minimal photography"
-                            size="md"
-                            variant="solid"
-                            color="danger"
-                            sx={{
-                                position: 'absolute',
-                                borderRadius: '50%',
-                                right: '0.5rem',
-                                bottom: 26,
-                                transform: 'translateY(50%)',
-                            }}
-                        >
-                            <Favorite />
-                        </IconButton>
-                    </CardContent>
-                </CardOverflow>
+                <IconButton
+                    aria-label="Like minimal photography"
+                    size="md"
+                    variant="solid"
+                    color="danger"
+                    sx={{
+                        position: 'absolute',
+                        borderRadius: '50%',
+                        right: 0,
+                        bottom: 0,
+                    }}
+                >
+                    <Favorite />
+                </IconButton>
             </CardContent>
         </Card>
     );

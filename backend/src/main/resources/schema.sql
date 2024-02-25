@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS workout (
 CREATE TABLE IF NOT EXISTS exercise (
     id SERIAL PRIMARY KEY,
     name text,
-    description text
+    description text,
+    image_url text
 );
 
 CREATE TABLE IF NOT EXISTS workout_exercise (

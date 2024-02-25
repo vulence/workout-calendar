@@ -11,6 +11,7 @@ export type Exercise = {
     id: number;
     name: string;
     description: string;
+    imageUrl: string;
 };
 
 export type ExerciseHistoryDto = {

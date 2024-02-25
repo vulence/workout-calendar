@@ -15,6 +15,7 @@ public class Exercise {
     private Integer id;
     private String name;
     private String description;
+    private String imageUrl;
     private Set<MuscleGroupRef> muscleGroups = new HashSet<>();
 
     public Exercise() {}
@@ -46,6 +47,14 @@ public class Exercise {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Set<Integer> getMuscleGroupIds() {
