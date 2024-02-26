@@ -14,7 +14,6 @@ import java.util.List;
 @RequestMapping("/exercises")
 @CrossOrigin
 public class ExerciseController {
-
     private final ExerciseService exerciseService;
     private final JwtService jwtService;
 

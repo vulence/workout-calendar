@@ -48,8 +48,4 @@ public class WorkoutExerciseDto {
     public void setReps(Integer reps) {
         this.reps = reps;
     }
-
-    public WorkoutExercise toWorkoutExercise() {
-        return WorkoutExercise.fromWorkoutExerciseDto(this);
-    }
 }

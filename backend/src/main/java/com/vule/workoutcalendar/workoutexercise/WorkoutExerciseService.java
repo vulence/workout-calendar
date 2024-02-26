@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class WorkoutExerciseService {
@@ -27,7 +28,7 @@ public class WorkoutExerciseService {
         if (workouts.findByIdAndUserId(id, userId).orElse(null) == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
 
-        List<WorkoutExercise> allExercises = workoutExercises.findWorkoutExercises(id).orElse(null);
+        List<WorkoutExercise> allExercises = workoutExercises.findAllByWorkoutId(id).orElse(null);
 
         if (allExercises == null) return null;
 
@@ -42,7 +43,7 @@ public class WorkoutExerciseService {
         if (workouts.findByIdAndUserId(workoutId, userId).orElse(null) == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
 
-        WorkoutExercise we = workoutExerciseDto.toWorkoutExercise();
+        WorkoutExercise we = WorkoutExercise.from(workoutExerciseDto);
         we.setWorkoutId(workoutId);
         we.setExerciseId(workoutExerciseDto.getExerciseId());
 
@@ -53,18 +54,21 @@ public class WorkoutExerciseService {
         if (workouts.findByIdAndUserId(workoutId, userId).orElse(null) == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
 
-        workoutExercises.updateWorkoutExercise(workoutExercise.getId(),
-                workoutExercise.getWeight(),
-                workoutExercise.getSets(),
-                workoutExercise.getReps(),
-                workoutExercise.isCompleted());
+        WorkoutExercise existingWE = workoutExercises.findById(workoutExercise.getId()).get();
+        existingWE.setExerciseName(workoutExercise.getExerciseName());
+        existingWE.setWeight(workoutExercise.getWeight());
+        existingWE.setSets(workoutExercise.getSets());
+        existingWE.setReps(workoutExercise.getReps());
+        existingWE.setCompleted(workoutExercise.isCompleted());
+
+        workoutExercises.save(existingWE);
     }
 
     public void deleteWorkoutExercise(Integer userId, Integer workoutId, Integer WorkoutExerciseId) {
         if (workouts.findByIdAndUserId(workoutId, userId).orElse(null) == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
 
-        WorkoutExercise we = workoutExercises.findWorkoutExercise(WorkoutExerciseId);
+        WorkoutExercise we = workoutExercises.findById(WorkoutExerciseId).get();
         workoutExercises.delete(we);
     }
 }

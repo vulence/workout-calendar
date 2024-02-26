@@ -21,6 +21,15 @@ public class WorkoutExercise {
 
     public WorkoutExercise() {}
 
+    public static WorkoutExercise from(WorkoutExerciseDto workoutExerciseDto) {
+        WorkoutExercise we = new WorkoutExercise();
+        we.setWeight(workoutExerciseDto.getWeight());
+        we.setSets(workoutExerciseDto.getSets());
+        we.setReps(workoutExerciseDto.getReps());
+
+        return we;
+    }
+
     public Integer getId() { return id; }
 
     public void setId(Integer id) {this.id = id;}
@@ -79,14 +88,5 @@ public class WorkoutExercise {
 
     public void setExerciseId(Integer exerciseId) {
         this.exerciseId = exerciseId;
-    }
-
-    public static WorkoutExercise fromWorkoutExerciseDto(WorkoutExerciseDto workoutExerciseDto) {
-        WorkoutExercise we = new WorkoutExercise();
-        we.setWeight(workoutExerciseDto.getWeight());
-        we.setSets(workoutExerciseDto.getSets());
-        we.setReps(workoutExerciseDto.getReps());
-
-        return we;
     }
 }

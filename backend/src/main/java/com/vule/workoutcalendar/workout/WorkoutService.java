@@ -79,14 +79,10 @@ public class WorkoutService {
         if (workouts.findByIdAndUserId(workoutId, userId).orElse(null) == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
 
-        WorkoutExercise we = workoutExercises.findWorkoutExercise(WorkoutExerciseId);
+        WorkoutExercise we = workoutExercises.findById(WorkoutExerciseId).get();
         we.setCompleted(completed);
 
-        workoutExercises.updateWorkoutExercise(we.getId(),
-                we.getWeight(),
-                we.getSets(),
-                we.getReps(),
-                we.isCompleted());
+        workoutExercises.save(we);
     }
 
     public void delete(Integer userId, Integer id) {
