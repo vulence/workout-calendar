@@ -56,5 +56,10 @@
   margin-left: 30px !important;
   height: 50% !important;
   align-self: center !important;
+}
 
+@media (max-width: 500px) {
+  .reset {
+    display: none !important;
+  }
 }

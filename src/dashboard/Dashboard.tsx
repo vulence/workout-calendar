@@ -15,6 +15,7 @@ import LinearProgressWithLabel from './LinearProgressWithLabel';
 import styles from './dashboard.module.css';
 import { fetchWorkoutExercises, fetchWorkouts, submitWorkout, updateWorkoutExerciseCompleted } from '../api/api';
 import { stringToDayjs } from '../workouts/utils/dateConverter';
+import { ThreeDots } from 'react-loader-spinner';
 
 dayjs.extend(utc);
 dayjs.extend(isToday);
@@ -133,48 +134,78 @@ export default function Dashboard() {
 
     return (
         <Container className={styles.content}>
-            <Box className={styles.calendarContainer}>
-                <Calendar
-                    selectable
-                    localizer={localizer}
-                    events={events}
-                    startAccessor="start"
-                    endAccessor="end"
-                    views={['month']}
-                    style={{ height: 500, borderRadius: 5, flex: 3 }}
-                    onSelectEvent={handleClick}
-                    onSelectSlot={handleOpenAddWorkout}
-                    components={{
-                        toolbar: CustomToolbar
-                    }}
-                    eventPropGetter={(event) => {
-                        let backgroundColor: string;
+            <Box className={styles.container}>
+                <Box className={styles.calendarContainer}>
+                    <Calendar
+                        selectable
+                        localizer={localizer}
+                        events={events}
+                        startAccessor="start"
+                        endAccessor="end"
+                        views={['month']}
+                        onSelectEvent={handleClick}
+                        onSelectSlot={handleOpenAddWorkout}
+                        components={{
+                            toolbar: CustomToolbar
+                        }}
+                        eventPropGetter={(event) => {
+                            let backgroundColor: string;
 
-                        // Sets the event color based on the rating
-                        switch (event.rating) {
-                            case 1:
-                                backgroundColor = "red";
-                                break;
-                            case 2:
-                                backgroundColor = "#f44336";
-                                break;
-                            case 3:
-                                backgroundColor = "#ffa726";
-                                break;
-                            case 4:
-                                backgroundColor = "#66bb6a";
-                                break;
-                            case 5:
-                                backgroundColor = "green";
-                                break;
-                            default:
-                                backgroundColor = "grey";
-                                break;
-                        }
+                            // Sets the event color based on the rating
+                            switch (event.rating) {
+                                case 1:
+                                    backgroundColor = "red";
+                                    break;
+                                case 2:
+                                    backgroundColor = "#f44336";
+                                    break;
+                                case 3:
+                                    backgroundColor = "#ffa726";
+                                    break;
+                                case 4:
+                                    backgroundColor = "#66bb6a";
+                                    break;
+                                case 5:
+                                    backgroundColor = "green";
+                                    break;
+                                default:
+                                    backgroundColor = "grey";
+                                    break;
+                            }
 
-                        return { style: { backgroundColor } }
-                    }}
-                />
+                            return { style: { backgroundColor } }
+                        }}
+                    />
+
+                    {events.length == 0 ? (
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                background: 'rgba(0, 0, 0, 0.8)',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                zIndex: 999,
+                            }}
+                        >
+                            <ThreeDots
+                                visible={true}
+                                height="80"
+                                width="80"
+                                color="white"
+                                radius="9"
+                                ariaLabel="three-dots-loading"
+                                wrapperStyle={{
+                                    marginLeft: "30px"
+                                }}
+                            />
+                        </Box>
+                    ) : null}
+                </Box>
 
                 <Card variant="outlined" className={styles.cardStats}>
                     <CardHeader
