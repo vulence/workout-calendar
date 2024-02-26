@@ -13,6 +13,7 @@ import { darken, styled } from '@mui/material/styles';
 
 import { Workout as WorkoutType, WorkoutDataGridRows, WorkoutExercise } from '../../types';
 import { deleteWorkoutExercise, fetchWorkoutById, fetchWorkoutExercises, updateWorkout, submitWorkoutExercise, updateWorkoutExerciseCompleted, updateWorkoutExercise } from '../../api/api';
+import LoadingModal from '../../common/LoadingModal';
 
 export default function Workout() {
     const { id } = useParams();
@@ -30,17 +31,15 @@ export default function Workout() {
     const [reps, setReps] = useState<number | null>();
     const [rowId, setRowId] = useState<number | null>(null);
 
-    const [loadingExercises, setLoadingExercises] = useState<boolean>(true);
+    // Displays loading modal if a workout exercise is submittng/deleting
+    const [loading, setLoading] = useState<boolean>(false);
 
     // Initialize the workout and map all corresponding exercises to workoutExercise objects
     useEffect(() => {
-        setLoadingExercises(true);
-
         Promise.all([fetchWorkoutById(id!), fetchWorkoutExercises(id!.toString())]).then(
             ([workout, workoutExercises]) => {
                 setWorkout(workout);
                 setWorkoutExercises(workoutExercises);
-                setLoadingExercises(false);
             }
         );
     }, []);
@@ -131,20 +130,23 @@ export default function Workout() {
         if (rowId === null) {
             const workoutExerciseDto = { exerciseId, weight, sets, reps };
             
-            submitWorkoutExercise(id!.toString(), workoutExerciseDto).then(() => window.location.reload()).catch(error => console.error(error));
+            setLoading(true);
+            submitWorkoutExercise(id!.toString(), workoutExerciseDto).then(() => {setLoading(false); window.location.reload()}).catch(error => console.error(error));
         }
 
         // If user is editing an existing done exercise, include the id of the workoutExercise to be modified
         else {
             const workoutExercise = { id: rowId, weight, sets, reps };
 
-            updateWorkoutExercise(id!.toString(), workoutExercise).then(() => window.location.reload()).catch(error => console.error(error));
+            setLoading(true);
+            updateWorkoutExercise(id!.toString(), workoutExercise).then(() => {setLoading(false); window.location.reload()}).catch(error => console.error(error));
         }
     };
 
     // Delete an exercise from a workout
     const handleDeleteClick = (params: GridRowParams) => () => {
-        deleteWorkoutExercise(id!.toString(), params.id.toString()).then((status) => {console.log(status); window.location.reload();}).catch(error => console.error(error));
+        setLoading(true);
+        deleteWorkoutExercise(id!.toString(), params.id.toString()).then(() => {setLoading(false); window.location.reload();}).catch(error => console.error(error));
     };
 
     // Set parameters to the corresponding row that's being edited
@@ -194,7 +196,7 @@ export default function Workout() {
 
     return (
         <Container>
-            {loadingExercises ? (
+            {!workoutExercises ? (
                 <>
                 <Skeleton animation="wave" variant="rectangular" width="50%" height={20} />
                 <Skeleton animation="wave" variant="rectangular" width="20%" sx={{marginTop: "10px"}} />
@@ -247,6 +249,7 @@ export default function Workout() {
                 notes={workout ? workout.notes : "nema"}
             />
 
+            <LoadingModal isLoading={loading} />
         </Container>
     )
 }

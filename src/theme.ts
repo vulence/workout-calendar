@@ -22,6 +22,13 @@ const theme = createTheme({
                 },
             },
         },
+        MuiDialog: {
+            styleOverrides: {
+                paper: {
+                    background: "rgba(40,40,40,1)",
+                },
+            },
+        },
     },
     typography: {
         allVariants: {

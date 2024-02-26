@@ -44,9 +44,9 @@ export default function AddWorkoutModal(props: AddWorkoutModalProps) {
                         id="workout-title"
                         label="Workout title"
                         value={title}
-                        sx={{alignSelf: "center", marginBottom: "30px"}}
+                        sx={{ alignSelf: "center", marginBottom: "30px" }}
                         fullWidth
-                        variant="standard"
+                        variant="outlined"
                         onChange={(e) => setTitle(e.target.value)}
                     />
                     <DatePicker
@@ -66,7 +66,7 @@ export default function AddWorkoutModal(props: AddWorkoutModalProps) {
                         sx={{ margin: "10px 0" }}
                         multiline
                         fullWidth
-                        variant="standard"
+                        variant="outlined"
                         onChange={(e) => setNotes(e.target.value)}
                     />
 

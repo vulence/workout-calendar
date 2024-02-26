@@ -16,12 +16,10 @@ import java.util.List;
 @Service
 public class WorkoutService {
     private final WorkoutRepository workouts;
-    private final ExerciseRepository exercises;
     private final WorkoutExerciseRepository workoutExercises;
 
-    public WorkoutService(WorkoutRepository workouts, ExerciseRepository exercises, WorkoutExerciseRepository workoutExercises) {
+    public WorkoutService(WorkoutRepository workouts, WorkoutExerciseRepository workoutExercises) {
         this.workouts = workouts;
-        this.exercises = exercises;
         this.workoutExercises = workoutExercises;
     }
 
@@ -43,21 +41,6 @@ public class WorkoutService {
 
     public int getWorkoutCount(Integer userId) {
         return workouts.getWorkoutCount(userId);
-    }
-
-    public List<WorkoutExercise> getWorkoutExercises(Integer userId, Integer id) {
-        if (workouts.findByIdAndUserId(id, userId).orElse(null) == null)
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
-
-        List<WorkoutExercise> allExercises = workoutExercises.findWorkoutExercises(id).orElse(null);
-
-        if (allExercises == null) return null;
-
-        for (WorkoutExercise we : allExercises) {
-            we.setExerciseName(exercises.findExerciseName(we.getExerciseId()));
-        }
-
-        return allExercises;
     }
 
     public void create(Integer userId, Workout workout) {
@@ -106,37 +89,7 @@ public class WorkoutService {
                 we.isCompleted());
     }
 
-    public void addWorkoutExercise(Integer userId, Integer workoutId, WorkoutExerciseDto workoutExerciseDto) {
-        if (workouts.findByIdAndUserId(workoutId, userId).orElse(null) == null)
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
-
-        WorkoutExercise we = workoutExerciseDto.toWorkoutExercise();
-        we.setWorkoutId(workoutId);
-        we.setExerciseId(workoutExerciseDto.getExerciseId());
-
-        workoutExercises.save(we);
-    }
-
     public void delete(Integer userId, Integer id) {
         workouts.deleteByIdAndUserId(id, userId);
-    }
-
-    public void updateWorkoutExercise(Integer userId, Integer workoutId, WorkoutExercise workoutExercise) {
-        if (workouts.findByIdAndUserId(workoutId, userId).orElse(null) == null)
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
-
-        workoutExercises.updateWorkoutExercise(workoutExercise.getId(),
-                workoutExercise.getWeight(),
-                workoutExercise.getSets(),
-                workoutExercise.getReps(),
-                workoutExercise.isCompleted());
-    }
-
-    public void deleteWorkoutExercise(Integer userId, Integer workoutId, Integer WorkoutExerciseId) {
-        if (workouts.findByIdAndUserId(workoutId, userId).orElse(null) == null)
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
-
-        WorkoutExercise we = workoutExercises.findWorkoutExercise(WorkoutExerciseId);
-        workoutExercises.delete(we);
     }
 }

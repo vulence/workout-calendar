@@ -24,19 +24,16 @@ public class ExerciseController {
     }
 
     @GetMapping("")
-    @RequiresJwtToken
     public List<Exercise> findAll() {
         return exerciseService.findAll();
     }
 
     @GetMapping("/muscleGroups/{muscleGroupId}")
-    @RequiresJwtToken
     public List<Exercise> findByMuscleGroup(@PathVariable Integer muscleGroupId) {
         return exerciseService.findByMuscleGroup(muscleGroupId);
     }
 
     @GetMapping("/{id}")
-    @RequiresJwtToken
     public Exercise findById(@PathVariable Integer id) {
         return exerciseService.findById(id);
     }
