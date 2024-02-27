@@ -16,11 +16,9 @@ import java.util.List;
 @Service
 public class WorkoutService {
     private final WorkoutRepository workouts;
-    private final WorkoutExerciseRepository workoutExercises;
 
-    public WorkoutService(WorkoutRepository workouts, WorkoutExerciseRepository workoutExercises) {
+    public WorkoutService(WorkoutRepository workouts) {
         this.workouts = workouts;
-        this.workoutExercises = workoutExercises;
     }
 
     public List<Workout> findAll(Integer userId, int page, int size) {
@@ -73,16 +71,6 @@ public class WorkoutService {
                 workouts.updateRating(workoutId, userId, rating);
                 break;
         }
-    }
-
-    public void updateWorkoutExerciseCompleted(Integer userId, Integer workoutId, Integer WorkoutExerciseId, Boolean completed) {
-        if (workouts.findByIdAndUserId(workoutId, userId).orElse(null) == null)
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
-
-        WorkoutExercise we = workoutExercises.findById(WorkoutExerciseId).get();
-        we.setCompleted(completed);
-
-        workoutExercises.save(we);
     }
 
     public void delete(Integer userId, Integer id) {

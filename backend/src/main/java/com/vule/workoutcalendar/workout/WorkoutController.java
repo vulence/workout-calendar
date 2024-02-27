@@ -65,13 +65,6 @@ public class WorkoutController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/setCompleted")
-    @RequiresJwtToken
-    public ResponseEntity<?> updateWorkoutExerciseCompleted(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @NotNull @RequestBody ObjectNode objectNode) {
-        workoutService.updateWorkoutExerciseCompleted(jwtService.parseUserIdFromJwt(jwtToken), id, objectNode.get("workoutExerciseId").asInt(), objectNode.get("completed").asBoolean());
-        return ResponseEntity.noContent().build();
-    }
-
     @DeleteMapping("/{id}")
     @RequiresJwtToken
     public ResponseEntity<?> delete(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id) {

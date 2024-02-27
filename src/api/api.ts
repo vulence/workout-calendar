@@ -143,20 +143,6 @@ export async function updateWorkoutExercise(workoutId : string, workoutExercise 
 
     return response.status;
 };
-
-export async function updateWorkoutExerciseCompleted(workoutId : string, workoutExerciseId: string, completed: boolean) {
-    const response = await fetch(`${API_URL}/workouts/${workoutId}/setCompleted`, {
-        method: "PUT",
-        headers: {
-            'Content-Type': 'application/json',
-            "Authorization": `Bearer ${Userfront.tokens.accessToken}`
-        },
-        body: JSON.stringify({ workoutExerciseId, completed })
-    });
-
-    return response.status;
-};
-
 /*
 * END WORKOUTS
 */

@@ -13,7 +13,7 @@ import { Workout, CalendarEvent, WorkoutExercise } from '../types';
 import AddWorkoutModal from '../workouts/allworkouts/AddWorkoutModal';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
 import styles from './dashboard.module.css';
-import { fetchWorkoutExercises, fetchWorkouts, submitWorkout, updateWorkoutExerciseCompleted } from '../api/api';
+import { fetchWorkoutExercises, fetchWorkouts, submitWorkout, updateWorkoutExercise } from '../api/api';
 import { stringToDayjs } from '../workouts/utils/dateConverter';
 import { ThreeDots } from 'react-loader-spinner';
 
@@ -120,16 +120,13 @@ export default function Dashboard() {
 
     // Updates the status bar and the workoutExercise that was marked as (not)completed
     const handleExerciseChecked = (workoutExerciseId: number, checked: boolean) => {
-        if (checked) {
-            setProgress(progress + progressIncrement);
-        }
-        else {
-            setProgress(progress - progressIncrement);
-        }
+        checked ? setProgress(progress + progressIncrement) : setProgress(progress - progressIncrement);
 
-        setTodaysWorkoutExercises(prevState => prevState!.map(we => we.id === workoutExerciseId ? { ...we, completed: !we.completed } : we));
+        const workoutExercise = todaysWorkoutExercises!.find(we => we.id === workoutExerciseId)!;
+        workoutExercise.completed = !workoutExercise.completed;
 
-        updateWorkoutExerciseCompleted(todaysWorkoutExercises![0].workoutId.toString(), workoutExerciseId.toString(), checked).then(data => console.log(data));
+        setTodaysWorkoutExercises(prevState => prevState!.map(we => we.id === workoutExerciseId ? workoutExercise : we));
+        updateWorkoutExercise(todaysWorkoutExercises![0].workoutId.toString(), workoutExercise).then(data => console.log(data));
     }
 
     return (

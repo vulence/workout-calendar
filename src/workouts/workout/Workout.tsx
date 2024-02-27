@@ -12,7 +12,7 @@ import EditNotesModal from './EditNotesModal';
 import { darken, styled } from '@mui/material/styles';
 
 import { Workout as WorkoutType, WorkoutDataGridRows, WorkoutExercise } from '../../types';
-import { deleteWorkoutExercise, fetchWorkoutById, fetchWorkoutExercises, updateWorkout, submitWorkoutExercise, updateWorkoutExerciseCompleted, updateWorkoutExercise } from '../../api/api';
+import { deleteWorkoutExercise, fetchWorkoutById, fetchWorkoutExercises, updateWorkout, submitWorkoutExercise, updateWorkoutExercise } from '../../api/api';
 import LoadingModal from '../../common/LoadingModal';
 
 export default function Workout() {
@@ -101,9 +101,11 @@ export default function Workout() {
 
     // Update the workoutExercise that was marked as (not)completed
     const handleCompleted = (params: GridRenderCellParams) => {
-        setWorkoutExercises(prevState => prevState!.map(we => (we.id === params.id ? {...we, completed: !we.completed} : we)));
+        const workoutExercise = workoutExercises!.find(we => we.id === params.id)!; // Guaranteed to exist since the row id is equal to the workoutexercise id
+        workoutExercise.completed = !workoutExercise.completed;
 
-        updateWorkoutExerciseCompleted(workout!.id.toString(), params.id.toString(), !params.row.completed).then(data => console.log(data));
+        setWorkoutExercises(prevState => prevState!.map(we => (we.id === params.id ? workoutExercise : we)));
+        updateWorkoutExercise(workout!.id.toString(), workoutExercise).then(data => console.log(data));
     }
 
     // Load data grid rows
