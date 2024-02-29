@@ -14,14 +14,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class WorkoutService {
+class WorkoutService {
     private final WorkoutRepository workouts;
 
-    public WorkoutService(WorkoutRepository workouts) {
+    WorkoutService(WorkoutRepository workouts) {
         this.workouts = workouts;
     }
 
-    public List<Workout> findAll(Integer userId, int page, int size) {
+    List<Workout> findAll(Integer userId, int page, int size) {
         if (page <= 0) return workouts.findByUserId(userId);
         else {
             int offset = (page - 1) * size;
@@ -29,25 +29,25 @@ public class WorkoutService {
         }
     }
 
-    public Workout findById(Integer id, Integer userId) {
+    Workout findById(Integer id, Integer userId) {
         return workouts.findByIdAndUserId(id, userId).orElse(null);
     }
 
-    public Workout findTodaysWorkout(Integer userId) {
+    Workout findTodaysWorkout(Integer userId) {
         return workouts.findTodaysWorkout(userId, LocalDate.now()).orElse(null);
     }
 
-    public int getWorkoutCount(Integer userId) {
+    int getWorkoutCount(Integer userId) {
         return workouts.getWorkoutCount(userId);
     }
 
-    public void create(Integer userId, Workout workout) {
+    void create(Integer userId, Workout workout) {
         workout.setuserId(userId);
 
         workouts.save(workout);
     }
 
-    public void update(Integer userId, Integer workoutId, ObjectNode objectNode) {
+    void update(Integer userId, Integer workoutId, ObjectNode objectNode) {
         String field = objectNode.get("field").asText().toLowerCase();
 
         switch (field) {
@@ -73,7 +73,7 @@ public class WorkoutService {
         }
     }
 
-    public void delete(Integer userId, Integer id) {
+    void delete(Integer userId, Integer id) {
         workouts.deleteByIdAndUserId(id, userId);
     }
 }

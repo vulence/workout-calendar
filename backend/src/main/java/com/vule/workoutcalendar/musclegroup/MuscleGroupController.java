@@ -10,35 +10,35 @@ import java.util.List;
 @RestController
 @RequestMapping("/muscleGroups")
 @CrossOrigin
-public class MuscleGroupController {
+class MuscleGroupController {
     private final MuscleGroupService muscleGroupService;
 
-    public MuscleGroupController(MuscleGroupService muscleGroupService) {
+    MuscleGroupController(MuscleGroupService muscleGroupService) {
         this.muscleGroupService = muscleGroupService;
     }
     @GetMapping("")
     @RequiresJwtToken
-    public List<MuscleGroup> findAll() {
+    List<MuscleGroup> findAll() {
         return muscleGroupService.findAll();
     }
 
     @GetMapping("/{id}")
     @RequiresJwtToken
-    public MuscleGroup findById(@PathVariable Integer id) {
+    MuscleGroup findById(@PathVariable Integer id) {
         return muscleGroupService.findById(id);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/new")
     @RequiresJwtToken
-    public void create(@Valid @RequestBody MuscleGroup muscleGroup) {
+    void create(@Valid @RequestBody MuscleGroup muscleGroup) {
         muscleGroupService.create(muscleGroup);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     @RequiresJwtToken
-    public void delete(@PathVariable Integer id) {
+    void delete(@PathVariable Integer id) {
         muscleGroupService.delete(id);
     }
 }

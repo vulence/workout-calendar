@@ -67,7 +67,7 @@ export async function fetchWorkoutExercises(workoutId: string) {
 };
 
 export async function submitWorkout(workout : any) {
-    const response = await fetch(`${API_URL}/workouts/new`, {
+    const response = await fetch(`${API_URL}/workouts`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export async function submitWorkoutExercise(workoutId : string, workoutExerciseD
 };
 
 export async function updateWorkout(workoutId : string, objectNode : any) {
-    const response = await fetch(`${API_URL}/workouts/${workoutId}/update`, {
+    const response = await fetch(`${API_URL}/workouts/${workoutId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",

@@ -16,58 +16,59 @@ import java.util.Map;
 @RestController
 @RequestMapping("/workouts")
 @CrossOrigin
-public class WorkoutController {
+class WorkoutController {
     private final WorkoutService workoutService;
+
     private final JwtService jwtService;
 
     private static final int DEFAULT_PAGE_SIZE = 12;
 
-    public WorkoutController(WorkoutService workoutService, JwtService jwtService) {
+    WorkoutController(WorkoutService workoutService, JwtService jwtService) {
         this.workoutService = workoutService;
         this.jwtService = jwtService;
     }
 
     @GetMapping("")
     @RequiresJwtToken
-    public ResponseEntity<?> findAll(@RequestAttribute(name = "jwtToken") String jwtToken, @RequestParam(required = false, defaultValue = "0") int page) {
+    ResponseEntity<?> findAll(@RequestAttribute(name = "jwtToken") String jwtToken, @RequestParam(required = false, defaultValue = "0") int page) {
         return ResponseEntity.ok(workoutService.findAll(jwtService.parseUserIdFromJwt(jwtToken), page, DEFAULT_PAGE_SIZE));
     }
 
     @GetMapping("/{id}")
     @RequiresJwtToken
-    public ResponseEntity<?> findById(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id) {
+    ResponseEntity<?> findById(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id) {
         return ResponseEntity.ok(workoutService.findById(id, jwtService.parseUserIdFromJwt(jwtToken)));
     }
 
     @GetMapping("/today")
     @RequiresJwtToken
-    public ResponseEntity<?> findTodaysWorkout(@RequestAttribute(name = "jwtToken") String jwtToken) {
+    ResponseEntity<?> findTodaysWorkout(@RequestAttribute(name = "jwtToken") String jwtToken) {
         return ResponseEntity.ok(workoutService.findTodaysWorkout(jwtService.parseUserIdFromJwt(jwtToken)));
     }
 
     @GetMapping("/count")
     @RequiresJwtToken
-    public ResponseEntity<?> getWorkoutCount(@RequestAttribute(name = "jwtToken") String jwtToken) {
+    ResponseEntity<?> getWorkoutCount(@RequestAttribute(name = "jwtToken") String jwtToken) {
         return ResponseEntity.ok(workoutService.getWorkoutCount(jwtService.parseUserIdFromJwt(jwtToken)));
     }
 
-    @PostMapping("/new")
+    @PostMapping("")
     @RequiresJwtToken
-    public ResponseEntity<?> create(@RequestAttribute(name = "jwtToken") String jwtToken, @Valid @RequestBody Workout workout) {
+    ResponseEntity<?> create(@RequestAttribute(name = "jwtToken") String jwtToken, @Valid @RequestBody Workout workout) {
         workoutService.create(jwtService.parseUserIdFromJwt(jwtToken), workout);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Workout created successfully."));
     }
 
-    @PutMapping("/{id}/update")
+    @PutMapping("/{id}")
     @RequiresJwtToken
-    public ResponseEntity<?> update(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @NotNull @RequestBody ObjectNode objectNode) {
+    ResponseEntity<?> update(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @NotNull @RequestBody ObjectNode objectNode) {
         workoutService.update(jwtService.parseUserIdFromJwt(jwtToken), id, objectNode);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     @RequiresJwtToken
-    public ResponseEntity<?> delete(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id) {
+    ResponseEntity<?> delete(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id) {
         workoutService.delete(jwtService.parseUserIdFromJwt(jwtToken), id);
         return ResponseEntity.noContent().build();
     }

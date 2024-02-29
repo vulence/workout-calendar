@@ -13,66 +13,67 @@ import java.util.List;
 @RestController
 @RequestMapping("/exercises")
 @CrossOrigin
-public class ExerciseController {
+class ExerciseController {
     private final ExerciseService exerciseService;
+
     private final JwtService jwtService;
 
-    public ExerciseController(ExerciseService exerciseService, JwtService jwtService) {
+    ExerciseController(ExerciseService exerciseService, JwtService jwtService) {
         this.exerciseService = exerciseService;
         this.jwtService = jwtService;
     }
 
     @GetMapping("")
-    public List<Exercise> findAll() {
+    List<Exercise> findAll() {
         return exerciseService.findAll();
     }
 
     @GetMapping("/muscleGroups/{muscleGroupId}")
-    public List<Exercise> findByMuscleGroup(@PathVariable Integer muscleGroupId) {
+    List<Exercise> findByMuscleGroup(@PathVariable Integer muscleGroupId) {
         return exerciseService.findByMuscleGroup(muscleGroupId);
     }
 
     @GetMapping("/{id}")
-    public Exercise findById(@PathVariable Integer id) {
+    Exercise findById(@PathVariable Integer id) {
         return exerciseService.findById(id);
     }
 
     @GetMapping("/{id}/exerciseHistory")
     @RequiresJwtToken
-    public ResponseEntity<?> findExerciseHistory(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id) {
+    ResponseEntity<?> findExerciseHistory(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id) {
         return ResponseEntity.ok(exerciseService.findExerciseHistory(jwtService.parseUserIdFromJwt(jwtToken), id));
     }
     @GetMapping("/{id}/workouts")
     @RequiresJwtToken
-    public ResponseEntity<?> findMaxWeights(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id) {
+    ResponseEntity<?> findMaxWeights(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id) {
         return ResponseEntity.ok(exerciseService.findMaxWeights(jwtService.parseUserIdFromJwt(jwtToken), id));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/new")
+    @PostMapping("")
     @RequiresJwtToken
-    public void create(@Valid @RequestBody Exercise exercise) {
+    void create(@Valid @RequestBody Exercise exercise) {
         exerciseService.create(exercise);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     @RequiresJwtToken
-    public void delete(@PathVariable Integer id) {
+    void delete(@PathVariable Integer id) {
         exerciseService.delete(id);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/{id}/muscleGroups/new")
     @RequiresJwtToken
-    public void addMuscleGroup(@PathVariable Integer id, @RequestBody Integer muscleGroupId) {
+    void addMuscleGroup(@PathVariable Integer id, @RequestBody Integer muscleGroupId) {
         exerciseService.addMuscleGroup(id, muscleGroupId);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}/muscleGroups")
     @RequiresJwtToken
-    public void deleteMuscleGroup(@PathVariable Integer id, @RequestBody Integer muscleGroupId) {
+    void deleteMuscleGroup(@PathVariable Integer id, @RequestBody Integer muscleGroupId) {
         exerciseService.deleteMuscleGroup(id, muscleGroupId);
     }
 }
