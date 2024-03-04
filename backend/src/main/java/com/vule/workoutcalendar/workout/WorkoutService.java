@@ -5,6 +5,7 @@ import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
 import com.vule.workoutcalendar.workoutexercise.WorkoutExerciseRepository;
 import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
 import com.vule.workoutcalendar.exercise.ExerciseRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,12 +22,9 @@ class WorkoutService {
         this.workouts = workouts;
     }
 
-    List<Workout> findAll(Integer userId, int page, int size) {
-        if (page <= 0) return workouts.findByUserId(userId);
-        else {
-            int offset = (page - 1) * size;
-            return workouts.findByUserIdPaged(userId, size, offset);
-        }
+    List<Workout> findAll(Integer userId, int page, int size, String direction) {
+        if (page <= 0) return workouts.findByUserId(userId, PageRequest.of(0, Integer.MAX_VALUE));
+        else return workouts.findByUserId(userId, PageRequest.of(page - 1, size, Sort.by(Sort.Direction.fromString(direction), "DATE")));
     }
 
     Workout findById(Integer id, Integer userId) {

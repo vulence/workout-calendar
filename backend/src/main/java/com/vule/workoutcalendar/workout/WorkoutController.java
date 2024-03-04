@@ -30,8 +30,10 @@ class WorkoutController {
 
     @GetMapping("")
     @RequiresJwtToken
-    ResponseEntity<?> findAll(@RequestAttribute(name = "jwtToken") String jwtToken, @RequestParam(required = false, defaultValue = "0") int page) {
-        return ResponseEntity.ok(workoutService.findAll(jwtService.parseUserIdFromJwt(jwtToken), page, DEFAULT_PAGE_SIZE));
+    ResponseEntity<?> findAll(@RequestAttribute(name = "jwtToken") String jwtToken,
+                              @RequestParam(required = false, defaultValue = "0") int page,
+                              @RequestParam(required = false, defaultValue = "DESC") String direction) {
+        return ResponseEntity.ok(workoutService.findAll(jwtService.parseUserIdFromJwt(jwtToken), page, DEFAULT_PAGE_SIZE, direction));
     }
 
     @GetMapping("/{id}")

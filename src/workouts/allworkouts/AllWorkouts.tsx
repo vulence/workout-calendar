@@ -66,8 +66,8 @@ export default function AllWorkouts() {
     // Initialize all workouts
     useEffect(() => {
         setLoading(true);
-        fetchWorkouts(page.toString()).then((data) => {setWorkouts(data); setLoading(false);});
-    }, [page]);
+        fetchWorkouts(page.toString(), filterValues.sortByDate).then((data) => {setWorkouts(data); setLoading(false); });
+    }, [page, filterValues]);
 
     // Calculates calories burned for each workout
     useEffect(() => {
@@ -132,25 +132,6 @@ export default function AllWorkouts() {
     IconContainer.propTypes = {
         value: PropTypes.number.isRequired,
     };
-
-    // Applies filters to workouts
-    const filterWorkouts = () => {
-        let filteredWorkouts = workouts;
-
-        if (filterValues.filterYear !== null) filteredWorkouts = filteredWorkouts.filter(workout => parseInt(workout.date.split('-')[2]) === filterValues.filterYear);
-        if (filterValues.filterMonth !== null) filteredWorkouts = filteredWorkouts.filter(workout => parseInt(workout.date.split('-')[1]) === filterValues.filterMonth! + 1);
-
-        if (filterValues.sortByDate === 'desc') {
-            return filteredWorkouts.sort((a, b) => {
-                return stringToDayjs(a.date).isAfter(stringToDayjs(b.date)) ? -1 : 1;
-            });
-        }
-        else {
-            return filteredWorkouts.sort((a, b) => {
-                return stringToDayjs(a.date).isAfter(stringToDayjs(b.date)) ? 1 : -1;
-            })
-        }
-    }
 
     // Filter callback function 
     const handleFilterValues = (newFilterValues: AllWorkoutsFilters) => {
@@ -231,7 +212,7 @@ export default function AllWorkouts() {
                 />
                 
                 <Grid container spacing={2} className={styles.gridContainer}>
-                    {filterWorkouts().map((workout, index) => (
+                    {workouts.map((workout, index) => (
                         <Grid key={workout.id} item xs={6} sm={4} md={3} className={styles.gridItem} direction="column" alignItems="center" justifyContent="center">
                             <Card key={workout.id.toString()} variant="outlined">
                                 <Tooltip title="Click to see more" placement="top" arrow>

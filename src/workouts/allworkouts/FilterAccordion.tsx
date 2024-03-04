@@ -19,7 +19,7 @@ export default function FilterAccordion(props: FilterAccordionProps) {
     const [formValues, setFormValues] = useState<AllWorkoutsFilters>({
         filterYear: null,
         filterMonth: null,
-        sortByDate: "desc"
+        sortByDate: "DESC"
     });
 
     // Updates the form values state
@@ -66,16 +66,15 @@ export default function FilterAccordion(props: FilterAccordionProps) {
                             onChange={(_, newSortByDate) => handleChange("sortByDate", newSortByDate)}
                             sx={{ display: "block" }}
                         >
-                            <ToggleButton value="asc">
+                            <ToggleButton value="ASC">
                                 <Typography>ASC</Typography>
                                 <NorthIcon />
                             </ToggleButton>
-                            <ToggleButton value="desc">
+                            <ToggleButton value="DESC">
                                 <Typography>DESC</Typography>
                                 <SouthIcon />
                             </ToggleButton>
                         </ToggleButtonGroup>
-
                     </Box>
 
                     <Divider orientation="vertical" flexItem />

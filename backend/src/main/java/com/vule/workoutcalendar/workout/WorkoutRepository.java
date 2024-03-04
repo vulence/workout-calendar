@@ -1,5 +1,6 @@
 package com.vule.workoutcalendar.workout;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jdbc.repository.query.Modifying;
@@ -13,18 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> {
-
-    List<Workout> findByUserId(Integer userId);
-
-    @Query("""
-            SELECT *
-            FROM WORKOUT
-            WHERE user_id = :userId
-            ORDER BY DATE DESC
-            LIMIT :limit
-            OFFSET :offset
-            """)
-    List<Workout> findByUserIdPaged(@Param("userId") Integer userId, @Param("limit") Integer limit, @Param("offset") Integer offset);
+    List<Workout> findByUserId(Integer userId, PageRequest pageRequest);
 
     @Query("""
             SELECT *
