@@ -182,6 +182,7 @@ export async function fetchExerciseById(exerciseId: string) {
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
     });
+
     const result = await response.json();
     return result;
 };

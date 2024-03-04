@@ -1,12 +1,16 @@
-import { Card, CardContent, CardCover, CardOverflow, IconButton, Typography } from "@mui/joy";
+import { Card, CardContent, CardCover, IconButton, Typography } from "@mui/joy";
 import Favorite from '@mui/icons-material/Favorite';
+import Timeline from '@mui/icons-material/Timeline';
 import { Exercise } from "../types";
+import { useNavigate } from "react-router-dom";
 
 interface ExerciseCardProps {
     exercise: Exercise
 }
 
 export default function ExerciseCard(props: ExerciseCardProps) {
+    const navigate = useNavigate();
+
     return (
         <Card variant="outlined" sx={{ height: 200, width: 280 }}>
             <CardCover>
@@ -31,18 +35,34 @@ export default function ExerciseCard(props: ExerciseCardProps) {
                 </Typography>
 
                 <IconButton
-                    aria-label="Like minimal photography"
-                    size="md"
+                    aria-label="Favorite exercise"
+                    size="sm"
                     variant="solid"
                     color="danger"
                     sx={{
                         position: 'absolute',
                         borderRadius: '50%',
-                        right: 0,
-                        bottom: 0,
+                        right: 2,
+                        bottom: 5,
                     }}
                 >
                     <Favorite />
+                </IconButton>
+
+                <IconButton
+                    aria-label="Exercise history"
+                    size="sm"
+                    variant="solid"
+                    color="primary"
+                    sx={{
+                        position: 'absolute',
+                        borderRadius: "50%",
+                        left: 2,
+                        bottom: 5,
+                    }}
+                    onClick={() => navigate(`/exercises/${props.exercise.id}`)}
+                >
+                    <Timeline />
                 </IconButton>
             </CardContent>
         </Card>

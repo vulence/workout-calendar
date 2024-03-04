@@ -28,7 +28,6 @@ export default function AllExercises() {
         if (muscleGroupExercises[muscleGroupId] !== undefined) return;
 
         fetchExercisesByMuscleGroup(muscleGroupId.toString()).then((data) => {
-            console.log(data);
             setMuscleGroupExercises({ ...muscleGroupExercises, [muscleGroupId]: data });
         });
     };

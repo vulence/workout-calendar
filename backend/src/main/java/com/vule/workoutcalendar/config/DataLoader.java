@@ -21,7 +21,7 @@ public class DataLoader implements CommandLineRunner
         if (workouts.count() == 0) {
             for (int i = 1; i < 29; i++) {
                 Workout w = new Workout("Chest day", LocalDate.of(2024, LocalDate.now().getMonth(), i), "nema notes", 60, 3);
-                w.setuserId(5);
+                w.setUserId(5);
                 workouts.save(w);
             }
         }

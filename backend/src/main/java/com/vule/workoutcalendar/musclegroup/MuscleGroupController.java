@@ -17,13 +17,11 @@ class MuscleGroupController {
         this.muscleGroupService = muscleGroupService;
     }
     @GetMapping("")
-    @RequiresJwtToken
     List<MuscleGroup> findAll() {
         return muscleGroupService.findAll();
     }
 
     @GetMapping("/{id}")
-    @RequiresJwtToken
     MuscleGroup findById(@PathVariable Integer id) {
         return muscleGroupService.findById(id);
     }

@@ -59,7 +59,7 @@ export default function App() {
                 <>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/exercises" element={<AllExercises />} />
-                  <Route path="/exercises/:id/history" element={<ExerciseHistory />} />
+                  <Route path="/exercises/:id" element={<ExerciseHistory />} />
                   <Route path="/workouts/?" element={<AllWorkouts />} />
                   <Route path="/workouts/:id" element={<Workout />} />
                   <Route path="/account" element={<Account />} />

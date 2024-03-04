@@ -2,59 +2,31 @@ package com.vule.workoutcalendar.exercise;
 
 import com.vule.workoutcalendar.musclegroup.MuscleGroup;
 import com.vule.workoutcalendar.musclegroup.MuscleGroupRef;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor
 public class Exercise {
-    @Id
-    private Integer id;
-    private String name;
-    private String description;
-    private String imageUrl;
-    private Set<MuscleGroupRef> muscleGroups = new HashSet<>();
 
-    public Exercise() {}
+    @Id @Getter @Setter private Integer id;
+    @Getter @Setter private String name;
+    @Getter @Setter private String description;
+    @Getter @Setter private String imageUrl;
+
+    private final Set<MuscleGroupRef> muscleGroups = new HashSet<>();
 
     public Exercise(String name, String description) {
         this.name = name;
         this.description = description;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public Set<Integer> getMuscleGroupIds() {
@@ -62,17 +34,18 @@ public class Exercise {
     }
 
     public List<String> getMuscleGroupNames() {
-        return muscleGroups.stream().map(muscleGroupRef -> muscleGroupRef.getName()).collect(Collectors.toList());
+        return muscleGroups.stream().map(MuscleGroupRef::getName).collect(Collectors.toList());
     }
 
     public void addMuscleGroup(MuscleGroup muscleGroup, String name) {
         MuscleGroupRef ref = new MuscleGroupRef();
         ref.setMuscleGroup(AggregateReference.to(muscleGroup.getId()));
         ref.setName(name);
+
         muscleGroups.add(ref);
     }
 
     public void removeMuscleGroup(MuscleGroup muscleGroup) {
-        muscleGroups.remove(muscleGroup);
+        muscleGroups.removeIf(mg -> Objects.equals(mg.getMuscleGroup().getId(), muscleGroup.getId()));
     }
 }

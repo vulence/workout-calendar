@@ -2,18 +2,21 @@ package com.vule.workoutcalendar.workout;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
 public class Workout {
-    @Id
-    private Integer id;
+
+    @Id private Integer id;
     private String title;
-    @JsonFormat(pattern="dd-MM-yyyy")
-    private LocalDate date;
+    @JsonFormat(pattern="dd-MM-yyyy") private LocalDate date;
     private String notes;
     private Integer duration;
     private Integer rating;
@@ -25,61 +28,5 @@ public class Workout {
         this.notes = notes;
         this.duration = duration;
         this.rating = rating;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public Integer getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
-    }
-
-    public Integer getRating() {
-        return rating;
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
-
-    public Integer getuserId() {
-        return userId;
-    }
-
-    public void setuserId(Integer userId) {
-        this.userId = userId;
     }
 }

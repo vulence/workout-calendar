@@ -36,7 +36,7 @@ public interface ExerciseRepository extends ListCrudRepository<Exercise, Integer
     @Query("""
           SELECT W.DATE, MAX(WE.WEIGHT) AS Weight
           FROM WORKOUT W
-          INNER JOIN WORKOUT_EXERCISE WE ON W.ID = WE.WORKOUT
+          INNER JOIN WORKOUT_EXERCISE WE ON W.ID = WE.WORKOUT_ID
           WHERE W.USER_ID = :userId AND WE.EXERCISE_ID = :exerciseId
           GROUP BY W.DATE
           ORDER BY W.DATE ASC

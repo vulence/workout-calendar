@@ -42,7 +42,7 @@ class WorkoutService {
     }
 
     void create(Integer userId, Workout workout) {
-        workout.setuserId(userId);
+        workout.setUserId(userId);
 
         workouts.save(workout);
     }

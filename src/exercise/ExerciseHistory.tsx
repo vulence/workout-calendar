@@ -1,4 +1,3 @@
-import React from 'react';
 import { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -18,9 +17,9 @@ export default function ExerciseHistory() {
     const { id } = useParams();
 
     // Data states
-    const [exercise, setExercise] = useState<Exercise | null>(null);
-    const [maxWeight, setMaxWeight] = useState<Array<ExerciseHistoryDto> | null>(null);
-    const [exerciseHistory, setExerciseHistory] = useState<Array<ExerciseHistoryDto> | null>(null);
+    const [exercise, setExercise] = useState<Exercise>();
+    const [maxWeight, setMaxWeight] = useState<Array<ExerciseHistoryDto>>();
+    const [exerciseHistory, setExerciseHistory] = useState<Array<ExerciseHistoryDto>>();
 
     const columns = [
         { field: 'date', headerName: 'Date', width: 130 },
@@ -68,7 +67,7 @@ export default function ExerciseHistory() {
 
     // Initialize the exercise
     useEffect(() => {
-        fetchExerciseById(id!).then(data => setExercise(data));
+        fetchExerciseById(id!).then((data) => setExercise(data));
     }, [id]);
 
     // Initialize max weights for exercise
