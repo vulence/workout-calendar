@@ -22,7 +22,7 @@ public class Exercise {
     @Getter @Setter private String description;
     @Getter @Setter private String imageUrl;
 
-    private final Set<MuscleGroupRef> muscleGroups = new HashSet<>();
+    private Set<MuscleGroupRef> muscleGroups = new HashSet<>();
 
     public Exercise(String name, String description) {
         this.name = name;

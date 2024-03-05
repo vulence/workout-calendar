@@ -45,30 +45,13 @@ class WorkoutService {
         workouts.save(workout);
     }
 
-    void update(Integer userId, Integer workoutId, ObjectNode objectNode) {
-        String field = objectNode.get("field").asText().toLowerCase();
+    void update(Integer userId, Integer workoutId, Workout w) {
+        Workout dbWorkout = findById(workoutId, userId);
+        dbWorkout.setDuration(w.getDuration());
+        dbWorkout.setNotes(w.getNotes());
+        dbWorkout.setRating(w.getRating());
 
-        switch (field) {
-            case "notes":
-                if (objectNode.get("notes") == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect JSON format.");
-
-                workouts.updateNotes(workoutId, userId, objectNode.get("notes").asText());
-                break;
-            case "duration":
-                if (objectNode.get("duration") == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid JSON format.");
-
-                int duration = objectNode.get("duration").asInt();
-                if (duration <= 1) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid duration value.");
-                workouts.updateDuration(workoutId, userId, duration);
-                break;
-            case "rating":
-                if (objectNode.get("rating") == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid JSON format.");
-
-                int rating = objectNode.get("rating").asInt();
-                if (rating < 0 || rating > 5) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid rating value.");
-                workouts.updateRating(workoutId, userId, rating);
-                break;
-        }
+        workouts.save(dbWorkout);
     }
 
     void delete(Integer userId, Integer id) {

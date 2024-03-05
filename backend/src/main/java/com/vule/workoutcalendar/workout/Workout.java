@@ -1,14 +1,14 @@
 package com.vule.workoutcalendar.workout;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -18,8 +18,8 @@ public class Workout {
     private String title;
     @JsonFormat(pattern="dd-MM-yyyy") private LocalDate date;
     private String notes;
-    private Integer duration;
-    private Integer rating;
+    @Positive private Integer duration;
+    @Min(0) @Max(5) private Integer rating;
     private Integer userId;
 
     public Workout(String title, LocalDate date, String notes, Integer duration, Integer rating) {

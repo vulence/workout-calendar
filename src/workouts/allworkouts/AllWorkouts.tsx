@@ -174,18 +174,11 @@ export default function AllWorkouts() {
 
     // Add a rating to a workout
     const handleRating = (workoutId: number, rating: number) => {   
-        // Update the rating in the state
         const updatedWorkouts: Array<Workout> = workouts.map((w) => {
             if (w.id === workoutId) {
                 // Remove the rating if the user clicks on the same rating as it already is
-                if (rating === null) {
-                    rating = 0; // In order to make a valid API call
-                    return { ...w, rating: rating };
-                }
-                // Set the rating if it's not the same
-                else {
-                    return { ...w, rating: rating };
-                }
+                const updatedRating = rating === null ? 0 : rating;
+                return { ...w, rating: updatedRating };
             }
 
             return w;
@@ -193,7 +186,8 @@ export default function AllWorkouts() {
 
         setWorkouts(updatedWorkouts);
 
-        updateWorkout(workoutId.toString(), {"field": "rating", "rating": rating}).then((data) => console.log(data));
+        const updatedWorkout = updatedWorkouts.find((w) => w.id === workoutId)!;
+        updateWorkout(workoutId.toString(), updatedWorkout).then((data) => console.log(data));
 
         handlePopoverClose(workoutId);
     }

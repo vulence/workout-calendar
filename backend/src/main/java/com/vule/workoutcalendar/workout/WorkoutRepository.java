@@ -44,28 +44,4 @@ public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> 
             WHERE id = :workoutId AND user_id = :userId
             """)
     void deleteByIdAndUserId(@Param("workoutId") Integer workoutId, @Param("userId") Integer userId);
-
-    @Modifying
-    @Query("""
-            UPDATE WORKOUT
-            SET NOTES = :notes
-            WHERE ID = :id AND user_id = :userId
-            """)
-    void updateNotes(@Param("id") Integer id, @Param("userId") Integer userId, @Param("notes") String notes);
-
-    @Modifying
-    @Query("""
-            UPDATE WORKOUT
-            SET DURATION = :duration
-            WHERE ID = :id AND user_id = :userId
-            """)
-    void updateDuration(@Param("id") Integer id, @Param("userId") Integer userId, @Param("duration") Integer duration);
-
-    @Modifying
-    @Query("""
-           UPDATE WORKOUT
-           SET RATING = :rating
-           WHERE ID = :id
-            """)
-    void updateRating(@Param("id") Integer id, @Param("userId") Integer userId, @Param("rating") Integer rating);
 }

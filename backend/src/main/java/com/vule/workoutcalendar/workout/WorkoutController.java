@@ -63,8 +63,8 @@ class WorkoutController {
 
     @PutMapping("/{id}")
     @RequiresJwtToken
-    ResponseEntity<?> update(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @NotNull @RequestBody ObjectNode objectNode) {
-        workoutService.update(jwtService.parseUserIdFromJwt(jwtToken), id, objectNode);
+    ResponseEntity<?> update(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id, @Valid @RequestBody Workout workout) {
+        workoutService.update(jwtService.parseUserIdFromJwt(jwtToken), id, workout);
         return ResponseEntity.noContent().build();
     }
 

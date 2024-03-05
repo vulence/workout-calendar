@@ -1,4 +1,6 @@
 import Userfront from '@userfront/toolkit';
+import { Workout } from '../types';
+import { stringToDayjs } from '../workouts/utils/dateConverter';
     
 const API_URL = "http://localhost:8080";
 
@@ -87,21 +89,20 @@ export async function submitWorkoutExercise(workoutId : string, workoutExerciseD
             "Content-Type": "application/json",
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
-        credentials: 'include',
         body: JSON.stringify(workoutExerciseDto),
     });
 
     return response.status;
 };
 
-export async function updateWorkout(workoutId : string, objectNode : any) {
+export async function updateWorkout(workoutId : string, workout: any) {
     const response = await fetch(`${API_URL}/workouts/${workoutId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
         },
-        body: JSON.stringify(objectNode),
+        body: JSON.stringify({ ...workout, date: stringToDayjs(workout.date)}),
     });
 
     return response.status;

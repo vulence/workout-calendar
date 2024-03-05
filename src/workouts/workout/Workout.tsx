@@ -188,12 +188,18 @@ export default function Workout() {
 
     // Notes form submission
     const handleNotesSubmit = (notes: string) => {
-        updateWorkout(id!.toString(), {"field": "notes", "notes": notes}).then(() => setOpenNotesDialog(false));
+        const updatedWorkout = { ...workout!, notes: notes };
+        setWorkout(updatedWorkout);
+
+        updateWorkout(id!.toString(), updatedWorkout).then(() => setOpenNotesDialog(false));
     };
 
     // Duration submission
     const handleDurationSubmit = (minutes: number) => {
-        updateWorkout(id!.toString(), {"field": "duration", "duration": minutes}).then(() => window.location.reload());
+        const updatedWorkout = { ...workout!, duration: minutes };
+        setWorkout(updatedWorkout);
+
+        updateWorkout(id!.toString(), updatedWorkout).then(() => window.location.reload());
     };
 
     return (
