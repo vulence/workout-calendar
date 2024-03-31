@@ -111,7 +111,7 @@ export default function ExerciseHistory() {
                     <Typography variant="h1" color="text.secondary">Max Weights</Typography>
                     <LineChart
                         xAxis={[{ scaleType: 'band', dataKey: 'date' }]}
-                        series={[{ area: true, dataKey: 'weight' }]}
+                        series={[{ curve: "linear", dataKey: 'weight' }]}
                         yAxis={[{ scaleType: 'linear' }]}
                         height={400}
                         dataset={maxWeight!}

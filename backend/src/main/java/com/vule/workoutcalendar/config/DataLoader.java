@@ -18,12 +18,12 @@ public class DataLoader implements CommandLineRunner
 
     @Override
     public void run(String... args) throws Exception {
-        if (workouts.count() == 0) {
-            for (int i = 1; i < 29; i++) {
-                Workout w = new Workout("Chest day", LocalDate.of(2024, LocalDate.now().getMonth(), i), "nema notes", 60, 3);
-                w.setUserId(5);
-                workouts.save(w);
-            }
-        }
+//        if (workouts.count() == 0) {
+//            for (int i = 1; i < 29; i++) {
+//                Workout w = new Workout("Chest day", LocalDate.of(2024, LocalDate.now().getMonth(), i), "nema notes", 60, 3);
+//                w.setUserId(5);
+//                workouts.save(w);
+//            }
+//        }
     }
 }

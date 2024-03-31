@@ -21,7 +21,10 @@ class WorkoutExerciseController {
 
     @GetMapping("")
     @RequiresJwtToken
-    ResponseEntity<?> findWorkoutExercises(@RequestAttribute(name = "jwtToken") String jwtToken, @PathVariable Integer id) {
+    ResponseEntity<?> findWorkoutExercises(@RequestAttribute(name = "jwtToken") String jwtToken, @RequestParam(name = "grouped", defaultValue = "false") String grouped, @PathVariable Integer id) {
+        if (grouped.equals("true"))
+            return ResponseEntity.ok(workoutExerciseService.getGroupedWorkoutExercises(jwtService.parseUserIdFromJwt(jwtToken), id));
+
         return ResponseEntity.ok(workoutExerciseService.getWorkoutExercises(jwtService.parseUserIdFromJwt(jwtToken), id));
     }
 

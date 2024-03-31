@@ -12,6 +12,8 @@ insert into exercise (name, description, image_url) values('Military press', 'A 
 insert into exercise (name, description, image_url) values('Close grip bench press', 'A variation of the traditional bench press that targets the triceps and chest muscles while reducing the involvement of the shoulders, enhancing tricep development.', 'https://barbend.com/wp-content/uploads/2019/05/Barbend-Featured-Image-1600x900-A-person-doing-a-close-grip-barbell-bench-press-1.jpg');
 insert into exercise (name, description, image_url) values('Crunches', 'A popular abdominal exercise that specifically targets the muscles in the front the core, primarily the rectus abdominis.', 'https://img.freepik.com/premium-photo/high-angle-side-view-determined-adult-bearded-male-sportswear-doing-crunches-while-training-abdominal-muscles-during-intense-workout-gym_251859-5515.jpg');
 insert into exercise (name, description, image_url) values('Barbell curl', 'A classic and effective strength training exercise for developing the muscles of the upper arm, primarily focusing on the biceps.', 'https://c4.wallpaperflare.com/wallpaper/855/739/772/arnold-schwarzenegger-barbell-bodybuilder-bodybuilding-wallpaper-thumb.jpg');
+insert into exercise (name, description, Image_url) values('Bench press', 'Bench press is a fundamental weightlifting exercise performed on a flat bench with a barbell or dumbbells. It targets the muscles of the chest, shoulders, and triceps, making it a key exercise for developing upper body strength and muscle mass.'. 'https://t4.ftcdn.net/jpg/00/95/32/41/360_F_95324105_nanCVHMiu7r8B0qSur3k1siBWxacfmII.jpg')
+insert into exercise (name, description, Image_url) values('Incline bench press', 'The incline bench press is a weightlifting exercise that targets the upper chest, shoulders, and triceps. It involves lying on an inclined bench and pushing a barbell or dumbbells upward from the upper chest to full arm extension, helping to develop strength and muscle definition in the upper body.', 'https://i0.wp.com/www.muscleandfitness.com/wp-content/uploads/2019/12/Incline-Barbell-Bench-Press.jpg?quality=86&strip=all')
 
 insert into exercise_muscle_group (exercise, muscle_group, name) values(1, 4, 'Legs');
 
@@ -27,3 +29,9 @@ insert into exercise_muscle_group (exercise, muscle_group, name) values(4, 7, 'C
 insert into exercise_muscle_group (exercise, muscle_group, name) values(5, 3, 'Abdominals');
 
 insert into exercise_muscle_group (exercise, muscle_group, name) values(6, 6, 'Biceps');
+
+insert into exercise_muscle_group (exercise, muscle_group, name) values(7, 7, 'Chest');
+insert into exercise_muscle_group (exercise, muscle_group, name) values(7, 5, 'Triceps');
+
+insert into exercise_muscle_group (exercise, muscle_group, name) values(8, 7, 'Chest');
+insert into exercise_muscle_group (exercise, muscle_group, name) values(8, 5, 'Triceps');

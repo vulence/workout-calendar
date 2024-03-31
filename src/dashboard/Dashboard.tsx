@@ -39,6 +39,8 @@ export default function Dashboard() {
     // Dialog control state
     const [openAddWorkout, setOpenAddWorkout] = useState<boolean>(false);
 
+    const [loading, setLoading] = useState<boolean>(true);
+
     // Gets all the workouts
     useEffect(() => {
         fetchWorkouts().then(data => setWorkouts(data));
@@ -46,6 +48,7 @@ export default function Dashboard() {
 
     // Creates an event for each of the workout and adds it to the calendar, as well as setting today's workout if it exists
     useEffect(() => {
+        setLoading(true);
         const curEvents: CalendarEvent[] = [];
 
         workouts.forEach(workout => {
@@ -59,6 +62,7 @@ export default function Dashboard() {
         });
 
         setEvents([...events, ...curEvents]);
+        setLoading(false);
     }, [workouts]);
 
     const createEvent = (stringDate: string, id: number, title: string, rating: number): CalendarEvent => {
@@ -174,7 +178,7 @@ export default function Dashboard() {
                         }}
                     />
 
-                    {events.length == 0 ? (
+                    {loading ? (
                         <Box
                             sx={{
                                 position: 'absolute',

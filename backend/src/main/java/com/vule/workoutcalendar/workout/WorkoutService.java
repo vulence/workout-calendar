@@ -1,15 +1,8 @@
 package com.vule.workoutcalendar.workout;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
-import com.vule.workoutcalendar.workoutexercise.WorkoutExerciseRepository;
-import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
-import com.vule.workoutcalendar.exercise.ExerciseRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;

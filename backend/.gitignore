@@ -34,3 +34,6 @@ build/
 
 ### KEYS ###
 .src/main/resources/certs
+
+keystore.p12
+.src/main/resources/application.properties

@@ -2,13 +2,13 @@ package com.vule.workoutcalendar.workoutexercise;
 
 import com.vule.workoutcalendar.exercise.ExerciseRepository;
 import com.vule.workoutcalendar.workout.WorkoutRepository;
+import com.vule.workoutcalendar.workoutexercise.dto.GroupedExerciseDto;
 import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 class WorkoutExerciseService {
@@ -41,6 +41,38 @@ class WorkoutExerciseService {
         }
 
         return allExercises;
+    }
+
+    List<GroupedExerciseDto> getGroupedWorkoutExercises(Integer userId, Integer workoutId) {
+        checkWorkoutBelongsToUser(userId, workoutId);
+
+        List<WorkoutExercise> allExercises = workoutExercises.findAllByWorkoutId(workoutId).orElse(null);
+
+        if (allExercises == null) return null;
+
+        for (WorkoutExercise we : allExercises) {
+            we.setExerciseName(exercises.findExerciseName(we.getExerciseId()));
+        }
+
+        Map<Integer, GroupedExerciseDto> groupedExercises = new HashMap<>();
+
+        for (WorkoutExercise we : allExercises) {
+            if (!groupedExercises.containsKey(we.getExerciseId())) {
+                String exerciseName = exercises.findExerciseName(we.getExerciseId());
+                GroupedExerciseDto groupedExerciseDto = new GroupedExerciseDto(exerciseName, new ArrayList<>());
+                groupedExercises.put(we.getExerciseId(), groupedExerciseDto);
+            }
+
+            Map<String, Integer> details = new HashMap<>();
+            details.put("weight", we.getWeight());
+            details.put("sets", we.getSets());
+            details.put("reps", we.getReps());
+            details.put("id", we.getId());
+            groupedExercises.get(we.getExerciseId()).details().add(details);
+        }
+
+        System.out.println(groupedExercises.values());
+        return new ArrayList<>(groupedExercises.values());
     }
 
     void addWorkoutExercise(Integer userId, Integer workoutId, WorkoutExerciseDto workoutExerciseDto) {
