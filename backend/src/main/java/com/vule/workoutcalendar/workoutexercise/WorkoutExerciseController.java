@@ -1,7 +1,7 @@
 package com.vule.workoutcalendar.workoutexercise;
 
 import com.vule.workoutcalendar.annotation.RequiresJwtToken;
-import com.vule.workoutcalendar.jwt.JwtService;
+import com.vule.workoutcalendar.jwt.impl.JwtService;
 import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

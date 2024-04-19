@@ -3,7 +3,7 @@ package com.vule.workoutcalendar.exercise.impl;
 import com.vule.workoutcalendar.annotation.RequiresJwtToken;
 import com.vule.workoutcalendar.exercise.Exercise;
 import com.vule.workoutcalendar.exercise.api.ExerciseControllerApi;
-import com.vule.workoutcalendar.jwt.JwtService;
+import com.vule.workoutcalendar.jwt.impl.JwtService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

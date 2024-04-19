@@ -1,12 +1,8 @@
 package com.vule.workoutcalendar.workout;
 
 import com.vule.workoutcalendar.annotation.RequiresJwtToken;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
-import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
-import com.vule.workoutcalendar.jwt.JwtService;
+import com.vule.workoutcalendar.jwt.impl.JwtService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
