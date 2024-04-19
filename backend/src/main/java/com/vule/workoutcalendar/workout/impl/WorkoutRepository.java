@@ -1,5 +1,6 @@
-package com.vule.workoutcalendar.workout;
+package com.vule.workoutcalendar.workout.impl;
 
+import com.vule.workoutcalendar.workout.Workout;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

@@ -1,11 +1,8 @@
 package com.vule.workoutcalendar.config;
 
-import com.vule.workoutcalendar.workout.Workout;
-import com.vule.workoutcalendar.workout.WorkoutRepository;
+import com.vule.workoutcalendar.workout.impl.WorkoutRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
 
 @Component
 public class DataLoader implements CommandLineRunner

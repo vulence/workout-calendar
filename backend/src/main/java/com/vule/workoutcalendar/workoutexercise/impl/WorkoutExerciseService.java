@@ -1,7 +1,9 @@
-package com.vule.workoutcalendar.workoutexercise;
+package com.vule.workoutcalendar.workoutexercise.impl;
 
-import com.vule.workoutcalendar.exercise.ExerciseRepository;
-import com.vule.workoutcalendar.workout.WorkoutRepository;
+import com.vule.workoutcalendar.exercise.impl.ExerciseRepository;
+import com.vule.workoutcalendar.workout.impl.WorkoutRepository;
+import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
+import com.vule.workoutcalendar.workoutexercise.api.WorkoutExerciseServiceApi;
 import com.vule.workoutcalendar.workoutexercise.dto.GroupedExerciseDto;
 import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
 import org.springframework.http.HttpStatus;
@@ -11,14 +13,14 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.*;
 
 @Service
-class WorkoutExerciseService {
+public class WorkoutExerciseService implements WorkoutExerciseServiceApi {
     private final WorkoutRepository workouts;
 
     private final ExerciseRepository exercises;
 
     private final WorkoutExerciseRepository workoutExercises;
 
-    WorkoutExerciseService(WorkoutRepository workouts, ExerciseRepository exercises, WorkoutExerciseRepository workoutExercises) {
+    public WorkoutExerciseService(WorkoutRepository workouts, ExerciseRepository exercises, WorkoutExerciseRepository workoutExercises) {
         this.workouts = workouts;
         this.exercises = exercises;
         this.workoutExercises = workoutExercises;
@@ -29,7 +31,8 @@ class WorkoutExerciseService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
     }
 
-    List<WorkoutExercise> getWorkoutExercises(Integer userId, Integer workoutId) {
+    @Override
+    public List<WorkoutExercise> getWorkoutExercises(Integer userId, Integer workoutId) {
         checkWorkoutBelongsToUser(userId, workoutId);
 
         List<WorkoutExercise> allExercises = workoutExercises.findAllByWorkoutId(workoutId).orElse(null);
@@ -43,7 +46,8 @@ class WorkoutExerciseService {
         return allExercises;
     }
 
-    List<GroupedExerciseDto> getGroupedWorkoutExercises(Integer userId, Integer workoutId) {
+    @Override
+    public List<GroupedExerciseDto> getGroupedWorkoutExercises(Integer userId, Integer workoutId) {
         checkWorkoutBelongsToUser(userId, workoutId);
 
         List<WorkoutExercise> allExercises = workoutExercises.findAllByWorkoutId(workoutId).orElse(null);
@@ -75,7 +79,8 @@ class WorkoutExerciseService {
         return new ArrayList<>(groupedExercises.values());
     }
 
-    void addWorkoutExercise(Integer userId, Integer workoutId, WorkoutExerciseDto workoutExerciseDto) {
+    @Override
+    public void addWorkoutExercise(Integer userId, Integer workoutId, WorkoutExerciseDto workoutExerciseDto) {
         checkWorkoutBelongsToUser(userId, workoutId);
 
         WorkoutExercise we = WorkoutExercise.from(workoutExerciseDto);
@@ -85,7 +90,8 @@ class WorkoutExerciseService {
         workoutExercises.save(we);
     }
 
-    void updateWorkoutExercise(Integer userId, Integer workoutId, WorkoutExercise workoutExercise) {
+    @Override
+    public void updateWorkoutExercise(Integer userId, Integer workoutId, WorkoutExercise workoutExercise) {
         checkWorkoutBelongsToUser(userId, workoutId);
 
         WorkoutExercise existingWE = workoutExercises.findById(workoutExercise.getId()).get();
@@ -98,7 +104,8 @@ class WorkoutExerciseService {
         workoutExercises.save(existingWE);
     }
 
-    void deleteWorkoutExercise(Integer userId, Integer workoutId, Integer WorkoutExerciseId) {
+    @Override
+    public void deleteWorkoutExercise(Integer userId, Integer workoutId, Integer WorkoutExerciseId) {
         checkWorkoutBelongsToUser(userId, workoutId);
 
         WorkoutExercise we = workoutExercises.findById(WorkoutExerciseId).get();
