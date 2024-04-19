@@ -1,5 +1,7 @@
-package com.vule.workoutcalendar.workout;
+package com.vule.workoutcalendar.workout.impl;
 
+import com.vule.workoutcalendar.workout.Workout;
+import com.vule.workoutcalendar.workout.api.WorkoutServiceApi;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -8,46 +10,53 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-class WorkoutService {
+public class WorkoutService implements WorkoutServiceApi {
     private final WorkoutRepository workouts;
 
-    WorkoutService(WorkoutRepository workouts) {
+    public WorkoutService(WorkoutRepository workouts) {
         this.workouts = workouts;
     }
 
-    List<Workout> findAll(Integer userId, int page, int size, String direction) {
+    @Override
+    public List<Workout> findAllPaged(Integer userId, Integer page, Integer size, String direction) {
         if (page <= 0) return workouts.findByUserId(userId, PageRequest.of(0, Integer.MAX_VALUE));
         else return workouts.findByUserId(userId, PageRequest.of(page - 1, size, Sort.by(Sort.Direction.fromString(direction), "DATE")));
     }
 
-    Workout findById(Integer id, Integer userId) {
+    @Override
+    public Workout findById(Integer id, Integer userId) {
         return workouts.findByIdAndUserId(id, userId).orElse(null);
     }
 
-    Workout findTodaysWorkout(Integer userId) {
+    @Override
+    public Workout findTodaysWorkout(Integer userId) {
         return workouts.findTodaysWorkout(userId, LocalDate.now()).orElse(null);
     }
 
-    int getWorkoutCount(Integer userId) {
+    @Override
+    public Integer getWorkoutCount(Integer userId) {
         return workouts.getWorkoutCount(userId);
     }
 
-    void create(Integer userId, Workout workout) {
+    @Override
+    public void create(Integer userId, Workout workout) {
         workout.setUserId(userId);
 
         workouts.save(workout);
     }
 
-    void update(Integer userId, Integer workoutId, Workout w) {
+    @Override
+    public void update(Integer userId, Integer workoutId, Workout workout) {
         Workout dbWorkout = findById(workoutId, userId);
-        dbWorkout.setDuration(w.getDuration());
-        dbWorkout.setNotes(w.getNotes());
-        dbWorkout.setRating(w.getRating());
+        dbWorkout.setDuration(workout.getDuration());
+        dbWorkout.setNotes(workout.getNotes());
+        dbWorkout.setRating(workout.getRating());
 
         workouts.save(dbWorkout);
     }
 
-    void delete(Integer userId, Integer id) {
+    @Override
+    public void delete(Integer userId, Integer id) {
         workouts.deleteByIdAndUserId(id, userId);
     }
 }

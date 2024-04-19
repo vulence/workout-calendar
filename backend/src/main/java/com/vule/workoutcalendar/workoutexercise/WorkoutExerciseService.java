@@ -1,7 +1,7 @@
 package com.vule.workoutcalendar.workoutexercise;
 
 import com.vule.workoutcalendar.exercise.impl.ExerciseRepository;
-import com.vule.workoutcalendar.workout.WorkoutRepository;
+import com.vule.workoutcalendar.workout.impl.WorkoutRepository;
 import com.vule.workoutcalendar.workoutexercise.dto.GroupedExerciseDto;
 import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
 import org.springframework.http.HttpStatus;
