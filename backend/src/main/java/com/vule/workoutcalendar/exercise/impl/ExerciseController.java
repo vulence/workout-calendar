@@ -1,6 +1,7 @@
-package com.vule.workoutcalendar.exercise;
+package com.vule.workoutcalendar.exercise.impl;
 
 import com.vule.workoutcalendar.annotation.RequiresJwtToken;
+import com.vule.workoutcalendar.exercise.Exercise;
 import com.vule.workoutcalendar.exercise.api.ExerciseControllerApi;
 import com.vule.workoutcalendar.jwt.JwtService;
 import jakarta.validation.Valid;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-class ExerciseController implements ExerciseControllerApi {
+public class ExerciseController implements ExerciseControllerApi {
 
     private final ExerciseService exerciseService;
 
