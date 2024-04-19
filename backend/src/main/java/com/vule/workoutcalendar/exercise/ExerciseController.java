@@ -1,7 +1,7 @@
 package com.vule.workoutcalendar.exercise;
 
 import com.vule.workoutcalendar.annotation.RequiresJwtToken;
-import com.vule.workoutcalendar.exercise.dto.ExerciseDto;
+import com.vule.workoutcalendar.exercise.api.ExerciseControllerApi;
 import com.vule.workoutcalendar.jwt.JwtService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -11,31 +11,33 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/exercises")
 @CrossOrigin
-class ExerciseController {
+class ExerciseController implements ExerciseControllerApi {
+
     private final ExerciseService exerciseService;
 
     private final JwtService jwtService;
 
-    ExerciseController(ExerciseService exerciseService, JwtService jwtService) {
+    public ExerciseController(ExerciseService exerciseService, JwtService jwtService) {
         this.exerciseService = exerciseService;
         this.jwtService = jwtService;
     }
 
+    @Override
     @GetMapping("")
-    List<Exercise> findAll() {
+    public List<Exercise> findAll() {
         return exerciseService.findAll();
+    }
+
+    @Override
+    @GetMapping("/{id}")
+    public Exercise findById(@PathVariable Integer id) {
+        return exerciseService.findById(id);
     }
 
     @GetMapping("/muscleGroups/{muscleGroupId}")
     List<Exercise> findByMuscleGroup(@PathVariable Integer muscleGroupId) {
         return exerciseService.findByMuscleGroup(muscleGroupId);
-    }
-
-    @GetMapping("/{id}")
-    Exercise findById(@PathVariable Integer id) {
-        return exerciseService.findById(id);
     }
 
     @GetMapping("/{id}/exerciseHistory")
@@ -49,17 +51,19 @@ class ExerciseController {
         return ResponseEntity.ok(exerciseService.findMaxWeights(jwtService.parseUserIdFromJwt(jwtToken), id));
     }
 
+    @Override
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
     @RequiresJwtToken
-    void create(@Valid @RequestBody Exercise exercise) {
+    public void create(@Valid @RequestBody Exercise exercise) {
         exerciseService.create(exercise);
     }
 
+    @Override
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     @RequiresJwtToken
-    void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable Integer id) {
         exerciseService.delete(id);
     }
 
