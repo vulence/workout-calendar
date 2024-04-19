@@ -1,5 +1,6 @@
-package com.vule.workoutcalendar.workoutexercise;
+package com.vule.workoutcalendar.workoutexercise.impl;
 
+import com.vule.workoutcalendar.workoutexercise.WorkoutExercise;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.ListCrudRepository;
