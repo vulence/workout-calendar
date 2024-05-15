@@ -3,7 +3,7 @@ package com.vule.workoutcalendar.exercise.impl;
 import com.vule.workoutcalendar.exercise.Exercise;
 import com.vule.workoutcalendar.exercise.api.ExerciseServiceApi;
 import com.vule.workoutcalendar.exercise.dto.ExerciseHistoryDto;
-import com.vule.workoutcalendar.musclegroup.MuscleGroupRepository;
+import com.vule.workoutcalendar.musclegroup.impl.MuscleGroupRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -50,18 +50,5 @@ public class ExerciseService implements ExerciseServiceApi {
     @Override
     public void delete(Integer id) {
         exercises.deleteById(id);
-    }
-
-    public void addMuscleGroup(Integer id, Integer muscleGroupId) {
-        Exercise e = exercises.findById(id).get();
-        e.addMuscleGroup(muscleGroups.findById(muscleGroupId).get(), e.getName());
-
-        exercises.save(e);
-    }
-    public void deleteMuscleGroup(Integer id, Integer muscleGroupId) {
-        Exercise e = exercises.findById(id).get();
-        e.removeMuscleGroup(muscleGroups.findById(muscleGroupId).get());
-
-        exercises.save(e);
     }
 }

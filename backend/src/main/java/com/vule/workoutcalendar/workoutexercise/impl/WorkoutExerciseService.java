@@ -75,7 +75,6 @@ public class WorkoutExerciseService implements WorkoutExerciseServiceApi {
             groupedExercises.get(we.getExerciseId()).details().add(details);
         }
 
-        System.out.println(groupedExercises.values());
         return new ArrayList<>(groupedExercises.values());
     }
 

@@ -1,5 +1,6 @@
-package com.vule.workoutcalendar.musclegroup;
+package com.vule.workoutcalendar.musclegroup.impl;
 
+import com.vule.workoutcalendar.musclegroup.MuscleGroup;
 import org.springframework.data.repository.ListCrudRepository;
 
 public interface MuscleGroupRepository extends ListCrudRepository<MuscleGroup, Integer> {

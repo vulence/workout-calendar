@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 
 @Getter
 @Setter
-public class MuscleGroup {
+public class    MuscleGroup {
 
     @Id private Integer id;
     private String name;

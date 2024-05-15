@@ -19,7 +19,7 @@ public class WorkoutService implements WorkoutServiceApi {
 
     @Override
     public List<Workout> findAllPaged(Integer userId, Integer page, Integer size, String direction) {
-        if (page <= 0) return workouts.findByUserId(userId, PageRequest.of(0, Integer.MAX_VALUE));
+        if (page <= 0) return workouts.findByUserId(userId, PageRequest.of(0, Integer.MAX_VALUE, Sort.by(Sort.Direction.fromString(direction), "DATE")));
         else return workouts.findByUserId(userId, PageRequest.of(page - 1, size, Sort.by(Sort.Direction.fromString(direction), "DATE")));
     }
 
