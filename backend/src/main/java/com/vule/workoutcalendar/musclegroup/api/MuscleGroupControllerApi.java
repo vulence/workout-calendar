@@ -15,4 +15,8 @@ public interface MuscleGroupControllerApi {
     void create(MuscleGroup muscleGroup);
 
     void delete(Integer id);
+
+    MuscleGroup findPrimaryMuscleGroupForExercise(String exerciseName);
+
+    List<MuscleGroup> findMuscleGroupsForExercise(String exerciseName);
 }

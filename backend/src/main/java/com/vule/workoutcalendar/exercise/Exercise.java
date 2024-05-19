@@ -1,5 +1,6 @@
 package com.vule.workoutcalendar.exercise;
 
+import com.vule.workoutcalendar.exercisemusclegroup.ExerciseMuscleGroup;
 import com.vule.workoutcalendar.musclegroup.MuscleGroup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

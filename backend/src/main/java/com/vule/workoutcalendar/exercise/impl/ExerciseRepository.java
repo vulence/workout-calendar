@@ -9,15 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ExerciseRepository extends ListCrudRepository<Exercise, Integer> {
-
-    @Query("""
-            SELECT E.*
-            FROM EXERCISE E
-            INNER JOIN EXERCISE_MUSCLE_GROUP EMG ON EMG.MUSCLE_GROUP = :muscleGroupId
-            WHERE E.ID = EMG.EXERCISE
-            """)
-    List<Exercise> findByMuscleGroup(@Param("muscleGroupId") Integer muscleGroupId);
-
     @Query("""
             SELECT NAME
             FROM EXERCISE
@@ -43,4 +34,11 @@ public interface ExerciseRepository extends ListCrudRepository<Exercise, Integer
           ORDER BY W.DATE ASC
             """)
     List<ExerciseHistoryDto> findMaxWeights(@Param("userId") Integer userId, @Param("exerciseId") Integer id);
+
+    @Query("""
+        SELECT *
+        FROM EXERCISE
+        WHERE lower(name) = lower(:name)
+        """)
+    Exercise findByName(String name);
 }

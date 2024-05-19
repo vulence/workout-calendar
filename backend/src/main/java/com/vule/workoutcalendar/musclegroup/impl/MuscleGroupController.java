@@ -46,4 +46,16 @@ public class MuscleGroupController implements MuscleGroupControllerApi {
     public void delete(@PathVariable Integer id) {
         muscleGroupServiceApi.delete(id);
     }
+
+    @Override
+    @GetMapping("/exercises/{exerciseName}/primary")
+    public MuscleGroup findPrimaryMuscleGroupForExercise(@PathVariable String exerciseName) {
+        return muscleGroupServiceApi.findPrimaryMuscleGroupForExercise(exerciseName);
+    }
+
+    @Override
+    @GetMapping("/exercises/{exerciseName}")
+    public List<MuscleGroup> findMuscleGroupsForExercise(@PathVariable String exerciseName) {
+        return muscleGroupServiceApi.findMuscleGroupsForExercise(exerciseName);
+    }
 }

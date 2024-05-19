@@ -5,6 +5,7 @@ import com.vule.workoutcalendar.exercise.Exercise;
 import com.vule.workoutcalendar.exercise.api.ExerciseControllerApi;
 import com.vule.workoutcalendar.exercise.api.ExerciseServiceApi;
 import com.vule.workoutcalendar.jwt.api.JwtServiceApi;
+import com.vule.workoutcalendar.musclegroup.MuscleGroup;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -66,6 +67,12 @@ public class ExerciseController implements ExerciseControllerApi {
     @RequiresJwtToken
     public void delete(@PathVariable Integer id) {
         exerciseServiceApi.delete(id);
+    }
+
+    @Override
+    @GetMapping("/muscle-groups/{muscleGroupName}")
+    public List<Exercise> findAllExercisesByMuscleGroup(@PathVariable String muscleGroupName) {
+        return exerciseServiceApi.findAllExercisesByMuscleGroup(muscleGroupName);
     }
 
 //    @ResponseStatus(HttpStatus.NO_CONTENT)
