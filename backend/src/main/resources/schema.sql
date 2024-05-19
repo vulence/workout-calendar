@@ -36,32 +36,14 @@ CREATE TABLE IF NOT EXISTS workout_exercise (
 CREATE TABLE IF NOT EXISTS muscle_group (
     id SERIAL PRIMARY KEY,
     name text,
-    description text,
-    exercise_count INTEGER NOT NULL DEFAULT 0
+    description text
 );
 
 CREATE TABLE IF NOT EXISTS exercise_muscle_group (
-    exercise INTEGER,
-    muscle_group INTEGER,
-    name text,
-    PRIMARY KEY (exercise, muscle_group),
-    FOREIGN KEY (exercise) REFERENCES exercise(id) ON DELETE CASCADE,
-    FOREIGN KEY (muscle_group) REFERENCES muscle_group(id) ON DELETE CASCADE
+    id SERIAL PRIMARY KEY,
+    "primary" BOOLEAN,
+    exercise_id INTEGER NOT NULL,
+    muscle_group_id INTEGER NOT NULL,
+    FOREIGN KEY (exercise_id) REFERENCES exercise(id) ON DELETE CASCADE,
+    FOREIGN KEY (muscle_group_id) REFERENCES muscle_group(id) ON DELETE CASCADE
 );
-
-CREATE OR REPLACE FUNCTION increment_exercise_count_function()
-RETURNS TRIGGER AS '
-BEGIN
-    IF (NEW.muscle_group IS NOT NULL) THEN
-        UPDATE muscle_group
-        SET exercise_count = exercise_count + 1
-        WHERE id = NEW.muscle_group;
-        RETURN NEW;
-    END IF;
-END;
-' LANGUAGE plpgsql;
-
-CREATE TRIGGER increment_exercise_count
-AFTER INSERT ON exercise_muscle_group
-FOR EACH ROW
-EXECUTE FUNCTION increment_exercise_count_function();
