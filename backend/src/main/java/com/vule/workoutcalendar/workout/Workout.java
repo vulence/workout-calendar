@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -28,5 +29,18 @@ public class Workout {
         this.notes = notes;
         this.duration = duration;
         this.rating = rating;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Workout workout = (Workout) o;
+        return Objects.equals(id, workout.id) && Objects.equals(title.toLowerCase(), workout.title.toLowerCase()) && Objects.equals(date, workout.date) && Objects.equals(notes.toLowerCase(), workout.notes.toLowerCase()) && Objects.equals(duration, workout.duration) && Objects.equals(rating, workout.rating) && Objects.equals(userId, workout.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, date, notes, duration, rating, userId);
     }
 }
