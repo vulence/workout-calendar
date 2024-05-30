@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
@@ -13,6 +14,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Workout {
 
     @Id private Integer id;
@@ -28,6 +30,21 @@ public class Workout {
         this.date = date;
         this.notes = notes;
         this.duration = duration;
+        this.rating = rating;
+    }
+
+    public void setDuration(Integer duration) {
+        if (duration < 0) {
+            throw new IllegalArgumentException("Duration cannot be negative");
+        }
+
+        this.duration = duration;
+    }
+
+    public void setRating(Integer rating) {
+        if (rating < 0 || rating > 5) {
+            throw new IllegalArgumentException("Rating must be between 0 and 5");
+        }
         this.rating = rating;
     }
 

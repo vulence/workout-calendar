@@ -50,6 +50,12 @@ class WorkoutTest {
     }
 
     @Test
+    void testNegativeDurationSetter() {
+        workout = new Workout();
+        assertThrows(IllegalArgumentException.class, () -> workout.setDuration(-1));
+    }
+
+    @Test
     void testNegativeRating() {
         workout = new Workout("Chest day", LocalDate.now(), "Max intensity", 120, -1);
         Set<ConstraintViolation<Workout>> violations = validator.validate(workout);
@@ -58,11 +64,23 @@ class WorkoutTest {
     }
 
     @Test
+    void testNegativeRatingSetter() {
+        workout = new Workout();
+        assertThrows(IllegalArgumentException.class, () -> workout.setRating(-1));
+    }
+
+    @Test
     void testPositiveRating() {
         workout = new Workout("Chest day", LocalDate.now(), "Max intensity", 60, 10);
         Set<ConstraintViolation<Workout>> violations = validator.validate(workout);
         assertEquals(1, violations.size());
         assertEquals("must be less than or equal to 5", violations.iterator().next().getMessage());
+    }
+
+    @Test
+    void testPositiveRatingSetter() {
+        workout = new Workout();
+        assertThrows(IllegalArgumentException.class, () -> workout.setRating(10));
     }
 
     @ParameterizedTest
