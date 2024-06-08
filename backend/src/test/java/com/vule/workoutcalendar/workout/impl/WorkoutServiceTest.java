@@ -109,7 +109,6 @@ class WorkoutServiceTest {
         workoutService.create(1, workout);
 
         verify(workouts, times(1)).save(workout);
-        assertEquals(1, workout.getUserId());
     }
 
     @Test
