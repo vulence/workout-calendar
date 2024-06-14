@@ -19,7 +19,7 @@ public class Workout {
 
     @Id private Integer id;
     private String title;
-    @JsonFormat(pattern="dd-MM-yyyy") private LocalDate date;
+    @JsonFormat(pattern="yyyy-MM-dd") private LocalDate date;
     private String notes;
     @Positive private Integer duration;
     @Min(0) @Max(5) private Integer rating;
