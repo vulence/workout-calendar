@@ -29,6 +29,7 @@ public class WorkoutExercise {
         we.setWeight(workoutExerciseDto.getWeight());
         we.setSets(workoutExerciseDto.getSets());
         we.setReps(workoutExerciseDto.getReps());
+        we.setExerciseId(workoutExerciseDto.getExerciseId());
 
         return we;
     }

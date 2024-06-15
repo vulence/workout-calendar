@@ -1,5 +1,6 @@
 package com.vule.workoutcalendar.workoutexercise;
 
+import com.vule.workoutcalendar.workoutexercise.dto.WorkoutExerciseDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,22 @@ class WorkoutExerciseTest {
     @Test
     void testNegativeRepsSetter() {
         assertThrows(IllegalArgumentException.class, () -> workoutExercise.setReps(-1));
+    }
+
+    @Test
+    void testFromWorkoutExerciseDto() {
+        WorkoutExerciseDto workoutExerciseDto = new WorkoutExerciseDto();
+        workoutExerciseDto.setWeight(50);
+        workoutExerciseDto.setSets(2);
+        workoutExerciseDto.setReps(5);
+        workoutExerciseDto.setExerciseId(1);
+
+        workoutExercise = WorkoutExercise.from(workoutExerciseDto);
+
+        assertEquals(workoutExerciseDto.getWeight(), workoutExercise.getWeight());
+        assertEquals(workoutExerciseDto.getSets(), workoutExercise.getSets());
+        assertEquals(workoutExerciseDto.getReps(), workoutExercise.getReps());
+        assertEquals(workoutExerciseDto.getExerciseId(), workoutExercise.getExerciseId());
     }
 
     @ParameterizedTest
