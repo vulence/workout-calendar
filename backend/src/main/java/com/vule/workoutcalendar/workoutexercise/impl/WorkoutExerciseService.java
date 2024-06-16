@@ -84,7 +84,6 @@ public class WorkoutExerciseService implements WorkoutExerciseServiceApi {
 
         WorkoutExercise we = WorkoutExercise.from(workoutExerciseDto);
         we.setWorkoutId(workoutId);
-        we.setExerciseId(workoutExerciseDto.getExerciseId());
 
         workoutExercises.save(we);
     }

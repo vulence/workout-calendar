@@ -4,8 +4,6 @@ import com.vule.workoutcalendar.exercise.Exercise;
 import com.vule.workoutcalendar.exercise.api.ExerciseServiceApi;
 import com.vule.workoutcalendar.exercise.dto.ExerciseHistoryDto;
 import com.vule.workoutcalendar.exercisemusclegroup.api.ExerciseMuscleGroupServiceApi;
-import com.vule.workoutcalendar.musclegroup.MuscleGroup;
-import com.vule.workoutcalendar.musclegroup.impl.MuscleGroupRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

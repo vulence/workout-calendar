@@ -7,7 +7,6 @@ import lombok.Setter;
 
 @Setter
 @Getter
-
 public class WorkoutExerciseDto {
     @NotNull
     @Positive(message = "Exercise ID has to be a positive number")

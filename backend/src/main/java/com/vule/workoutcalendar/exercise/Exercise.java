@@ -1,18 +1,11 @@
 package com.vule.workoutcalendar.exercise;
 
-import com.vule.workoutcalendar.exercisemusclegroup.ExerciseMuscleGroup;
-import com.vule.workoutcalendar.musclegroup.MuscleGroup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.jdbc.core.mapping.AggregateReference;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -28,5 +21,18 @@ public class Exercise {
     public Exercise(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Exercise exercise = (Exercise) o;
+        return Objects.equals(name.replaceAll("\\s+", "").toLowerCase(), exercise.name.replaceAll("\\s+", "").toLowerCase());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
     }
 }
