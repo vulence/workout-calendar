@@ -11,6 +11,10 @@ import java.util.List;
 
 @Service
 public class WorkoutService implements WorkoutServiceApi {
+
+    /**
+     * A workout repository that communicates with the DB for CRUD operations.
+     */
     private final WorkoutRepository workouts;
 
     public WorkoutService(WorkoutRepository workouts) {
