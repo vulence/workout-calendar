@@ -136,6 +136,7 @@ class WorkoutExerciseServiceTest {
     @Test
     public void deleteWorkoutExerciseSuccessfully() {
         when(workoutRepository.findByIdAndUserId(any(), any())).thenReturn(Optional.of(new Workout()));
+        when(workoutExerciseRepository.findById(1)).thenReturn(Optional.of(new WorkoutExercise()));
 
         workoutExerciseService.deleteWorkoutExercise(1, 1, 1);
         verify(workoutExerciseRepository, times(1)).delete(any());
