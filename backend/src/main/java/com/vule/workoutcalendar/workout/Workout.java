@@ -63,7 +63,7 @@ public class Workout {
     private Integer userId;
 
     /**
-     * Creates a bew Workout and sets title, date, notes, duration and rating to the input values
+     * Creates a new Workout and sets title, date, notes, duration and rating to the input values
      *
      * @param title workout title as a string
      * @param date workout date as a LocalDate

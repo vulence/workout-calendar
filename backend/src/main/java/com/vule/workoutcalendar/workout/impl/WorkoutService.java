@@ -13,7 +13,7 @@ import java.util.List;
 public class WorkoutService implements WorkoutServiceApi {
 
     /**
-     * A workout repository that communicates with the DB for CRUD operations.
+     * A workout repository that communicates with the DB for CRUD operations, with Spring Data JDBC as an implementation.
      */
     private final WorkoutRepository workouts;
 
