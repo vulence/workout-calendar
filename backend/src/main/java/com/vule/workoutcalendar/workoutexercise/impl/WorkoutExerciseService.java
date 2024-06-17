@@ -63,7 +63,7 @@ public class WorkoutExerciseService implements WorkoutExerciseServiceApi {
         for (WorkoutExercise we : allExercises) {
             if (!groupedExercises.containsKey(we.getExerciseId())) {
                 String exerciseName = exercises.findExerciseName(we.getExerciseId());
-                GroupedExerciseDto groupedExerciseDto = new GroupedExerciseDto(exerciseName, new ArrayList<>());
+                GroupedExerciseDto groupedExerciseDto = new GroupedExerciseDto(exerciseName, we.getExerciseId(), new ArrayList<>());
                 groupedExercises.put(we.getExerciseId(), groupedExerciseDto);
             }
 
