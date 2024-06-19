@@ -11,8 +11,19 @@ import java.util.*;
 @Service
 public class ExerciseService implements ExerciseServiceApi {
 
+    /**
+     * An exercise repository that communicates with the DB for CRUD operations, with Spring Data JDBC as an implementation.
+     */
     private final ExerciseRepository exercises;
+
+    /**
+     * An API that communicates with the Exercise-MuscleGroup service.
+     */
     private final ExerciseMuscleGroupServiceApi exerciseMuscleGroupServiceApi;
+
+    /**
+     * A mapper that maps ExerciseMuscleGroup objects to an Exercise object.
+     */
     private final ExerciseMapper exerciseMapper;
 
     public ExerciseService(ExerciseRepository exercises, ExerciseMuscleGroupServiceApi exerciseMuscleGroupServiceApi, ExerciseMapper exerciseMapper) {

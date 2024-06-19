@@ -14,10 +14,20 @@ import java.util.*;
 
 @Service
 public class WorkoutExerciseService implements WorkoutExerciseServiceApi {
+
+    /**
+     * A workout repository that communicates with the DB for CRUD operations, with Spring Data JDBC as an implementation.
+     */
     private final WorkoutRepository workouts;
 
+    /**
+     * An exercise repository that communicates with the DB for CRUD operations, with Spring Data JDBC as an implementation.
+     */
     private final ExerciseRepository exercises;
 
+    /**
+     * A WorkoutExercise joint table repository that communicates with the DB for CRUD operations, with Spring Data JDBC as an implementation.
+     */
     private final WorkoutExerciseRepository workoutExercises;
 
     public WorkoutExerciseService(WorkoutRepository workouts, ExerciseRepository exercises, WorkoutExerciseRepository workoutExercises) {
@@ -26,6 +36,14 @@ public class WorkoutExerciseService implements WorkoutExerciseServiceApi {
         this.workoutExercises = workoutExercises;
     }
 
+    /**
+     * Checks whether the workout with id workoutId belongs to the user with id userId.
+     *
+     * @param userId Id of the user
+     * @param workoutId Id of the workout
+     *
+     * @throws ResponseStatusException If the userId does not match for the workoutId
+     */
     private void checkWorkoutBelongsToUser(Integer userId, Integer workoutId) {
         if (workouts.findByIdAndUserId(workoutId, userId).orElse(null) == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "WorkoutID for this UserID doesn't exist.");
@@ -63,7 +81,7 @@ public class WorkoutExerciseService implements WorkoutExerciseServiceApi {
         for (WorkoutExercise we : allExercises) {
             if (!groupedExercises.containsKey(we.getExerciseId())) {
                 String exerciseName = exercises.findExerciseName(we.getExerciseId());
-                GroupedExerciseDto groupedExerciseDto = new GroupedExerciseDto(exerciseName, new ArrayList<>());
+                GroupedExerciseDto groupedExerciseDto = new GroupedExerciseDto(exerciseName, we.getExerciseId(), new ArrayList<>());
                 groupedExercises.put(we.getExerciseId(), groupedExerciseDto);
             }
 

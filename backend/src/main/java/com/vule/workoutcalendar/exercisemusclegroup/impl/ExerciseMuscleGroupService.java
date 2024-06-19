@@ -13,8 +13,19 @@ import java.util.List;
 @Service
 public class ExerciseMuscleGroupService implements ExerciseMuscleGroupServiceApi {
 
+    /**
+     * An exercise repository that communicates with the DB for CRUD operations, with Spring Data JDBC as an implementation.
+     */
     private final ExerciseRepository exerciseRepository;
+
+    /**
+     * A muscle group repository that communicates with the DB for CRUD operations, with Spring Data JDBC as an implementation.
+     */
     private final MuscleGroupRepository muscleGroupRepository;
+
+    /**
+     * An ExerciseMuscleGroup joint table repository that communicates with the DB for CRUD operations, with Spring Data JDBC as an implementation.
+     */
     private final ExerciseMuscleGroupRepository exerciseMuscleGroupRepository;
 
     public ExerciseMuscleGroupService(ExerciseRepository exerciseRepository, MuscleGroupRepository muscleGroupRepository, ExerciseMuscleGroupRepository exerciseMuscleGroupRepository) {

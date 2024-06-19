@@ -80,7 +80,7 @@ class WorkoutExerciseServiceTest {
 
         List<GroupedExerciseDto> groupedExercisesDto = new ArrayList<>();
 
-        groupedExercisesDto.add(new GroupedExerciseDto("Bench press", List.of(
+        groupedExercisesDto.add(new GroupedExerciseDto("Bench press", 1, List.of(
                 Map.of("weight", we1.getWeight(), "sets", we1.getSets(), "reps", we1.getReps(), "id", we1.getId()),
                 Map.of("weight", we2.getWeight(), "sets", we2.getSets(), "reps", we2.getReps(), "id", we2.getId())
         )));
@@ -136,6 +136,7 @@ class WorkoutExerciseServiceTest {
     @Test
     public void deleteWorkoutExerciseSuccessfully() {
         when(workoutRepository.findByIdAndUserId(any(), any())).thenReturn(Optional.of(new Workout()));
+        when(workoutExerciseRepository.findById(1)).thenReturn(Optional.of(new WorkoutExercise()));
 
         workoutExerciseService.deleteWorkoutExercise(1, 1, 1);
         verify(workoutExerciseRepository, times(1)).delete(any());

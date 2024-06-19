@@ -19,9 +19,10 @@ class GroupedExerciseDtoTest {
         details.add(Map.of("weight", 130, "sets", 3, "reps", 2));
         details.add(Map.of("weight", 100, "sets", 4, "reps", 10));
 
-        GroupedExerciseDto groupedExerciseDto = new GroupedExerciseDto(exercise, details);
+        GroupedExerciseDto groupedExerciseDto = new GroupedExerciseDto(exercise, 1, details);
 
         assertEquals(groupedExerciseDto.exercise(), exercise);
+        assertEquals(groupedExerciseDto.exerciseId(), 1);
         assertEquals(groupedExerciseDto.details(), details);
     }
 }

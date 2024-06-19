@@ -54,11 +54,11 @@ public class WorkoutExerciseController implements WorkoutExerciseControllerApi {
     }
 
     @Override
-    @DeleteMapping("")
+    @DeleteMapping("/{workoutExerciseId}")
     @RequiresJwtToken
     public ResponseEntity<Void> deleteWorkoutExercise(@RequestAttribute(name = "jwtToken") String jwtToken,
                                                       @PathVariable Integer id,
-                                                      @RequestBody Integer workoutExerciseId) {
+                                                      @PathVariable Integer workoutExerciseId) {
         workoutExerciseServiceApi.deleteWorkoutExercise(jwtServiceApi.parseUserIdFromJwt(jwtToken), id, workoutExerciseId);
         return ResponseEntity.noContent().build();
     }
