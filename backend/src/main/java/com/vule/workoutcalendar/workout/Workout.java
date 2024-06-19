@@ -99,7 +99,7 @@ public class Workout {
     /**
      * Sets the rating of the workout to the input value
      *
-     * The inputted rating cannot be les than 0 or more than 5
+     * The inputted rating cannot be less than 0 or more than 5
      *
      * @param rating workout rating as an integer
      *

@@ -80,7 +80,7 @@ class WorkoutExerciseServiceTest {
 
         List<GroupedExerciseDto> groupedExercisesDto = new ArrayList<>();
 
-        groupedExercisesDto.add(new GroupedExerciseDto("Bench press", List.of(
+        groupedExercisesDto.add(new GroupedExerciseDto("Bench press", 1, List.of(
                 Map.of("weight", we1.getWeight(), "sets", we1.getSets(), "reps", we1.getReps(), "id", we1.getId()),
                 Map.of("weight", we2.getWeight(), "sets", we2.getSets(), "reps", we2.getReps(), "id", we2.getId())
         )));
