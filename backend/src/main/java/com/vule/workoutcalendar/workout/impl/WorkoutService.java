@@ -1,5 +1,6 @@
 package com.vule.workoutcalendar.workout.impl;
 
+import com.vule.workoutcalendar.workout.CompletedWorkout;
 import com.vule.workoutcalendar.workout.Workout;
 import com.vule.workoutcalendar.workout.api.WorkoutServiceApi;
 import org.springframework.data.domain.PageRequest;
@@ -17,24 +18,22 @@ public class WorkoutService implements WorkoutServiceApi {
      */
     private final WorkoutRepository workouts;
 
-    public WorkoutService(WorkoutRepository workouts) {
+    private final CompletedWorkoutRepository completedWorkouts;
+
+    public WorkoutService(WorkoutRepository workouts, CompletedWorkoutRepository completedWorkouts) {
         this.workouts = workouts;
+        this.completedWorkouts = completedWorkouts;
     }
 
     @Override
     public List<Workout> findAllPaged(Integer userId, Integer page, Integer size, String direction) {
-        if (page <= 0) return workouts.findByUserId(userId, PageRequest.of(0, Integer.MAX_VALUE, Sort.by(Sort.Direction.fromString(direction), "DATE")));
-        else return workouts.findByUserId(userId, PageRequest.of(page - 1, size, Sort.by(Sort.Direction.fromString(direction), "DATE")));
+        if (page <= 0) return workouts.findByUserId(userId, PageRequest.of(0, Integer.MAX_VALUE));
+        else return workouts.findByUserId(userId, PageRequest.of(page - 1, size));
     }
 
     @Override
     public Workout findById(Integer id, Integer userId) {
         return workouts.findByIdAndUserId(id, userId).orElse(null);
-    }
-
-    @Override
-    public Workout findTodaysWorkout(Integer userId) {
-        return workouts.findTodaysWorkout(userId, LocalDate.now()).orElse(null);
     }
 
     @Override
@@ -62,5 +61,15 @@ public class WorkoutService implements WorkoutServiceApi {
     @Override
     public void delete(Integer userId, Integer id) {
         workouts.deleteByIdAndUserId(id, userId);
+    }
+
+    @Override
+    public void createCompletedWorkout(Integer userId, CompletedWorkout completedWorkout) {
+        completedWorkouts.save(completedWorkout);
+    }
+
+    @Override
+    public List<CompletedWorkout> findAllCompletedWorkouts(Integer userId) {
+        return completedWorkouts.findAllByUserId(userId);
     }
 }

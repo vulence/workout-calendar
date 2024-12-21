@@ -1,5 +1,6 @@
 package com.vule.workoutcalendar.workout.api;
 
+import com.vule.workoutcalendar.workout.CompletedWorkout;
 import com.vule.workoutcalendar.workout.Workout;
 
 import java.util.List;
@@ -34,15 +35,6 @@ public interface WorkoutServiceApi {
      * @return A workout with the supplied id for the user with userId, or null if it doesn't exist
      */
     Workout findById(Integer id, Integer userId);
-
-    /**
-     * Retrieves a workout with the current date.
-     *
-     * @param userId Id of the user for whom the today's workout should be found
-     *
-     * @return A workout with today's date for the user with ID userID, null otherwise
-     */
-    Workout findTodaysWorkout(Integer userId);
 
     /**
      * Retrieves the numbers of workouts for a particular user.
@@ -83,4 +75,8 @@ public interface WorkoutServiceApi {
      * @param id Id of the workout that should be deleted
      */
     void delete(Integer userId, Integer id);
+
+    void createCompletedWorkout(Integer userId, CompletedWorkout completedWorkout);
+
+    List<CompletedWorkout> findAllCompletedWorkouts(Integer userId);
 }

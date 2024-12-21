@@ -33,8 +33,8 @@ class WorkoutServiceTest {
         Integer size = 12;
         String direction = "DESC";
 
-        Workout workout1 = new Workout("Workout1", LocalDate.now(), "Notes1", 30, 4);
-        Workout workout2 = new Workout("Workout2", LocalDate.now(), "Notes2", 45, 5);
+        Workout workout1 = new Workout("Workout1", "Notes1", 30, 4);
+        Workout workout2 = new Workout("Workout2", "Notes2", 45, 5);
         List<Workout> workoutList = Arrays.asList(workout1, workout2);
 
         when(workouts.findByUserId(eq(userId), any(PageRequest.class))).thenReturn(workoutList);
@@ -51,7 +51,7 @@ class WorkoutServiceTest {
         Integer userId = 1;
         Integer workoutId = 1;
 
-        Workout workout = new Workout("Workout1", LocalDate.now(), "Notes1", 30, 4);
+        Workout workout = new Workout("Workout1", "Notes1", 30, 4);
 
         when(workouts.findByIdAndUserId(workoutId, userId)).thenReturn(Optional.of(workout));
 
@@ -69,31 +69,31 @@ class WorkoutServiceTest {
         assertNull(result);
     }
 
-    @Test
-    public void testFindTodaysWorkoutIfItExists() {
-        Workout workout1 = new Workout("Workout1", LocalDate.now(), "Notes1", 30, 4);
-        Workout workout2 = new Workout("Workout2", LocalDate.of(2023, 5, 4), "Notes2", 45, 5);
+//    @Test
+//    public void testFindTodaysWorkoutIfItExists() {
+//        Workout workout1 = new Workout("Workout1", "Notes1", 30, 4);
+//        Workout workout2 = new Workout("Workout2", "Notes2", 45, 5);
+//
+//        when(workouts.findTodaysWorkout(1, LocalDate.now())).thenReturn(Optional.of(workout1));
+//
+//        Workout result = workoutService.findTodaysWorkout(1);
+//        assertNotNull(result);
+//        assertEquals(workout1, result);
+//        verify(workouts, times(1)).findTodaysWorkout(1, LocalDate.now());
+//    }
 
-        when(workouts.findTodaysWorkout(1, LocalDate.now())).thenReturn(Optional.of(workout1));
-
-        Workout result = workoutService.findTodaysWorkout(1);
-        assertNotNull(result);
-        assertEquals(workout1, result);
-        verify(workouts, times(1)).findTodaysWorkout(1, LocalDate.now());
-    }
-
-    @Test
-    public void testFindTodaysWorkoutWhenItDoesntExist() {
-        when(workouts.findTodaysWorkout(any(), any())).thenReturn(Optional.empty());
-        Workout result = workoutService.findTodaysWorkout(1);
-        assertNull(result);
-    }
+//    @Test
+//    public void testFindTodaysWorkoutWhenItDoesntExist() {
+//        when(workouts.findTodaysWorkout(any(), any())).thenReturn(Optional.empty());
+//        Workout result = workoutService.findTodaysWorkout(1);
+//        assertNull(result);
+//    }
 
     @Test
     public void testWorkoutCount() {
         Integer userId = 1;
-        Workout workout1 = new Workout("Workout1", LocalDate.now(), "Notes1", 30, 4);
-        Workout workout2 = new Workout("Workout2", LocalDate.now(), "Notes2", 45, 5);
+        Workout workout1 = new Workout("Workout1", "Notes1", 30, 4);
+        Workout workout2 = new Workout("Workout2", "Notes2", 45, 5);
         workout1.setUserId(userId);
         workout2.setUserId(userId);
 
@@ -105,7 +105,7 @@ class WorkoutServiceTest {
 
     @Test
     public void testCreateNewWorkout() {
-        Workout workout = new Workout("Workout1", LocalDate.now(), "Notes1", 30, 4);
+        Workout workout = new Workout("Workout1", "Notes1", 30, 4);
         workoutService.create(1, workout);
 
         verify(workouts, times(1)).save(workout);
@@ -113,12 +113,12 @@ class WorkoutServiceTest {
 
     @Test
     public void testUpdateWorkout() {
-        Workout workout = new Workout("Workout1", LocalDate.now(), "Notes1", 30, 4);
+        Workout workout = new Workout("Workout1", "Notes1", 30, 4);
         workout.setUserId(1);
 
         when(workouts.findByIdAndUserId(1, 1)).thenReturn(Optional.of(workout));
 
-        Workout updatedWorkout = new Workout("UpdatedWorkout", LocalDate.now(), "Updated notes", 120, 2);
+        Workout updatedWorkout = new Workout("UpdatedWorkout", "Updated notes", 120, 2);
         workoutService.update(1, 1, updatedWorkout);
 
         verify(workouts, times(1)).save(workout);

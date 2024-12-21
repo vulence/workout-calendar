@@ -25,13 +25,6 @@ public interface WorkoutRepository extends ListCrudRepository<Workout, Integer> 
     Optional<Workout> findByIdAndUserId(@Param("workoutId") Integer workoutId, @Param("userId") Integer userId);
 
     @Query("""
-            SELECT *
-            FROM WORKOUT
-            WHERE user_id = :userId AND date = :today
-            """)
-    Optional<Workout> findTodaysWorkout(@Param("userId") Integer userId, @Param("today") LocalDate today);
-
-    @Query("""
             SELECT COUNT(*)
             FROM WORKOUT
             WHERE user_id = :userId

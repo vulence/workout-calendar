@@ -24,8 +24,8 @@ public class WorkoutExerciseController implements WorkoutExerciseControllerApi {
     @Override
     @GetMapping("")
     @RequiresJwtToken
-    public ResponseEntity<?> findWorkoutExercises(@RequestAttribute(name = "jwtToken") String jwtToken,
-                                                  @RequestParam(name = "grouped", defaultValue = "false") String grouped,
+    public ResponseEntity<?> findWorkoutExercises(@RequestAttribute String jwtToken,
+                                                  @RequestParam(defaultValue = "false") String grouped,
                                                   @PathVariable Integer id) {
         if (grouped.equals("true"))
             return ResponseEntity.ok(workoutExerciseServiceApi.getGroupedWorkoutExercises(jwtServiceApi.parseUserIdFromJwt(jwtToken), id));
@@ -36,7 +36,7 @@ public class WorkoutExerciseController implements WorkoutExerciseControllerApi {
     @Override
     @PostMapping("")
     @RequiresJwtToken
-    public ResponseEntity<Void> addWorkoutExercise(@RequestAttribute(name = "jwtToken") String jwtToken,
+    public ResponseEntity<Void> addWorkoutExercise(@RequestAttribute String jwtToken,
                                                    @PathVariable Integer id,
                                                    @Valid @RequestBody WorkoutExerciseDto workoutExerciseDto) {
         workoutExerciseServiceApi.addWorkoutExercise(jwtServiceApi.parseUserIdFromJwt(jwtToken), id, workoutExerciseDto);
@@ -46,7 +46,7 @@ public class WorkoutExerciseController implements WorkoutExerciseControllerApi {
     @Override
     @PutMapping("/update")
     @RequiresJwtToken
-    public ResponseEntity<Void> updateWorkoutExercise(@RequestAttribute(name = "jwtToken") String jwtToken,
+    public ResponseEntity<Void> updateWorkoutExercise(@RequestAttribute String jwtToken,
                                                @PathVariable Integer id,
                                                @Valid @RequestBody WorkoutExercise workoutExercise) {
         workoutExerciseServiceApi.updateWorkoutExercise(jwtServiceApi.parseUserIdFromJwt(jwtToken), id, workoutExercise);
@@ -56,7 +56,7 @@ public class WorkoutExerciseController implements WorkoutExerciseControllerApi {
     @Override
     @DeleteMapping("/{workoutExerciseId}")
     @RequiresJwtToken
-    public ResponseEntity<Void> deleteWorkoutExercise(@RequestAttribute(name = "jwtToken") String jwtToken,
+    public ResponseEntity<Void> deleteWorkoutExercise(@RequestAttribute String jwtToken,
                                                       @PathVariable Integer id,
                                                       @PathVariable Integer workoutExerciseId) {
         workoutExerciseServiceApi.deleteWorkoutExercise(jwtServiceApi.parseUserIdFromJwt(jwtToken), id, workoutExerciseId);

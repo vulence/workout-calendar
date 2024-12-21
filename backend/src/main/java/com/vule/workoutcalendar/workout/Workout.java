@@ -1,6 +1,5 @@
 package com.vule.workoutcalendar.workout;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
@@ -9,13 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
-import java.time.LocalDate;
 import java.util.Objects;
 
 /**
  * Represents a gym workout
  *
- * A workout has an id, a title, a date when it was completed, notes, a (positive) duration in minutes,
+ * A workout has an id, a title, notes, a (positive) duration in minutes,
  * a (0-5) rating, and a userId of the user who did the workout.
  *
  * @author vulence
@@ -38,11 +36,6 @@ public class Workout {
     private String title;
 
     /**
-     * The date when the workout was completed
-     */
-    @JsonFormat(pattern="yyyy-MM-dd") private LocalDate date;
-
-    /**
      * Notes specific to that workout
      */
     private String notes;
@@ -63,17 +56,15 @@ public class Workout {
     private Integer userId;
 
     /**
-     * Creates a new Workout and sets title, date, notes, duration and rating to the input values
+     * Creates a new Workout and sets title, notes, duration and rating to the input values
      *
      * @param title workout title as a string
-     * @param date workout date as a LocalDate
      * @param notes workout notes as a string
      * @param duration workout duration as an integer
      * @param rating workout rating as an integer
      */
-    public Workout(String title, LocalDate date, String notes, Integer duration, Integer rating) {
+    public Workout(String title, String notes, Integer duration, Integer rating) {
         this.title = title;
-        this.date = date;
         this.notes = notes;
         this.duration = duration;
         this.rating = rating;
@@ -114,15 +105,15 @@ public class Workout {
     }
 
     /**
-     * Compares two workouts according to their ids, titles (case-insensitive), dates, notes, durations, ratings, and userIds
+     * Compares two workouts according to their ids, titles (case-insensitive), notes, durations, ratings, and userIds
      *
      * @param o the second workout to be compared with
      * @return
      * <ul>
      *     <li><b>true</b> - if both objects are initialized, belong to the Workout class,
-     *     and have the same ids, titles, dates, notes, durations, ratings and userIds</li>
+     *     and have the same ids, titles, notes, durations, ratings and userIds</li>
      *     <li><b>false</b> - if objects don't belong to the Workout class, if the inputted object is null
-     *     or if they don't have the same ids, titles, dates, notes, durations, ratings or userIds</li>
+     *     or if they don't have the same ids, titles, notes, durations, ratings or userIds</li>
      * </ul>
      */
     @Override
@@ -130,11 +121,11 @@ public class Workout {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Workout workout = (Workout) o;
-        return Objects.equals(id, workout.id) && Objects.equals(title.toLowerCase(), workout.title.toLowerCase()) && Objects.equals(date, workout.date) && Objects.equals(notes.toLowerCase(), workout.notes.toLowerCase()) && Objects.equals(duration, workout.duration) && Objects.equals(rating, workout.rating) && Objects.equals(userId, workout.userId);
+        return Objects.equals(id, workout.id) && Objects.equals(title.toLowerCase(), workout.title.toLowerCase()) && Objects.equals(notes.toLowerCase(), workout.notes.toLowerCase()) && Objects.equals(duration, workout.duration) && Objects.equals(rating, workout.rating) && Objects.equals(userId, workout.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, date, notes, duration, rating, userId);
+        return Objects.hash(id, title, notes, duration, rating, userId);
     }
 }

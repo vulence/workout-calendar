@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * Represents a gym exercise.
  *
- * An exercise has an id, a name, a description, and an external image URI.
+ * An exercise has an id, a name, a description, an external image URI, and a muscleGroupId.
  *
  * @author vulence
  * @version 1.0
@@ -41,6 +41,11 @@ public class Exercise {
      * A web URI of an image that displays the exercise
      */
     private String imageUrl;
+
+    /**
+     * An id of the muscle group which the exercise affects.
+     */
+    private Integer muscleGroupId;
 
     /**
      * Creates a new exercise and sets name and description to the input values

@@ -1,5 +1,6 @@
 package com.vule.workoutcalendar.workout.api;
 
+import com.vule.workoutcalendar.workout.CompletedWorkout;
 import com.vule.workoutcalendar.workout.Workout;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +15,6 @@ public interface WorkoutControllerApi {
 
     ResponseEntity<Workout> findById(String jwtToken, Integer id);
 
-    ResponseEntity<Workout> findTodaysWorkout(String jwtToken);
-
     ResponseEntity<Integer> getWorkoutCount(String jwtToken);
 
     ResponseEntity<Map<String, String>> create(String jwtToken, Workout workout);
@@ -23,4 +22,8 @@ public interface WorkoutControllerApi {
     ResponseEntity<Void> update(String jwtToken, Integer id, Workout workout);
 
     ResponseEntity<Void> delete(String jwtToken, Integer id);
+
+    ResponseEntity<Map<String, String>> createCompletedWorkout(String jwtToken, Integer id, CompletedWorkout completedWorkout);
+
+    ResponseEntity<List<CompletedWorkout>> findAllCompletedWorkouts(String jwtToken);
 }
