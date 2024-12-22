@@ -43,11 +43,6 @@ public class Exercise {
     private String imageUrl;
 
     /**
-     * An id of the muscle group which the exercise affects.
-     */
-    private Integer muscleGroupId;
-
-    /**
      * Creates a new exercise and sets name and description to the input values
      *
      * @param name Workout name as a string
