@@ -11,9 +11,14 @@
 	<groupId>com.vule</groupId>
 	<artifactId>workout-calendar</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>workout-calendar</name>
+    <packaging>pom</packaging>
+    <name>workout-calendar</name>
 	<description>Calendar that allows tracking exercises for each workout</description>
-	<properties>
+    <modules>
+        <module>main-app</module>
+		<module>security</module>
+	</modules>
+    <properties>
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
@@ -59,22 +64,5 @@
 			<scope>test</scope>
 		</dependency>
     </dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 
 </project>

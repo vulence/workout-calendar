@@ -1,4 +1,4 @@
-package com.vule.workoutcalendar.config;
+package com.vule.security.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
