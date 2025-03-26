@@ -17,25 +17,6 @@ public interface ExerciseRepository extends ListCrudRepository<Exercise, Integer
     String findExerciseName(@Param("exerciseId") Integer exerciseId);
 
     @Query("""
-           SELECT W.DATE, WE.*
-           FROM WORKOUT W
-           INNER JOIN WORKOUT_EXERCISE WE ON W.ID = WE.WORKOUT_ID
-           WHERE W.USER_ID = :userId AND WE.EXERCISE_ID = :exerciseId
-           ORDER BY W.DATE ASC
-            """)
-    List<ExerciseHistoryDto> findExerciseHistory(@Param("userId") Integer userId, @Param("exerciseId") Integer id);
-
-    @Query("""
-          SELECT W.DATE, MAX(WE.WEIGHT) AS Weight
-          FROM WORKOUT W
-          INNER JOIN WORKOUT_EXERCISE WE ON W.ID = WE.WORKOUT_ID
-          WHERE W.USER_ID = :userId AND WE.EXERCISE_ID = :exerciseId
-          GROUP BY W.DATE
-          ORDER BY W.DATE ASC
-            """)
-    List<ExerciseHistoryDto> findMaxWeights(@Param("userId") Integer userId, @Param("exerciseId") Integer id);
-
-    @Query("""
         SELECT *
         FROM EXERCISE
         WHERE lower(name) = lower(:name)

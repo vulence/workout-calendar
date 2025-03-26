@@ -1,7 +1,6 @@
 package com.vule.workoutcalendar.exercise.api;
 
 import com.vule.workoutcalendar.exercise.Exercise;
-import com.vule.workoutcalendar.musclegroup.MuscleGroup;
 
 import java.util.List;
 
@@ -47,15 +46,4 @@ public interface ExerciseServiceApi {
      * @param id Id of the exercise that is being deleted
      */
     void delete(Integer id);
-
-    /**
-     * Retrieves all exercises that affect a particular muscle group.
-     *
-     * The muscle group with the muscleGroupName should not be null and should exist.
-     *
-     * @param muscleGroupName The name of the muscle group for which exercises should be retrieved
-     *
-     * @return A list of all exercises that affect the supplied muscle group, or an empty list if such exercises don't exist
-     */
-    List<Exercise> findAllExercisesByMuscleGroup(String muscleGroupName);
 }

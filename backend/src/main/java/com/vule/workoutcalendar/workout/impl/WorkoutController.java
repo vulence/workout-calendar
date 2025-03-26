@@ -1,10 +1,10 @@
 package com.vule.workoutcalendar.workout.impl;
 
 import com.vule.workoutcalendar.annotation.RequiresJwtToken;
+import com.vule.workoutcalendar.exerciseset.ExerciseSet;
 import com.vule.workoutcalendar.jwt.api.JwtServiceApi;
 import com.vule.workoutcalendar.workout.CompletedWorkout;
 import com.vule.workoutcalendar.workout.Workout;
-import com.vule.workoutcalendar.workout.api.WorkoutControllerApi;
 import com.vule.workoutcalendar.workout.api.WorkoutServiceApi;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,8 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin
-public class WorkoutController implements WorkoutControllerApi {
+@RequestMapping("/workouts")
+public class WorkoutController {
     private final WorkoutServiceApi workoutServiceApi;
 
     private final JwtServiceApi jwtServiceApi;
@@ -28,7 +29,6 @@ public class WorkoutController implements WorkoutControllerApi {
         this.jwtServiceApi = jwtServiceApi;
     }
 
-    @Override
     @GetMapping("")
     @RequiresJwtToken
     public ResponseEntity<List<Workout>> findAllPaged(@RequestAttribute String jwtToken,
@@ -37,21 +37,24 @@ public class WorkoutController implements WorkoutControllerApi {
         return ResponseEntity.ok(workoutServiceApi.findAllPaged(jwtServiceApi.parseUserIdFromJwt(jwtToken), page, DEFAULT_PAGE_SIZE, direction));
     }
 
-    @Override
     @GetMapping("/{id}")
     @RequiresJwtToken
     public ResponseEntity<Workout> findById(@RequestAttribute String jwtToken, @PathVariable Integer id) {
         return ResponseEntity.ok(workoutServiceApi.findById(id, jwtServiceApi.parseUserIdFromJwt(jwtToken)));
     }
 
-    @Override
+    @GetMapping("/{id}/details")
+    @RequiresJwtToken
+    public ResponseEntity<Map<String, List<ExerciseSet>>> findWorkoutDetails(@RequestAttribute String jwtToken, @PathVariable Integer id) {
+        return ResponseEntity.ok(workoutServiceApi.findWorkoutDetails(jwtServiceApi.parseUserIdFromJwt(jwtToken), id));
+    }
+
     @GetMapping("/count")
     @RequiresJwtToken
     public ResponseEntity<Integer> getWorkoutCount(@RequestAttribute String jwtToken) {
         return ResponseEntity.ok(workoutServiceApi.getWorkoutCount(jwtServiceApi.parseUserIdFromJwt(jwtToken)));
     }
 
-    @Override
     @PostMapping("")
     @RequiresJwtToken
     public ResponseEntity<Map<String, String>> create(@RequestAttribute String jwtToken, @Valid @RequestBody Workout workout) {
@@ -59,7 +62,6 @@ public class WorkoutController implements WorkoutControllerApi {
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Workout created successfully."));
     }
 
-    @Override
     @PutMapping("/{id}")
     @RequiresJwtToken
     public ResponseEntity<Void> update(@RequestAttribute String jwtToken, @PathVariable Integer id, @Valid @RequestBody Workout workout) {
@@ -67,7 +69,6 @@ public class WorkoutController implements WorkoutControllerApi {
         return ResponseEntity.noContent().build();
     }
 
-    @Override
     @DeleteMapping("/{id}")
     @RequiresJwtToken
     public ResponseEntity<Void> delete(@RequestAttribute String jwtToken, @PathVariable Integer id) {
@@ -75,7 +76,6 @@ public class WorkoutController implements WorkoutControllerApi {
         return ResponseEntity.noContent().build();
     }
 
-    @Override
     @PostMapping("/{id}/complete")
     @RequiresJwtToken
     public ResponseEntity<Map<String, String>> createCompletedWorkout(@RequestAttribute String jwtToken, @PathVariable Integer id, @RequestBody CompletedWorkout completedWorkout) {
@@ -83,7 +83,6 @@ public class WorkoutController implements WorkoutControllerApi {
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Workout completed successfully."));
     }
 
-    @Override
     @GetMapping("/completed")
     @RequiresJwtToken
     public ResponseEntity<List<CompletedWorkout>> findAllCompletedWorkouts(@RequestAttribute String jwtToken) {

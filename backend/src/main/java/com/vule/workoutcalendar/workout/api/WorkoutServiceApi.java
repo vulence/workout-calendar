@@ -1,9 +1,11 @@
 package com.vule.workoutcalendar.workout.api;
 
+import com.vule.workoutcalendar.exerciseset.ExerciseSet;
 import com.vule.workoutcalendar.workout.CompletedWorkout;
 import com.vule.workoutcalendar.workout.Workout;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents an API for the workout service.
@@ -25,6 +27,8 @@ public interface WorkoutServiceApi {
      * @return A list of workouts for a particular user of a particular page, or an empty list if the user has no workouts.
      */
     List<Workout> findAllPaged(Integer userId, Integer page, Integer size, String direction);
+
+    Map<String, List<ExerciseSet>> findWorkoutDetails(Integer userId, Integer workoutId);
 
     /**
      * Retrieves a workout with the supplied ID.
@@ -79,4 +83,6 @@ public interface WorkoutServiceApi {
     void createCompletedWorkout(Integer userId, CompletedWorkout completedWorkout);
 
     List<CompletedWorkout> findAllCompletedWorkouts(Integer userId);
+
+    void checkWorkoutBelongsToUser(Integer userId, Integer workoutId);
 }
