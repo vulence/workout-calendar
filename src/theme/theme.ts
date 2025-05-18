@@ -1,4 +1,4 @@
-import { createTheme } from "@mui/material/";
+import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
     palette: {
@@ -36,6 +36,7 @@ const theme = createTheme({
             fontSize: 17,
         },
     },
+    cssVariables: true
 });
 
 export default theme;

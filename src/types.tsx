@@ -153,10 +153,10 @@ export type AuthProviderProps = {
 
 export type CalendarEvent = {
     id: number;
-    title: string;
+    workoutId: number;
     start: Date;
     end: Date;
-    rating: number;
+    title: string;
 }
 
 export type AllWorkoutsFilters = {
@@ -167,4 +167,10 @@ export type AllWorkoutsFilters = {
 
 export type FilterAccordionProps = {
     updateParentValues: (newValues : AllWorkoutsFilters) => void;
+}
+
+export type CompletedWorkout = {
+    id: number;
+    workoutId: number;
+    date: string;
 }
