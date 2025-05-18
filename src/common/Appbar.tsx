@@ -23,9 +23,9 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SportsGymnasticsIcon from '@mui/icons-material/SportsGymnastics';
 import { Link } from "react-router-dom";
 
-import { AuthContext } from './auth/AuthContext';
+import { AuthContext } from '../auth/AuthContext';
 import { useContext } from 'react';
-import { AuthContextType, IconMap } from './types';
+import { AuthContextType, IconMap } from '../types';
 
 const pages = ['Workouts', 'Exercises'];
 const settings = ['Workouts', 'Exercises', 'Account', 'Logout'];

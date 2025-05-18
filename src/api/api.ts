@@ -1,24 +1,23 @@
 import Userfront from '@userfront/toolkit';
-import { Workout } from '../types';
 import { stringToDayjs } from '../workouts/utils/dateConverter';
     
-const API_URL = "http://localhost:8080";
+const API_URL = "http://localhost:8080/api";
 
 /*
 * START WORKOUTS
 */
 
-export async function fetchTodaysWorkout() {
-    const response = await fetch(`${API_URL}/workouts/findTodaysWorkout`, {
+export async function fetchCompletedWorkouts() {
+    const response = await fetch(`${API_URL}/workouts/completed`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${Userfront.tokens.accessToken}`
-        },
+        }
     });
 
     const result = await response.json();
     return result;
-};
+}
 
 export async function fetchWorkouts(page = "0", direction = "desc") {
     const response = await fetch(`${API_URL}/workouts?page=${page}&direction=${direction}`, {

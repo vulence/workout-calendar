@@ -9,11 +9,11 @@ import isToday from 'dayjs/plugin/isToday';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import CustomToolbar from './CalendarToolbar';
-import { Workout, CalendarEvent, WorkoutExercise } from '../types';
+import { Workout, CalendarEvent, WorkoutExercise, CompletedWorkout } from '../types';
 import AddWorkoutModal from '../workouts/allworkouts/AddWorkoutModal';
 import LinearProgressWithLabel from './LinearProgressWithLabel';
 import styles from './dashboard.module.css';
-import { fetchWorkoutExercises, fetchWorkouts, submitWorkout, updateWorkoutExercise } from '../api/api';
+import { fetchCompletedWorkouts, fetchWorkoutExercises, submitWorkout, updateWorkoutExercise } from '../api/api';
 import { stringToDayjs } from '../workouts/utils/dateConverter';
 import { ThreeDots } from 'react-loader-spinner';
 
@@ -25,9 +25,9 @@ export default function Dashboard() {
     const localizer = dayjsLocalizer(dayjs);
 
     // States for workouts and the calendar events
-    const [workouts, setWorkouts] = useState<Array<Workout>>([]);
+    const [completedWorkouts, setCompletedWorkouts] = useState<Array<CompletedWorkout>>([]);
     const [events, setEvents] = useState<Array<CalendarEvent>>([]);
-    const [todaysWorkout, setTodaysWorkout] = useState<Workout | null>(null);
+    const [todaysWorkout, setTodaysWorkout] = useState<CompletedWorkout | null>(null);
     const [todaysWorkoutExercises, setTodaysWorkoutExercises] = useState<WorkoutExercise[] | null>(null);
     const [loadingTodaysWorkout, setLoadingTodaysWorkout] = useState<boolean>(false);
     const [progress, setProgress] = useState<number>(0);
@@ -43,7 +43,7 @@ export default function Dashboard() {
 
     // Gets all the workouts
     useEffect(() => {
-        fetchWorkouts().then(data => setWorkouts(data));
+        fetchCompletedWorkouts().then(data => setCompletedWorkouts(data));
     }, []);
 
     // Creates an event for each of the workout and adds it to the calendar, as well as setting today's workout if it exists
@@ -51,8 +51,8 @@ export default function Dashboard() {
         setLoading(true);
         const curEvents: CalendarEvent[] = [];
 
-        workouts.forEach(workout => {
-            curEvents.push(createEvent(workout.date, workout.id, workout.title, workout.rating));
+        completedWorkouts.forEach(workout => {
+            curEvents.push(createEvent(workout.date, workout.id, workout.workoutId));
 
             if (stringToDayjs(workout.date).isToday()) {
                 setTodaysWorkout(workout);
@@ -63,15 +63,15 @@ export default function Dashboard() {
 
         setEvents([...events, ...curEvents]);
         setLoading(false);
-    }, [workouts]);
+    }, [completedWorkouts]);
 
-    const createEvent = (stringDate: string, id: number, title: string, rating: number): CalendarEvent => {
+    const createEvent = (stringDate: string, id: number, workoutId: number): CalendarEvent => {
         const parts = stringDate.split("-");
-        const year = parseInt(parts[2]);
+        const year = parseInt(parts[0]);
         const month = parseInt(parts[1]) - 1;
-        const day = parseInt(parts[0]);
+        const day = parseInt(parts[2]);
 
-        return { id: id, title: title, start: new Date(year, month, day), end: new Date(year, month, day), rating: rating }
+        return { id: id, start: new Date(year, month, day), end: new Date(year, month, day), workoutId: workoutId, title: "cao" }
     }
 
     // If there is a today's workout, set all essential elements related to progress
@@ -87,7 +87,7 @@ export default function Dashboard() {
     }
 
     // Load in all of the exercises related to today's workout
-    const initializeTodaysWorkout = (todaysWorkout: Workout) => {
+    const initializeTodaysWorkout = (todaysWorkout: CompletedWorkout) => {
         setLoadingTodaysWorkout(true);
 
         fetchWorkoutExercises(todaysWorkout.id.toString()).then((workoutExercises) => {
@@ -149,33 +149,6 @@ export default function Dashboard() {
                         components={{
                             toolbar: CustomToolbar
                         }}
-                        eventPropGetter={(event) => {
-                            let backgroundColor: string;
-
-                            // Sets the event color based on the rating
-                            switch (event.rating) {
-                                case 1:
-                                    backgroundColor = "red";
-                                    break;
-                                case 2:
-                                    backgroundColor = "#f44336";
-                                    break;
-                                case 3:
-                                    backgroundColor = "#ffa726";
-                                    break;
-                                case 4:
-                                    backgroundColor = "#66bb6a";
-                                    break;
-                                case 5:
-                                    backgroundColor = "green";
-                                    break;
-                                default:
-                                    backgroundColor = "grey";
-                                    break;
-                            }
-
-                            return { style: { backgroundColor } }
-                        }}
                     />
 
                     {loading ? (
@@ -234,9 +207,9 @@ export default function Dashboard() {
                                 {todaysWorkout && todaysWorkoutExercises ? (
                                     <>
                                         <Box className={styles.todaysWorkoutTitleDuration}>
-                                            <Typography>{todaysWorkout.title}</Typography>
+                                            <Typography>{todaysWorkout.id}</Typography>
                                             <TimerIcon sx={{ marginLeft: "auto" }} />
-                                            <Typography alignSelf="center" fontSize={15}>{todaysWorkout.duration}min</Typography>
+                                            <Typography alignSelf="center" fontSize={15}>{todaysWorkout.workoutId}min</Typography>
                                         </Box>
                                         <Box className={styles.todaysWorkoutProgress}>
                                             <LinearProgressWithLabel value={progress} />
